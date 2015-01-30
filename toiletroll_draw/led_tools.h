@@ -11,19 +11,40 @@ class LED : public Adafruit_NeoPixel {
     LED(uint16_t amount, uint8_t pin);
     void start(void);
     
+    // Set the size of the view
+    void view(uint16_t xmax, uint16_t ymax);
+    
+    // Display the current view
+    void display(void);
+    
+    // Clear everything
+    void clear(void);
+    void clear(uint32_t colour);
+    
     // Set the current colour
     void colour_set(uint32_t colour);
     
-    // Colour the LEDs from offset 1 to offset 2
-    void colour_o1_o2(uint16_t o1, uint16_t o2);
-    void colour_o1_o2(uint16_t o1, uint16_t o2, uint32_t colour);
+    // Colour the LEDs in the strip from offset 1 to offset 2
+    void strip_o1_o2(uint16_t o1, uint16_t o2);
+    void strip_o1_o2(uint16_t o1, uint16_t o2, uint32_t colour);
     
-    // Colour the LEDs from offset to offset + length
-    void colour_o_length(uint16_t o, uint16_t length);
-    void colour_o_length(uint16_t o, uint16_t length, uint32_t colour);
+    // Colour the LEDs in the strip from offset to offset + length
+    void strip_o_length(uint16_t o, uint16_t length);
+    void strip_o_length(uint16_t o, uint16_t length, uint32_t colour);
+    
+    // Colour the LEDs in the matrix from (x1, y1) x (x2, y2)
+    void square(int16_t x, int16_t y, uint16_t dx, uint16_t dy);
+    void square(int16_t x, int16_t y, uint16_t dx, uint16_t dy, uint32_t colour);
+
+    // Predefined colours
+    uint32_t colour_red, colour_green, colour_blue, colour_black;
 
     private:
+    uint32_t **_matrix;
+    uint32_t *_strip;
     uint32_t _colourlast;
+    uint16_t _xmax, _ymax;
+    
 };
 
 #endif
