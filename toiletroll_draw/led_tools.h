@@ -32,14 +32,25 @@ class LED : public Adafruit_NeoPixel {
     void strip_o_length(uint16_t o, uint16_t length);
     void strip_o_length(uint16_t o, uint16_t length, uint32_t colour);
     
-    // Colour the LEDs in the matrix from (x1, y1) x (x2, y2)
+    // Colour the LED in the matrix in the dot of (x, y)
+    void dot(int16_t x, int16_t y);
+    void dot(int16_t x, int16_t y, uint32_t colour);
+    
+    // Colour the LEDs in the matrix in the square from (x, y) x (x + dx, y + dy)
     void square(int16_t x, int16_t y, uint16_t dx, uint16_t dy);
     void square(int16_t x, int16_t y, uint16_t dx, uint16_t dy, uint32_t colour);
+    
+    // Colour the LEDs in the matrix in a line from (x1, y1) to (x2, y2)
+    void line(int16_t x1, int16_t y1, int16_t x2, int16_t y2);
+    void line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t colour);
 
     // Predefined colours
-    uint32_t colour_red, colour_green, colour_blue, colour_black;
+    uint32_t colour_red, colour_green, colour_blue;
+    uint32_t colour_purple, colour_cyan, colour_yellow;
+    uint32_t colour_white, colour_black;
 
     private:
+    int8_t octant(int16_t x, int16_t y);
     uint32_t **_matrix;
     uint32_t *_strip;
     uint32_t _colourlast;
