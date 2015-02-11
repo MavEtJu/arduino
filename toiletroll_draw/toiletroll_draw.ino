@@ -30,6 +30,7 @@ loop(void)
     // led_text();
     // led_lines_horver();
     // led_squares_growing();
+    led_sinus();
 
     led.display();
     delay(100);
@@ -70,9 +71,9 @@ led_lines_horver(void)
 
     led.colour_set(led.colour_purple);
     if (m < VIEW_HEIGHT)
-	led.line(0, m, VIEW_WIDTH, m);
+        led.line(0, m, VIEW_WIDTH, m);
     else
-	led.line(m % VIEW_HEIGHT, 0, m % VIEW_HEIGHT, VIEW_WIDTH);
+        led.line(m % VIEW_HEIGHT, 0, m % VIEW_HEIGHT, VIEW_WIDTH);
 
     step++;
 }
@@ -84,16 +85,34 @@ led_squares_growing(void)
     int m = step % (2 * VIEW_HEIGHT);
 
     if (m < VIEW_HEIGHT) {
-	led.line(0, 0, 0, m, led.colour_green);
-	led.line(0, m, m, m);
-	led.line(m, m, m, 0);
-	led.line(m, 0, 0, 0);
+        led.line(0, 0, 0, m, led.colour_green);
+        led.line(0, m, m, m);
+        led.line(m, m, m, 0);
+        led.line(m, 0, 0, 0);
     } else {
-	m %= VIEW_HEIGHT;
-	led.line(VIEW_HEIGHT - 1, VIEW_HEIGHT - 1,
-		 VIEW_HEIGHT - 1, m, led.colour_green);
-	led.line(VIEW_HEIGHT - 1, m, m, m);
-	led.line(m, m, m, VIEW_HEIGHT - 1);
-	led.line(m, VIEW_HEIGHT - 1, VIEW_HEIGHT - 1, VIEW_HEIGHT - 1);
+        m %= VIEW_HEIGHT;
+        led.line(VIEW_HEIGHT - 1, VIEW_HEIGHT - 1,
+                 VIEW_HEIGHT - 1, m, led.colour_green);
+        led.line(VIEW_HEIGHT - 1, m, m, m);
+        led.line(m, m, m, VIEW_HEIGHT - 1);
+        led.line(m, VIEW_HEIGHT - 1, VIEW_HEIGHT - 1, VIEW_HEIGHT - 1);
     }
+
+    step++;
+}
+
+void
+led_sinus(void)
+{
+    static uint32_t step = 0;
+
+    for (uint16_t m = 0; m < VIEW_WIDTH; m++) {
+        uint16_t o = m + step;
+        float f = M_PI * 2 / o;
+        float s = sin(s);
+
+        led.dot(m, (VIEW_WIDTH / 2) + s * (VIEW_WIDTH / 3), led.colour_yellow);
+    }
+
+    step++;
 }
