@@ -63,6 +63,7 @@ class Adafruit_NeoPixel {
   uint32_t
     getPixelColor(uint16_t n) const;
 
+  uint8_t *pixels;
  private:
 
   const uint16_t
@@ -74,8 +75,8 @@ class Adafruit_NeoPixel {
 #endif
   uint8_t
     pin,           // Output pin number
-    brightness,
-   *pixels;        // Holds LED color values (3 bytes each)
+    brightness;
+//   *pixels;        // Holds LED color values (3 bytes each)
   uint32_t
     endTime;       // Latch timing reference
 #ifdef __AVR__
