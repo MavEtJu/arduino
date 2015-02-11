@@ -2,13 +2,13 @@
 //
 
 #include <Arduino.h>
-#include <pgmspace.h>
+//#include <pgmspace.h>
 #include <Adafruit_NeoPixel.h>
 #include "led_tools.h"
 
-LED::LED(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin, NEO_GRB + NEO_KHZ800)
+LEDstrip::LEDstrip(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin, NEO_GRB + NEO_KHZ800)
 {
-    _colourlast = this->Color(0, 0, 0);
+    _colourlast = Color(0, 0, 0);
     colour_red = Color(8, 0, 0);
     colour_green = Color(0, 8, 0);
     colour_blue = Color(0, 0, 8);
@@ -17,12 +17,22 @@ LED::LED(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin, NEO_GRB 
     colour_purple = Color(8, 0, 8);
     colour_cyan = Color(0, 8, 8);
     colour_yellow = Color(8, 8, 0);
-    _strip = (uint32_t *)malloc(amount * sizeof(uint32_t));
+    _strip = (LED *)pixels; // (uint32_t *)malloc(amount * sizeof(uint32_t));
     letters_init();
 }
 
+LED
+LEDstrip::Color(uint8_t r, uint8_t g, uint8_t b)
+{
+    LED l;
+    l.red = r;
+    l.green = g;
+    l.blue = b;
+    return l;
+}
+
 void
-LED::start(void)
+LEDstrip::start(void)
 {
     this->begin();
     this->show();
@@ -30,51 +40,62 @@ LED::start(void)
 
 // Set the size of the view
 void
-LED::view(uint16_t xmax, uint16_t ymax)
+LEDstrip::view(uint16_t xmax, uint16_t ymax, byte rtl, byte btt)
 {
     _xmax = xmax;
     _ymax = ymax;
-    _matrix = (uint32_t **)malloc(sizeof(uint32_t *) * ymax);
+    _matrix = (LED **)malloc(sizeof(LED *) * ymax);
     for (uint16_t y = 0; y < _ymax; y++) {
         _matrix[y] = _strip + y * _xmax;
     }
+    _rtl = rtl;
+    _btt = btt;
 }
 
 // 
 void
-LED::display(void)
+LEDstrip::display(void)
 {
-    for (uint16_t o = 0; o < _xmax * _ymax; o++) {
-        setPixelColor(o, _strip[o]);
+  /*
+    if (_btt == SPIN_BOTTOMTOTOP) {
+        for (uint16_t o = 0; o < _xmax * _ymax; o++) {
+            setPixelColor(o, _strip[o]);
+        }
+    } else {
+        uint16_t omax = _xmax * _ymax - 1;
+        for (int16_t o = omax; o >= 0; o--) {
+            setPixelColor(omax - o, _strip[o]);
+        }
     }
+    */
     show();
 }
 
 // Clear everything
 void
-LED::clear(void)
+LEDstrip::clear(void)
 {
     clear(led.colour_black);
 }
 
 void
-LED::clear(uint32_t colour)
+LEDstrip::clear(LED colour)
 {
     for (uint16_t x = 0; x < _xmax * _ymax; x++) {
-        _strip[x] = colour;
+        _strip[x] = colour_black;
     }
 }
 
 
 // Set the current colour
 void
-LED::colour_set(uint32_t colour)
+LEDstrip::colour_set(LED colour)
 {
     _colourlast = colour;
 }
 
-uint32_t
-LED::colour_random(void)
+LED
+LEDstrip::colour_random(void)
 {
     switch (rand() % 8) {
         case 0: return colour_white;
@@ -93,14 +114,14 @@ LED::colour_random(void)
 
 // Colour the LEDs in the strip from offset 1 to offset 2
 void
-LED::strip_o1_o2(uint16_t o1, uint16_t o2)
+LEDstrip::strip_o1_o2(uint16_t o1, uint16_t o2)
 {
     for (uint16_t o = o1; o <= o2; o++) {
         _strip[o] = _colourlast;
     }
 }
 void
-LED::strip_o1_o2(uint16_t o1, uint16_t o2, uint32_t colour)
+LEDstrip::strip_o1_o2(uint16_t o1, uint16_t o2, LED colour)
 {
     _colourlast = colour;
     strip_o1_o2(o1, o2);
@@ -108,14 +129,14 @@ LED::strip_o1_o2(uint16_t o1, uint16_t o2, uint32_t colour)
 
 // Colour the LEDs in the strip from offset to offset + length
 void
-LED::strip_o_length(uint16_t o, uint16_t length)
+LEDstrip::strip_o_length(uint16_t o, uint16_t length)
 {
     for (uint16_t x = o; x < o + length; x++) {
         _strip[x] = _colourlast;
     }
 }
 void
-LED::strip_o_length(uint16_t o, uint16_t length, uint32_t colour)
+LEDstrip::strip_o_length(uint16_t o, uint16_t length, LED colour)
 {
     _colourlast = colour;
     strip_o_length(o, length);
@@ -123,7 +144,7 @@ LED::strip_o_length(uint16_t o, uint16_t length, uint32_t colour)
 
 // Plot a dot
 void
-LED::dot(int16_t x, int16_t y)
+LEDstrip::dot(int16_t x, int16_t y)
 {
     if (x < 0 || x >= _xmax)
         return;
@@ -133,7 +154,7 @@ LED::dot(int16_t x, int16_t y)
 }
 
 void
-LED::dot(int16_t x, int16_t y, uint32_t colour)
+LEDstrip::dot(int16_t x, int16_t y, LED colour)
 {
     _colourlast = colour;
     dot(x, y);
@@ -141,7 +162,7 @@ LED::dot(int16_t x, int16_t y, uint32_t colour)
 
 // Colour the LEDs in the matrix from (x1, y1) x (x2, y2)
 void
-LED::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy)
+LEDstrip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy)
 {
     for (int16_t x = 0; x < dx; x++) {
         if (xo + x < 0 || xo + x >= _xmax)
@@ -155,7 +176,7 @@ LED::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy)
 }
 
 void
-LED::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy, uint32_t colour)
+LEDstrip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy, LED colour)
 {
     _colourlast = colour;
     square(xo, yo, dx, dy);
@@ -165,7 +186,7 @@ LED::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy, uint32_t colour)
 // http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm#Algorithm_for_integer_arithmetic
 // http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
 void
-LED::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2)
+LEDstrip::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2)
 {
     int w = x2 - x1;
     int h = y2 - y1;
@@ -211,7 +232,7 @@ LED::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2)
 }
 
 void
-LED::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t colour)
+LEDstrip::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, LED colour)
 {
     _colourlast = colour;
     line(x1, y1, x2, y2);
@@ -220,10 +241,10 @@ LED::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t colour)
 // Draw a character
 #define TEXTHEIGHT 7
 void
-LED::text(int16_t x, int16_t y, char *string)
+LEDstrip::text(int16_t x, int16_t y, char *string)
 {
     dot(x, y);
-    uint32_t dotcolour = _colourlast;
+    LED dotcolour = _colourlast;
     
     for (char *s = string; *s != 0; s++) {
         if (letters[*s] == NULL) {
@@ -236,10 +257,10 @@ LED::text(int16_t x, int16_t y, char *string)
         byte width = strlen(ch) / TEXTHEIGHT;
 
         for (uint8_t i = 0; i < strlen(ch); i++) {
-            uint32_t c = colour_black;
+            LED c = colour_black;
             if (ch[i] != ' ')
                 c = dotcolour;          
-            dot(x + (i % width), y + (i / width), c);
+            dot(x + (i % width), y + TEXTHEIGHT - (i / width), c);
         }
 
 //        Serial.print("char: '");
@@ -253,14 +274,14 @@ LED::text(int16_t x, int16_t y, char *string)
 }
 
 void
-LED::text(int16_t x, int16_t y, char *string, uint32_t colour)
+LEDstrip::text(int16_t x, int16_t y, char *string, LED colour)
 {
     _colourlast = colour;
     text(x, y, string);
 }
 
 uint16_t
-LED::text_width(char *string)
+LEDstrip::text_width(char *string)
 {
     char ch[70];
     int total = 0;
@@ -272,13 +293,13 @@ LED::text_width(char *string)
         }
         
         strcpy_P(ch, letters[*s]);
-        total += strlen(ch) / TEXTHEIGHT;
+        total += strlen(ch) / TEXTHEIGHT + 1;
     }
     return total;
 }
 
 void
-LED::letters_init(void)
+LEDstrip::letters_init(void)
 {
     static int initialized = false;
 
@@ -286,10 +307,11 @@ LED::letters_init(void)
         return;
     initialized = true;
     
-    letters = (char **) malloc(sizeof(char *) * 128);
+    letters = (const char **) malloc(sizeof(char *) * 128);
     for (int c = 0; c < 128; c++) {
         letters[c] = NULL;
     }
+
     letters['A'] = PSTR( 
     	" XXX "
     	"X   X"
