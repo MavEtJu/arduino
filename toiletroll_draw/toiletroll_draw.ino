@@ -30,7 +30,7 @@ loop(void)
     char *s = "the quick brown fox jumped over the lazy dog 0123456789";
     uint16_t w = led.text_width(s);
     uint16_t i = step % (w + 2 * VIEW_WIDTH);
-    led.text(VIEW_WIDTH - i, 0, s, led.colour_purple);
+    led.text(VIEW_WIDTH - i, 2, s, led.colour_purple);
 
     step++;
     led.display();
