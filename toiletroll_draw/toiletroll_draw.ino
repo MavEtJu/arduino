@@ -7,14 +7,13 @@
 #define VIEW_HEIGHT  14
 
 LEDstrip led = LEDstrip(VIEW_WIDTH * VIEW_HEIGHT, PIN_STRIP);
-//LED led = LED(144, PIN_STRIP);
 
 void
 setup(void)
 {
     Serial.begin(9600);
     pinMode(PIN_BLINK, OUTPUT);
-    led.view(VIEW_WIDTH, VIEW_HEIGHT, SPIN_LEFTTORIGHT, SPIN_BOTTOMTOTOP);
+    led.view(VIEW_WIDTH, VIEW_HEIGHT);
     led.start();
 }
 

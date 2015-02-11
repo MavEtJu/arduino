@@ -2,7 +2,6 @@
 //
 
 #include <Arduino.h>
-//#include <pgmspace.h>
 #include <Adafruit_NeoPixel.h>
 #include "led_tools.h"
 
@@ -17,7 +16,10 @@ LEDstrip::LEDstrip(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin
     colour_purple = Color(8, 0, 8);
     colour_cyan = Color(0, 8, 8);
     colour_yellow = Color(8, 8, 0);
-    _strip = (LED *)pixels; // (uint32_t *)malloc(amount * sizeof(uint32_t));
+    _strip = (LED *)pixels;
+    _matrix = NULL;
+    _ymax = 0;
+    _xmax = 0;
     letters_init();
 }
 
@@ -40,7 +42,7 @@ LEDstrip::start(void)
 
 // Set the size of the view
 void
-LEDstrip::view(uint16_t xmax, uint16_t ymax, byte rtl, byte btt)
+LEDstrip::view(uint16_t xmax, uint16_t ymax)
 {
     _xmax = xmax;
     _ymax = ymax;
@@ -48,26 +50,12 @@ LEDstrip::view(uint16_t xmax, uint16_t ymax, byte rtl, byte btt)
     for (uint16_t y = 0; y < _ymax; y++) {
         _matrix[y] = _strip + y * _xmax;
     }
-    _rtl = rtl;
-    _btt = btt;
 }
 
-// 
+// Display the drawn objects to the LED strip
 void
 LEDstrip::display(void)
 {
-  /*
-    if (_btt == SPIN_BOTTOMTOTOP) {
-        for (uint16_t o = 0; o < _xmax * _ymax; o++) {
-            setPixelColor(o, _strip[o]);
-        }
-    } else {
-        uint16_t omax = _xmax * _ymax - 1;
-        for (int16_t o = omax; o >= 0; o--) {
-            setPixelColor(omax - o, _strip[o]);
-        }
-    }
-    */
     show();
 }
 
@@ -263,11 +251,6 @@ LEDstrip::text(int16_t x, int16_t y, char *string)
             dot(x + (i % width), y + TEXTHEIGHT - (i / width), c);
         }
 
-//        Serial.print("char: '");
-//        Serial.print(*s);
-//        Serial.print("' width: ");
-//        Serial.print(width);
-//        Serial.println("");
         x += width;
         x++;
     }
@@ -596,7 +579,7 @@ LEDstrip::letters_init(void)
     letters['j'] = PSTR(
     	"  X"
     	"   "
-    	" XX "
+    	" XX"
     	"  X"
     	"  X"
     	"  X"
@@ -943,9 +926,9 @@ LEDstrip::letters_init(void)
     letters['['] = PSTR(
     	"XX"
     	"X "
-    	"X  "
-    	"X  "
-    	"X  "
+    	"X "
+    	"X "
+    	"X "
     	"X "
     	"XX");
     letters[']'] = PSTR(
@@ -989,5 +972,3 @@ LEDstrip::letters_init(void)
     	"X"
     	"X");
 }
-
-
