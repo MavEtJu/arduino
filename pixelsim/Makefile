@@ -2,15 +2,16 @@
 
 .SUFFIXES: .ino
 
+# Remove the -O2 since it broke wrefresh(screen) from libcurses for some reason.
 CFLAGS	+= -Wall -Werror -I. -Wno-char-subscripts -g
 
-all:	led_tools
+all:	test
 
 .ino.o:
 	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
 
-led_tools: led_tools.o Arduino.o Adafruit_NeoPixel.o test.o
-	${CXX} ${CXXFLAGS} -o ${.TARGET} ${.ALLSRC}
+test: led_tools.o Arduino.o Adafruit_NeoPixel.o toiletroll_draw.o
+	${CXX} ${CXXFLAGS} -o ${.TARGET} ${.ALLSRC} -lcurses
 
 
 test.o: test.ino
@@ -19,12 +20,12 @@ Arduino.o: Arduino.cpp Arduino.h
 Adafruit_NeoPixel.o: Adafruit_NeoPixel.cpp Adafruit_NeoPixel.h Arduino.h
 Arduino.cpp: Arduino.h
 
-test.ino: led_tools.h Arduino.h
-	ln -fs ../toiletroll_draw/toiletroll_draw.ino test.ino
+toiletroll_draw.ino: led_tools.h Arduino.h
+	ln -fs ../toiletroll_draw/toiletroll_draw.ino toiletroll_draw.ino
 led_tools.ino: led_tools.h Adafruit_NeoPixel.h Arduino.h
 	ln -fs ../toiletroll_draw/led_tools.ino led_tools.ino
 led_tools.h:
 	ln -fs ../toiletroll_draw/led_tools.h led_tools.h
 
 clean:
-	rm -f *.o led_tools led_tools.ino led_tools.h test.ino
+	rm -f *.o test led_tools.ino led_tools.h toiletroll_draw.ino

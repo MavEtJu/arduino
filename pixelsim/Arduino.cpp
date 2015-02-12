@@ -34,6 +34,6 @@ pinMode(uint8_t pin, uint8_t mode)
 void
 delay(uint32_t ms)
 {
-	usleep(ms);
+	usleep(ms * 1000);
 }
 
