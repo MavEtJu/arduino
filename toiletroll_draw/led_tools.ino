@@ -63,7 +63,7 @@ LEDstrip::display(void)
 void
 LEDstrip::clear(void)
 {
-    clear(led.colour_black);
+    clear(colour_black);
 }
 
 void
@@ -240,7 +240,6 @@ LEDstrip::blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, LED *colour)
 void
 LEDstrip::blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, const char *s, LED colour)
 {
-    Serial.println(s);
     for (int16_t y = 0; y < dy; y++) {
         for (int16_t x = 0; x < dx; x++) {
             LED c = colour_black;
@@ -254,11 +253,11 @@ LEDstrip::blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, const char *s, LE
 // Draw a character
 #define TEXTHEIGHT 7
 void
-LEDstrip::text(int16_t x, int16_t y, char *string)
+LEDstrip::text(int16_t x, int16_t y, const char *string)
 {
     LED dotcolour = _colourlast;
     
-    for (char *s = string; *s != 0; s++) {
+    for (const char *s = string; *s != 0; s++) {
         if (letters[*s] == NULL) {
             x++;
             continue;
@@ -281,19 +280,19 @@ LEDstrip::text(int16_t x, int16_t y, char *string)
 }
 
 void
-LEDstrip::text(int16_t x, int16_t y, char *string, LED colour)
+LEDstrip::text(int16_t x, int16_t y, const char *string, LED colour)
 {
     _colourlast = colour;
     text(x, y, string);
 }
 
 uint16_t
-LEDstrip::text_width(char *string)
+LEDstrip::text_width(const char *string)
 {
     char ch[70];
     int total = 0;
     
-    for (char *s = string; *s != 0; s++) {
+    for (const char *s = string; *s != 0; s++) {
         if (letters[*s] == NULL) {
             total++;
             continue;

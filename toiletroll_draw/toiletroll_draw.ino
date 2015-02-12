@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "led_tools.h"
 
 #define PIN_BLINK   13
@@ -7,36 +8,6 @@
 #define VIEW_HEIGHT  14
 
 LEDstrip led = LEDstrip(VIEW_WIDTH * VIEW_HEIGHT, PIN_STRIP);
-
-void
-setup(void)
-{
-    Serial.begin(9600);
-    pinMode(PIN_BLINK, OUTPUT);
-    led.view(VIEW_WIDTH, VIEW_HEIGHT);
-    led.start();
-}
-
-void
-loop(void)
-{
-    static uint32_t step = 0;
-    
-    loop_blink();
-
-    led.clear();
-    led00_blink();
-
-    // led_text();
-    // led_lines_horver();
-    // led_squares_growing();
-    led_sinus();
-    // led_spaceinvaders();
-
-    led.display();
-    delay(10);
-    return;
-}
 
 void
 loop_blink(void)
@@ -56,7 +27,7 @@ void
 led_text(void)
 {
     static uint32_t step = 0;
-    char *s = "the quick brown fox jumped over the lazy dog 0123456789";
+    const char *s = "the quick brown fox jumped over the lazy dog 0123456789";
     uint16_t w = led.text_width(s);
     uint16_t i = step % (w + 2 * VIEW_WIDTH);
     led.text(VIEW_WIDTH - i, 2, s, led.colour_purple);
@@ -241,4 +212,32 @@ led_spaceinvaders(void)
     "X X  X X"
     );
 
+}
+
+void
+setup(void)
+{
+    /* Serial.begin(9600); */
+    pinMode(PIN_BLINK, OUTPUT);
+    led.view(VIEW_WIDTH, VIEW_HEIGHT);
+    led.start();
+}
+
+void
+loop(void)
+{
+    loop_blink();
+
+    led.clear();
+    led00_blink();
+
+    // led_text();
+    // led_lines_horver();
+    // led_squares_growing();
+    led_sinus();
+    // led_spaceinvaders();
+
+    led.display();
+    delay(10);
+    return;
 }

@@ -57,9 +57,9 @@ class LEDstrip : public Adafruit_NeoPixel {
     void blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, const char *s, LED colour);
     
     // Draw a character
-    void text(int16_t x, int16_t y, char *text);
-    void text(int16_t x, int16_t y, char *text, LED colour);
-    uint16_t text_width(char *text);
+    void text(int16_t x, int16_t y, const char *text);
+    void text(int16_t x, int16_t y, const char *text, LED colour);
+    uint16_t text_width(const char *text);
 
     // Predefined colours
     LED colour_red, colour_green, colour_blue;
