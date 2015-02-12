@@ -30,7 +30,7 @@ led_text(void)
     const char *s = "the quick brown fox jumped over the lazy dog 0123456789";
     uint16_t w = led.text_width(s);
     uint16_t i = step % (w + 2 * VIEW_WIDTH);
-    led.text(VIEW_WIDTH - i, 2, s, led.colour_purple);
+    led.text(VIEW_WIDTH - i, 2, s, led.colour_magenta);
     step++;
 }
 
@@ -40,7 +40,7 @@ led_lines_horver(void)
     static uint32_t step = 0;
     int m = step % (2 * VIEW_HEIGHT);
 
-    led.colour_set(led.colour_purple);
+    led.colour_set(led.colour_magenta);
     if (m < VIEW_HEIGHT)
         led.line(0, m, VIEW_WIDTH, m);
     else
@@ -110,116 +110,140 @@ led_sinus(void)
 void
 led_spaceinvaders(void)
 {
-    static uint32_t step = 0;
-    
     #define IMGS 9
-    const char **img = (const char **)malloc(sizeof(char *) * IMGS);
+    static uint32_t step = 0;
+    uint8_t imgnr = (step / 100) % IMGS;
+    static const char **imgs = NULL;
+    static uint8_t width[IMGS];
+    static LED colours[IMGS];
 
     // From https://0.s3.envato.com/files/69626951/space-invaders-icons-set-colour-prev.jpg
+    if (imgs == NULL) {
+	colours[0] = led.colour_green;
+	colours[1] = led.colour_blue;
+	colours[2] = led.colour_magenta;
+	colours[3] = led.colour_yellow;
+	colours[4] = led.colour_magenta;
+	colours[5] = led.colour_cyan;
+	colours[6] = led.colour_red;
+	colours[7] = led.colour_green;
+	colours[8] = led.colour_magenta;
 
-    img[0] = PSTR(
-    "  X      X  "
-    "X  X    X  X"
-    "X XXXXXXXX X"
-    "XXX XXXX XXX"
-    " XXXXXXXXXX "
-    "  XXXXXXXX  "
-    "  X      X  "
-    " XX      XX "
-    );
+	imgs = (const char **)malloc(sizeof(char *) * IMGS);
+
+	width[0] = 12;
+	imgs[0] = PSTR(
+	"  X      X  "
+	"X  X    X  X"
+	"X XXXXXXXX X"
+	"XXX XXXX XXX"
+	" XXXXXXXXXX "
+	"  XXXXXXXX  "
+	"  X      X  "
+	" XX      XX "
+	);
+
+	width[1] = 9;
+	imgs[1] = PSTR(
+	"  X   X  "
+	"   X X   "
+	"  XXXXX  "
+	" XX X XX "
+	"XXXXXXXXX"
+	"X XXXXX X"
+	"X XXXXX X"
+	"   X X   "
+	"  XX XX  "
+	);
+
+	width[2] = 9;
+	imgs[2] = PSTR(
+	"   XXX   "
+	"  XXXXX  "
+	" X  X  X "
+	" XXXXXXX "
+	"  XXXXX  "
+	" X X X X "
+	"X       X"
+	);
+
+	width[3] = 9;
+	imgs[3] = PSTR(
+	"  XXXXX  "
+	" XXXXXXX "
+	"XX  X  XX"
+	"XX XX XXX"
+	"XXXXXXXXX"
+	"XXXXXXXXX"
+	"XXXXXXXXX"
+	"X X X X X"
+	);
+
+	width[4] = 10;
+	imgs[4] = PSTR(
+	"   XXXX   "
+	" XXXXXXXX "
+	"XXX XX XXX"
+	"XXXXXXXXXX"
+	"XXXXXXXXXX"
+	"  XX  XX  "
+	" XX XX XX "
+	"XX      XX"
+	);
+
+	width[5] = 9;
+	imgs[5] = PSTR(
+	"   X X   "
+	"X XXXXX X"
+	"XXX X XXX"
+	" XXXXXXX "
+	" X X X X "
+	"XX     XX"
+	);
+
+	width[6] = 9;
+	imgs[6] = PSTR(
+	"   X X   "
+	"  XXXXX  "
+	" XXXXXXX "
+	"XX  X  XX"
+	"XXXXXXXXX"
+	"XXXXXXXXX"
+	"X X X X X"
+	);
+
+	width[7] = 11;
+	imgs[7] = PSTR(
+	"  X     X  "
+	"   X   X   "
+	"  XXXXXXX  "
+	" XX XXX XX "
+	"XXXXXXXXXXX"
+	"X XXXXXXX X"
+	"X X     X X"
+	"   XX XX   "
+	);
+
+	width[8] = 8;
+	imgs[8] = PSTR(
+	"   XX   "
+	"  XXXX  "
+	" XXXXXX "
+	"XX XX XX"
+	"XXXXXXXX"
+	"  X  X  "
+	" X XX X "
+	"X X  X X"
+	);
+    }
     
     char ch[256];
-    strcpy_P(ch, img[0]);
-    led.blob(step % (VIEW_WIDTH + 24) - 12, 1, 12, 8, ch, led.colour_green);
+    strcpy_P(ch, imgs[imgnr]);
+    led.blob(step % (VIEW_WIDTH + 24) - 12, 1, width[imgnr], strlen(ch) / width[imgnr], ch, colours[imgnr]);
     
     step++;
     return;
 
-    img[1] = PSTR(
-    "  X   X  "
-    "   X X   "
-    "  XXXXX  "
-    " XX X XX "
-    "XXXXXXXXX"
-    "X XXXXX X"
-    "X XXXXX X"
-    "   X X   "
-    "  XX XX  "
-    );
-
-    img[2] = PSTR(
-    "   XXX   "
-    "  XXXXX  "
-    " X  X  X "
-    " XXXXXXX "
-    "  XXXXX  "
-    " X X X X "
-    "X       X"
-    );
-
-    img[3] = PSTR(
-    "  XXXXX  "
-    " XXXXXXX "
-    "XX  X  XX"
-    "XX XX XXX"
-    "XXXXXXXXX"
-    "XXXXXXXXX"
-    "XXXXXXXXX"
-    "X X X X X"
-    "XXXXXXXXX"
-    );
-
-    img[4] = PSTR(
-    "   XXXX   "
-    " XXXXXXXX "
-    "XXX XX XXX"
-    "XXXXXXXXXX"
-    "XXXXXXXXXX"
-    "  XX  XX  "
-    " XX XX XX "
-    "XX      XX"
-    );
-
-    img[5] = PSTR(
-    "   X X   "
-    "X XXXXX X"
-    "XXX X XXX"
-    " XXXXXXX "
-    " X X X X "
-    "XX     XX"
-    );
-
-    img[6] = PSTR(
-    "   X X   "
-    "  XXXXX  "
-    " XXXXXXX "
-    "XX  X  XX"
-    "XXXXXXXXX"
-    "XXXXXXXXX"
-    "X X X X X"
-    );
-
-    img[7] = PSTR(
-    "  X     X  "
-    "   X   X   "
-    "  XXXXXXX  "
-    " XX XXX XX "
-    "XXXXXXXXXXX"
-    "X XXXXXXX X"
-    "X X     X X"
-    "   XX XX   "
-    );
-
-    img[8] = PSTR(
-    "   XX   "
-    "  XXXX  "
-    " XXXXXX "
-    "XX XX XX"
-    "XXXXXXXX"
-    "  X  X  "
-    " X XX X "
-    "X X  X X"
-    );
 
 }
 
@@ -243,8 +267,8 @@ loop(void)
     // led_text();
     // led_lines_horver();
     // led_squares_growing();
-    led_sinus();	// Needs a delay of 10 ms
-    // led_spaceinvaders();
+    // led_sinus();	// Needs a delay of 10 ms
+    led_spaceinvaders();
 
     led.display();
     delay(100);
