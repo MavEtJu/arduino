@@ -81,10 +81,11 @@ void
 led_sinus(void)
 {
     static uint32_t step = 0;
+    static uint32_t piece = 360 / VIEW_WIDTH;
 
     for (uint16_t m = 0; m < VIEW_WIDTH; m++) {
         uint16_t o = m + step;
-        float f = 8 * M_PI / 180 * o;
+        float f = piece * M_PI / 180 * o;
         float s = sin(f);
        /* 
         Serial.print("offset: ");
@@ -95,9 +96,12 @@ led_sinus(void)
         Serial.print(s);
         Serial.println("");
 */
-        led.dot(m, (VIEW_HEIGHT / 2) + s * (VIEW_HEIGHT / 2), led.colour_yellow);
-        led.dot((m + VIEW_WIDTH / 3) % VIEW_WIDTH, (VIEW_HEIGHT / 2) + s * (VIEW_HEIGHT / 2), led.colour_blue);
-        led.dot((m + 2 * VIEW_WIDTH / 3) % VIEW_WIDTH, (VIEW_HEIGHT / 2) + s * (VIEW_HEIGHT / 2), led.colour_green);
+        led.dot(m, (VIEW_HEIGHT / 2) + s * (VIEW_HEIGHT / 2),
+	    led.colour_yellow);
+        led.dot((m + VIEW_WIDTH / 3) % VIEW_WIDTH,
+	    (VIEW_HEIGHT / 2) + s * (VIEW_HEIGHT / 2), led.colour_blue);
+        led.dot((m + 2 * VIEW_WIDTH / 3) % VIEW_WIDTH,
+	    (VIEW_HEIGHT / 2) + s * (VIEW_HEIGHT / 2), led.colour_green);
     }
 
     step++;
