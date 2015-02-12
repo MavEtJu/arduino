@@ -31,6 +31,7 @@ loop(void)
     // led_lines_horver();
     // led_squares_growing();
     led_sinus();
+    // led_spaceinvaders();
 
     led.display();
     delay(10);
@@ -124,4 +125,120 @@ led_sinus(void)
     }
 
     step++;
+}
+
+void
+led_spaceinvaders(void)
+{
+    static uint32_t step = 0;
+    
+    #define IMGS 9
+    const char **img = (const char **)malloc(sizeof(char *) * IMGS);
+
+    // From https://0.s3.envato.com/files/69626951/space-invaders-icons-set-colour-prev.jpg
+
+    img[0] = PSTR(
+    "  X      X  "
+    "X  X    X  X"
+    "X XXXXXXXX X"
+    "XXX XXXX XXX"
+    " XXXXXXXXXX "
+    "  XXXXXXXX  "
+    "  X      X  "
+    " XX      XX "
+    );
+    
+    char ch[256];
+    strcpy_P(ch, img[0]);
+    led.blob(step % (VIEW_WIDTH + 24) - 12, 1, 12, 8, ch, led.colour_green);
+    
+    step++;
+    return;
+
+    img[1] = PSTR(
+    "  X   X  "
+    "   X X   "
+    "  XXXXX  "
+    " XX X XX "
+    "XXXXXXXXX"
+    "X XXXXX X"
+    "X XXXXX X"
+    "   X X   "
+    "  XX XX  "
+    );
+
+    img[2] = PSTR(
+    "   XXX   "
+    "  XXXXX  "
+    " X  X  X "
+    " XXXXXXX "
+    "  XXXXX  "
+    " X X X X "
+    "X       X"
+    );
+
+    img[3] = PSTR(
+    "  XXXXX  "
+    " XXXXXXX "
+    "XX  X  XX"
+    "XX XX XXX"
+    "XXXXXXXXX"
+    "XXXXXXXXX"
+    "XXXXXXXXX"
+    "X X X X X"
+    "XXXXXXXXX"
+    );
+
+    img[4] = PSTR(
+    "   XXXX   "
+    " XXXXXXXX "
+    "XXX XX XXX"
+    "XXXXXXXXXX"
+    "XXXXXXXXXX"
+    "  XX  XX  "
+    " XX XX XX "
+    "XX      XX"
+    );
+
+    img[5] = PSTR(
+    "   X X   "
+    "X XXXXX X"
+    "XXX X XXX"
+    " XXXXXXX "
+    " X X X X "
+    "XX     XX"
+    );
+
+    img[6] = PSTR(
+    "   X X   "
+    "  XXXXX  "
+    " XXXXXXX "
+    "XX  X  XX"
+    "XXXXXXXXX"
+    "XXXXXXXXX"
+    "X X X X X"
+    );
+
+    img[7] = PSTR(
+    "  X     X  "
+    "   X   X   "
+    "  XXXXXXX  "
+    " XX XXX XX "
+    "XXXXXXXXXXX"
+    "X XXXXXXX X"
+    "X X     X X"
+    "   XX XX   "
+    );
+
+    img[8] = PSTR(
+    "   XX   "
+    "  XXXX  "
+    " XXXXXX "
+    "XX XX XX"
+    "XXXXXXXX"
+    "  X  X  "
+    " X XX X "
+    "X X  X X"
+    );
+
 }

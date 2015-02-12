@@ -226,12 +226,36 @@ LEDstrip::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, LED colour)
     line(x1, y1, x2, y2);
 }
 
+// Copy the blob into the matrix
+void
+LEDstrip::blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, LED *colour)
+{
+    for (int16_t y = 0; y < dy; y++) {
+        for (int16_t x = 0; x < dx; x++) {
+            dot(xo + x, yo + dy - y, colour[dx * dy - (y * dx + x)]);
+        }
+    }
+}
+
+void
+LEDstrip::blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, const char *s, LED colour)
+{
+    Serial.println(s);
+    for (int16_t y = 0; y < dy; y++) {
+        for (int16_t x = 0; x < dx; x++) {
+            LED c = colour_black;
+            if (s[y * dx + x] != ' ')
+                c = colour;
+            dot(xo + x, yo + dy - y, c);
+        }
+    }
+}
+
 // Draw a character
 #define TEXTHEIGHT 7
 void
 LEDstrip::text(int16_t x, int16_t y, char *string)
 {
-    dot(x, y);
     LED dotcolour = _colourlast;
     
     for (char *s = string; *s != 0; s++) {

@@ -52,6 +52,10 @@ class LEDstrip : public Adafruit_NeoPixel {
     void line(int16_t x1, int16_t y1, int16_t x2, int16_t y2);
     void line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, LED colour);
     
+    // Copy the blob into the matrix
+    void blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, LED *colour);
+    void blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, const char *s, LED colour);
+    
     // Draw a character
     void text(int16_t x, int16_t y, char *text);
     void text(int16_t x, int16_t y, char *text, LED colour);
