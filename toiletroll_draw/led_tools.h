@@ -63,7 +63,7 @@ class LEDstrip : public Adafruit_NeoPixel {
 
     // Predefined colours
     LED colour_red, colour_green, colour_blue;
-    LED colour_purple, colour_cyan, colour_yellow;
+    LED colour_magenta, colour_cyan, colour_yellow;
     LED colour_white, colour_black;
     LED colour_random(void);
 
