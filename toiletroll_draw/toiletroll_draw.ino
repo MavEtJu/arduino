@@ -38,7 +38,7 @@ void
 led_lines_horver(void)
 {
     static uint32_t step = 0;
-    int m = step % VIEW_HEIGHT;
+    int m = step % (2 * VIEW_HEIGHT);
 
     led.colour_set(led.colour_purple);
     if (m < VIEW_HEIGHT)
@@ -54,16 +54,21 @@ led_squares_growing(void)
 {
     static uint32_t step = 0;
     int m = step % (2 * VIEW_HEIGHT);
+    static LED c = led.colour_black;
+
+    if (m == 0)
+	c = led.colour_random();
+    led.colour_set(c);
 
     if (m < VIEW_HEIGHT) {
-        led.line(0, 0, 0, m, led.colour_green);
+        led.line(0, 0, 0, m);
         led.line(0, m, m, m);
         led.line(m, m, m, 0);
         led.line(m, 0, 0, 0);
     } else {
         m %= VIEW_HEIGHT;
         led.line(VIEW_HEIGHT - 1, VIEW_HEIGHT - 1,
-                 VIEW_HEIGHT - 1, m, led.colour_green);
+                 VIEW_HEIGHT - 1, m);
         led.line(VIEW_HEIGHT - 1, m, m, m);
         led.line(m, m, m, VIEW_HEIGHT - 1);
         led.line(m, VIEW_HEIGHT - 1, VIEW_HEIGHT - 1, VIEW_HEIGHT - 1);
@@ -234,10 +239,10 @@ loop(void)
     // led_text();
     // led_lines_horver();
     // led_squares_growing();
-    led_sinus();
+    led_sinus();	// Needs a delay of 10 ms
     // led_spaceinvaders();
 
     led.display();
-    delay(10);
+    delay(100);
     return;
 }
