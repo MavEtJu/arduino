@@ -222,7 +222,7 @@ led_spaceinvaders(void)
 void
 setup(void)
 {
-    /* Serial.begin(9600); */
+    // Serial.begin(9600);
     pinMode(PIN_BLINK, OUTPUT);
     led.view(VIEW_WIDTH, VIEW_HEIGHT);
     led.start();
