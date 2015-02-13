@@ -7,8 +7,8 @@
 #include <Adafruit_NeoPixel.h>
 
 struct LED {
-    uint8_t red;
     uint8_t green;
+    uint8_t red;
     uint8_t blue;
 };
 typedef struct LED LED;
