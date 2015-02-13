@@ -7,8 +7,8 @@
 #include <Adafruit_NeoPixel.h>
 
 struct LED {
-    uint8_t red;
     uint8_t green;
+    uint8_t red;
     uint8_t blue;
 };
 typedef struct LED LED;
@@ -63,7 +63,7 @@ class LEDstrip : public Adafruit_NeoPixel {
 
     // Predefined colours
     LED colour_red, colour_green, colour_blue;
-    LED colour_purple, colour_cyan, colour_yellow;
+    LED colour_magenta, colour_cyan, colour_yellow;
     LED colour_white, colour_black;
     LED colour_random(void);
 

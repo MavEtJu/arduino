@@ -13,7 +13,7 @@ LEDstrip::LEDstrip(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin
     colour_blue = Color(0, 0, 8);
     colour_black = Color(0, 0, 0);
     colour_white = Color(8, 8, 8);
-    colour_purple = Color(8, 0, 8);
+    colour_magenta = Color(8, 0, 8);
     colour_cyan = Color(0, 8, 8);
     colour_yellow = Color(8, 8, 0);
     _strip = (LED *)pixels;
@@ -92,7 +92,7 @@ LEDstrip::colour_random(void)
         case 3: return colour_green;
         case 4: return colour_blue;
         case 5: return colour_cyan;
-        case 6: return colour_purple;
+        case 6: return colour_magenta;
         case 7: return colour_yellow;
         default:
             return colour_white;
