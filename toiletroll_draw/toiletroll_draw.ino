@@ -250,7 +250,7 @@ led_mario(void)
     static uint32_t step = 0;
     static const char *img = NULL;
     static LED colours[6];
-    static const char *ps;
+    static char ps[257];
 
     if (img == NULL) {
 	/*
@@ -262,7 +262,7 @@ led_mario(void)
 	 * y yellow
 	 *
 	 */
-	img = // PSTR(
+	img = PSTR(
 	    "     RRRRRR     "
 	    "    RRRRRRRRRR  "
 	    "    BBBSSSbS    "
@@ -270,38 +270,35 @@ led_mario(void)
 	    "   BSBSSSSSbSSS "
 	    "   BBSSSSSbbbb  "
 	    "     SSSSSSSS   "
-	    "    rrlrrrl     "
-	    "   rrrlrrlrrr   "
-	    "  rrrrllllrrrr  "
-	    "  ssrlyllylrss  "
-	    "  sssllllllsss  "
-	    "  ssllllllllss  "
+	    "    RRlRRRl     "
+	    "   RRRlRRlRRR   "
+	    "  RRRRllllRRRR  "
+	    "  SSRlyllylRSS  "
+	    "  SSSllllllSSS  "
+	    "  SSllllllllSS  "
 	    "    lll  lll    "
 	    "   BBBB  BBBB   "
 	    "  BBBBB  BBBBB  "
-	    ;
-	    //);
+	    );
 	#define COLOUR_RED	0
 	#define COLOUR_SKIN	1
 	#define COLOUR_BROWN	2
 	#define COLOUR_BLACK	3
 	#define COLOUR_BLUE	4
 	#define COLOUR_YELLOW	5
-	colours[COLOUR_RED   ] = led.Color(244, 0, 10);
-	colours[COLOUR_SKIN  ] = led.Color(208, 189, 156);
-	colours[COLOUR_BROWN ] = led.Color(92, 68, 30);
-	colours[COLOUR_BLACK ] = led.Color(26, 26, 26);
-	colours[COLOUR_BLUE  ] = led.Color(84, 45, 214);
-	colours[COLOUR_YELLOW] = led.Color(225, 202, 47);
-
-	ps = (const char *)malloc(257);
-
+	colours[COLOUR_RED   ] = led.Color(244 >> 4,   0 >> 4,  10 >> 4);
+	colours[COLOUR_SKIN  ] = led.Color(208 >> 4, 189 >> 4, 156 >> 4);
+	colours[COLOUR_BROWN ] = led.Color( 92 >> 4,  68 >> 4,  30 >> 4);
+	colours[COLOUR_BLACK ] = led.Color( 26 >> 4,  26 >> 4,  26 >> 4);
+	colours[COLOUR_BLUE  ] = led.Color( 84 >> 4,  45 >> 4, 214 >> 4);
+	colours[COLOUR_YELLOW] = led.Color(225 >> 4, 202 >> 4,  47 >> 4);
     }
 
+    strcpy_P(ps, img);
     for (uint8_t y = 0; y < 16; y++) {
 	for (uint8_t x = 0; x < 16; x++) {
 	    LED c = led.colour_black;
-	    switch (img[y * 16 + x]) {
+	    switch (ps[y * 16 + x]) {
 	    case 'R': c = colours[COLOUR_RED   ]; break;
 	    case 'S': c = colours[COLOUR_SKIN  ]; break;
 	    case 'B': c = colours[COLOUR_BROWN ]; break;
@@ -310,7 +307,8 @@ led_mario(void)
 	    case 'y': c = colours[COLOUR_YELLOW]; break;
 	    }
 
-	    led.dot((x + step) % VIEW_HEIGHT, VIEW_HEIGHT - y, c);
+//	    led.dot((x + step) % VIEW_HEIGHT, VIEW_HEIGHT - y, c);
+	    led.dot(x , VIEW_HEIGHT - y, c);
 	}
     }
 
@@ -339,11 +337,11 @@ loop(void)
     // led_text();
     // led_lines_horver();
     // led_squares_growing();
-    // led_sinus();	// Needs a delay of 10 ms
+    led_sinus();	// Needs a delay of 10 ms
     // led_spaceinvaders();
-    led_mario();
+    // led_mario();
 
     led.display();
-    delay(100);
+    delay(40);
     return;
 }
