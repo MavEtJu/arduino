@@ -242,9 +242,81 @@ led_spaceinvaders(void)
     led.blob(step % (VIEW_WIDTH + 24) - 12, 1, width[imgnr], strlen(ch) / width[imgnr], ch, colours[imgnr]);
     
     step++;
-    return;
+}
 
+void
+led_mario(void)
+{
+    static uint32_t step = 0;
+    static const char *img = NULL;
+    static LED colours[6];
+    static const char *ps;
 
+    if (img == NULL) {
+	/*
+	 * R red
+	 " S skin
+	 * B brown
+	 * b black
+	 * l blue
+	 * y yellow
+	 *
+	 */
+	img = // PSTR(
+	    "     RRRRRR     "
+	    "    RRRRRRRRRR  "
+	    "    BBBSSSbS    "
+	    "   BSBSSSSbSSS  "
+	    "   BSBSSSSSbSSS "
+	    "   BBSSSSSbbbb  "
+	    "     SSSSSSSS   "
+	    "    rrlrrrl     "
+	    "   rrrlrrlrrr   "
+	    "  rrrrllllrrrr  "
+	    "  ssrlyllylrss  "
+	    "  sssllllllsss  "
+	    "  ssllllllllss  "
+	    "    lll  lll    "
+	    "   BBBB  BBBB   "
+	    "  BBBBB  BBBBB  "
+	    ;
+	    //);
+	#define COLOUR_RED	0
+	#define COLOUR_SKIN	1
+	#define COLOUR_BROWN	2
+	#define COLOUR_BLACK	3
+	#define COLOUR_BLUE	4
+	#define COLOUR_YELLOW	5
+	colours[COLOUR_RED   ] = led.Color(244, 0, 10);
+	colours[COLOUR_SKIN  ] = led.Color(208, 189, 156);
+	colours[COLOUR_BROWN ] = led.Color(92, 68, 30);
+	colours[COLOUR_BLACK ] = led.Color(26, 26, 26);
+	colours[COLOUR_BLUE  ] = led.Color(84, 45, 214);
+	colours[COLOUR_YELLOW] = led.Color(225, 202, 47);
+
+	ps = (const char *)malloc(257);
+
+    }
+
+    for (uint8_t y = 0; y < 16; y++) {
+	for (uint8_t x = 0; x < 16; x++) {
+	    LED c = led.colour_black;
+	    switch (img[y * 16 + x]) {
+	    case 'R': c = colours[COLOUR_RED   ]; break;
+	    case 'S': c = colours[COLOUR_SKIN  ]; break;
+	    case 'B': c = colours[COLOUR_BROWN ]; break;
+	    case 'b': c = colours[COLOUR_BLACK ]; break;
+	    case 'l': c = colours[COLOUR_BLUE  ]; break;
+	    case 'y': c = colours[COLOUR_YELLOW]; break;
+	    }
+
+	    led.dot((x + step) % VIEW_HEIGHT, VIEW_HEIGHT - y, c);
+	}
+    }
+
+    //
+
+    step++;
 }
 
 void
@@ -268,7 +340,8 @@ loop(void)
     // led_lines_horver();
     // led_squares_growing();
     // led_sinus();	// Needs a delay of 10 ms
-    led_spaceinvaders();
+    // led_spaceinvaders();
+    led_mario();
 
     led.display();
     delay(100);
