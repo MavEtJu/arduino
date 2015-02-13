@@ -312,7 +312,43 @@ led_mario(void)
 	}
     }
 
-    //
+    step++;
+}
+
+struct coal {
+	uint8_t x, y;
+};
+typedef struct coal coal;
+void
+led_torch(void)
+{
+    static uint32_t step = 0;
+    static LED colour_floor = led.Color(16, 16, 0);
+    #define COALS 10 * VIEW_WIDTH
+    static coal coals[COALS];
+    static byte init = 0;
+
+    if (init == 0) {
+	init = 1;
+	for (uint8_t c = 0; c < COALS; c++) {
+	    coals[c].x = 0;
+	    coals[c].y = 1;
+	}
+    }
+
+    for (uint8_t c = 0; c < COALS; c++) {
+	// There is a 50% chance that a light goes higher
+	if (random() % 100 > 50) {
+	    // Back to the beginning
+	    coals[c].x = random() % VIEW_WIDTH;
+	    coals[c].y = 1;
+	} else {
+	    coals[c].y++;
+	}
+	led.dot(coals[c].x, coals[c].y,
+	    led.Color(VIEW_HEIGHT - coals[c].y, VIEW_HEIGHT - coals[c].y, 0));
+    }
+    led.line(0, 0, VIEW_WIDTH, 0, colour_floor);
 
     step++;
 }
@@ -337,11 +373,12 @@ loop(void)
     // led_text();
     // led_lines_horver();
     // led_squares_growing();
-    led_sinus();	// Needs a delay of 10 ms
+    // led_sinus();	// Needs a delay of 10 ms
     // led_spaceinvaders();
     // led_mario();
+    led_torch();
 
     led.display();
-    delay(40);
+    delay(50);
     return;
 }
