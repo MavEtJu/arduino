@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <MemoryFree.h>
 #include "led_tools.h"
 
 #define PIN_BLINK   13
@@ -17,23 +18,62 @@ loop_blink(void)
     digitalWrite(PIN_BLINK, (++onoff % 8) == 0 ? HIGH : LOW);
 }
 
+// ==============================
+class LED_Animation {
+public:
+    LED_Animation(void);
+    virtual void destroy(void);
+    void loop(void);
+    virtual void animation(void);
+    uint16_t step;
+};
+LED_Animation::LED_Animation(void)
+{
+    step = 0;
+}
+void LED_Animation::destroy(void)
+{
+    // Serial.println("LED_Animation::~LED_Animation");
+}
 void
-led00_blink(void)
+LED_Animation::loop(void)
+{
+    step++;
+    animation();
+    delay(100);
+}
+void
+LED_Animation::animation(void)
+{
+    // Nothing yet
+}
+
+// ==============================
+class LED_led00_blink : public LED_Animation {
+    void animation(void);
+};
+
+void
+LED_led00_blink::animation(void)
 {
     led.dot(0, 0, led.colour_random());
 }
 
+// ==============================
+class LED_quickbrowfox : public LED_Animation {
+    void animation(void);
+};
+
 void
-led_text(void)
+LED_quickbrowfox::animation(void)
 {
-    static uint32_t step = 0;
     const char *s = "the quick brown fox jumped over the lazy dog 0123456789";
     uint16_t w = led.text_width(s);
     uint16_t i = step % (w + 2 * VIEW_WIDTH);
     led.text(VIEW_WIDTH - i, 2, s, led.colour_magenta);
-    step++;
 }
 
+// ==============================
 void
 led_lines_horver(void)
 {
@@ -107,18 +147,26 @@ led_sinus(void)
     step++;
 }
 
-void
-led_spaceinvaders(void)
-{
-    #define IMGS 9
-    static uint32_t step = 0;
-    uint8_t imgnr = (step / 100) % IMGS;
-    static const char **imgs = NULL;
-    static uint8_t width[IMGS];
-    static LED colours[IMGS];
+// ==============================
+#define LED_spaceinvaders_IMGS 9
+class LED_spaceinvaders : public LED_Animation {
+    public:
+    LED_spaceinvaders(void);
+    void destroy(void);
+    void animation(void);
+    const char **imgs;
+    LED colours[LED_spaceinvaders_IMGS];
+    uint8_t width[LED_spaceinvaders_IMGS];
+};
 
-    // From https://0.s3.envato.com/files/69626951/space-invaders-icons-set-colour-prev.jpg
-    if (imgs == NULL) {
+void LED_spaceinvaders::destroy(void)
+{
+    // Serial.println("LED_spaceinvaders::destroy");
+    free(imgs);
+}
+
+LED_spaceinvaders::LED_spaceinvaders(void)
+{
 	colours[0] = led.colour_green;
 	colours[1] = led.colour_blue;
 	colours[2] = led.colour_magenta;
@@ -129,7 +177,9 @@ led_spaceinvaders(void)
 	colours[7] = led.colour_green;
 	colours[8] = led.colour_magenta;
 
-	imgs = (const char **)malloc(sizeof(char *) * IMGS);
+	imgs = (const char **)malloc(sizeof(char *) * LED_spaceinvaders_IMGS);
+
+    // From https://0.s3.envato.com/files/69626951/space-invaders-icons-set-colour-prev.jpg
 
 	width[0] = 12;
 	imgs[0] = PSTR(
@@ -235,8 +285,11 @@ led_spaceinvaders(void)
 	" X XX X "
 	"X X  X X"
 	);
-    }
-    
+}
+void
+LED_spaceinvaders::animation(void)
+{
+    uint8_t imgnr = (step / 100) % LED_spaceinvaders_IMGS;
     char ch[256];
     strcpy_P(ch, imgs[imgnr]);
     led.blob(step % (VIEW_WIDTH + 24) - 12, 1, width[imgnr], strlen(ch) / width[imgnr], ch, colours[imgnr]);
@@ -316,7 +369,8 @@ led_mario(void)
 }
 
 struct coal {
-	uint8_t x, y;
+	int16_t x, y;
+        int16_t intensity;
 };
 typedef struct coal coal;
 void
@@ -357,8 +411,6 @@ void
 led_torch2(void)
 {
     static uint32_t step = 0;
-    static LED colour_floor = led.Color(VIEW_HEIGHT << 2, VIEW_HEIGHT << 2, 0);
-    static LED colour_spark = led.Color(2, 2, 0);
     
     #define COALS VIEW_WIDTH
     static coal coals[COALS];
@@ -368,63 +420,108 @@ led_torch2(void)
 	init = 1;
 	for (uint8_t c = 0; c < COALS; c++) {
 	    coals[c].x = 0;
-	    coals[c].y = 1;
+	    coals[c].y = - (random() % VIEW_HEIGHT);
+            coals[c].intensity = VIEW_HEIGHT << 2 + 2 - (random() % 5);
 	}
     }
 
+    // Change in intensity of the lowest level
+    static uint32_t piece = 360 / (4 * VIEW_WIDTH);
+    uint16_t o = step;
+    float f = piece * M_PI / 180 * o;
+    float s = sin(f) * VIEW_HEIGHT;
+    uint8_t floor_intensity = (VIEW_HEIGHT << 1) + s;
+    LED colour_floor = led.Color(floor_intensity, floor_intensity, 0);
+
     for (uint8_t c = 0; c < COALS; c++) {
-	// There is a 50% chance that a light goes higher
-	if (random() % 100 == 66) {
-	    // Back to the beginning
-	    coals[c].x = random() % VIEW_WIDTH;
-	    coals[c].y = 1;
-	} else {
-	    coals[c].y++;
-	}
-        if (coals[c].y == VIEW_HEIGHT) {
+        coals[c].y++;
+        coals[c].intensity -= (random() % 2) + 1;
+        if (coals[c].y == VIEW_HEIGHT || coals[c].intensity <= 0) {
             coals[c].y = 0;
             coals[c].x = random() % VIEW_WIDTH;
+            coals[c].intensity = floor_intensity + 2 - (random() % 5);
         }
 
         int16_t x = coals[c].x;
         int16_t y = coals[c].y;
-	led.dot(x % VIEW_WIDTH, y,
-	    led.Color((VIEW_HEIGHT - coals[c].y) << 2, (VIEW_HEIGHT - coals[c].y) << 2, 2));
-        led.dot(x - 1, y, colour_spark);
-        led.dot(x + 1, y, colour_spark);
-        led.dot(x, y - 1, colour_spark);
-        led.dot(x, y + 1, colour_spark);
-    }   
+        led.dot(x % VIEW_WIDTH, y,
+            led.Color(coals[c].intensity, coals[c].intensity, 0));
+
+        /* Spark around the flame */
+        if (coals[c].intensity > 2) {
+            LED colour_spark = led.Color(2, 2, 0);
+            colour_spark = led.Color(2, 2, 0);
+            if (y > 0) {
+                led.dot(x - 1, y, colour_spark);
+                led.dot(x + 1, y, colour_spark);
+            }
+            if (y > 1)
+                led.dot(x, y - 1, colour_spark);
+            led.dot(x, y + 1, colour_spark);
+        }
+    }
+    
     led.line(0, 0, VIEW_WIDTH, 0, colour_floor);
+    step++;
 }
 
 void
 setup(void)
 {
-    // Serial.begin(9600);
+    Serial.begin(9600);
     pinMode(PIN_BLINK, OUTPUT);
     led.view(VIEW_WIDTH, VIEW_HEIGHT);
     led.start();
 }
 
+LED_Animation *phase[1] = {NULL};
 void
 loop(void)
 {
     loop_blink();
-
     led.clear();
-    led00_blink();
 
-    // led_text();
-    // led_lines_horver();
-    // led_squares_growing();
-    // led_sinus();	// Needs a delay of 10 ms
-    // led_spaceinvaders();
-    // led_mario();
-    // led_torch1();
-    led_torch2();
+    static uint16_t phasenr = 0;
+    static unsigned long started = 0;
+    
+    if (started == 0 || started + 5000 < millis()) {
+        Serial.print("Free Memory before free: ");
+        Serial.println(freeMemory());
+        if (phase[0] != NULL) {
+            phase[0]->destroy();
+            delete(phase[0]);
+            phase[0] = NULL;
+        }
+        Serial.print("Free Memory after free: ");
+        Serial.println(freeMemory());
+        switch (phasenr) {
+            case 0: { LED_led00_blink *p = new LED_led00_blink(); phase[0] = p; break; } 
+            case 1: { LED_quickbrowfox *p = new LED_quickbrowfox(); phase[0] = p; break; } 
+            case 2: { LED_spaceinvaders *p = new LED_spaceinvaders(); phase[0] = p; break; }
+        }
+        Serial.print("Free Memory after new: ");
+        Serial.println(freeMemory());
+        phasenr++;
+        phasenr %= 3;
+        started = millis();
+    }
+    if (phase[0] != NULL)
+        phase[0]->loop();
+ 
+    /* 
+    led.dot(1,1,led.colour_random()); led.display();
+    led.dot(1,1,led.colour_red);
+    */
+    
+  
+//    led_text();
+//    led_lines_horver();
+//    led_squares_growing();
+//    led_sinus();	// Needs a delay of 10 ms
+//    led_spaceinvaders();
+//    led_mario();
+//    led_torch1();
+//    led_torch2();
 
     led.display();
-    delay(50);
-    return;
 }
