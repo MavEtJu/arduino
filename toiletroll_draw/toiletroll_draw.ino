@@ -320,10 +320,10 @@ struct coal {
 };
 typedef struct coal coal;
 void
-led_torch(void)
+led_torch1(void)
 {
     static uint32_t step = 0;
-    static LED colour_floor = led.Color(16, 16, 0);
+    static LED colour_floor = led.Color(8 << 2, 4, 0);
     #define COALS 10 * VIEW_WIDTH
     static coal coals[COALS];
     static byte init = 0;
@@ -338,19 +338,64 @@ led_torch(void)
 
     for (uint8_t c = 0; c < COALS; c++) {
 	// There is a 50% chance that a light goes higher
-	if (random() % 100 > 50) {
+	if (random() % 100 > 66) {
 	    // Back to the beginning
 	    coals[c].x = random() % VIEW_WIDTH;
 	    coals[c].y = 1;
 	} else {
 	    coals[c].y++;
 	}
-	led.dot(coals[c].x, coals[c].y,
-	    led.Color(VIEW_HEIGHT - coals[c].y, VIEW_HEIGHT - coals[c].y, 0));
+	led.dot(coals[c].x % VIEW_WIDTH, coals[c].y,
+	    led.Color((VIEW_HEIGHT - coals[c].y) << 2, VIEW_HEIGHT - coals[c].y > 1, 0));
     }
     led.line(0, 0, VIEW_WIDTH, 0, colour_floor);
 
     step++;
+}
+
+void
+led_torch2(void)
+{
+    static uint32_t step = 0;
+    static LED colour_floor = led.Color(VIEW_HEIGHT << 2, VIEW_HEIGHT << 2, 0);
+    static LED colour_spark = led.Color(2, 2, 0);
+    
+    #define COALS VIEW_WIDTH
+    static coal coals[COALS];
+    static byte init = 0;
+
+    if (init == 0) {
+	init = 1;
+	for (uint8_t c = 0; c < COALS; c++) {
+	    coals[c].x = 0;
+	    coals[c].y = 1;
+	}
+    }
+
+    for (uint8_t c = 0; c < COALS; c++) {
+	// There is a 50% chance that a light goes higher
+	if (random() % 100 == 66) {
+	    // Back to the beginning
+	    coals[c].x = random() % VIEW_WIDTH;
+	    coals[c].y = 1;
+	} else {
+	    coals[c].y++;
+	}
+        if (coals[c].y == VIEW_HEIGHT) {
+            coals[c].y = 0;
+            coals[c].x = random() % VIEW_WIDTH;
+        }
+
+        int16_t x = coals[c].x;
+        int16_t y = coals[c].y;
+	led.dot(x % VIEW_WIDTH, y,
+	    led.Color((VIEW_HEIGHT - coals[c].y) << 2, (VIEW_HEIGHT - coals[c].y) << 2, 2));
+        led.dot(x - 1, y, colour_spark);
+        led.dot(x + 1, y, colour_spark);
+        led.dot(x, y - 1, colour_spark);
+        led.dot(x, y + 1, colour_spark);
+    }   
+    led.line(0, 0, VIEW_WIDTH, 0, colour_floor);
 }
 
 void
@@ -376,7 +421,8 @@ loop(void)
     // led_sinus();	// Needs a delay of 10 ms
     // led_spaceinvaders();
     // led_mario();
-    led_torch();
+    // led_torch1();
+    led_torch2();
 
     led.display();
     delay(50);
