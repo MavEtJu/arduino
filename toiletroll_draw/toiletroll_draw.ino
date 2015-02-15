@@ -1,3 +1,4 @@
+
 #include <Arduino.h>
 #include <MemoryFree.h>
 #include "led_tools.h"
@@ -26,10 +27,12 @@ public:
     void loop(void);
     virtual void animation(void);
     uint16_t step;
+    uint8_t delayms;
 };
 LED_Animation::LED_Animation(void)
 {
     step = 0;
+    delayms = 100;
 }
 void LED_Animation::destroy(void)
 {
@@ -40,7 +43,7 @@ LED_Animation::loop(void)
 {
     step++;
     animation();
-    delay(100);
+    delay(delayms);
 }
 void
 LED_Animation::animation(void)
@@ -117,34 +120,68 @@ led_squares_growing(void)
     step++;
 }
 
-void
-led_sinus(void)
+// ===================
+class LED_sinus1 : public LED_Animation {
+    public:
+    LED_sinus1(void);
+    void animation(void);
+};
+
+LED_sinus1::LED_sinus1(void) : LED_Animation()
 {
-    static uint32_t step = 0;
-    static uint32_t piece = 360 / VIEW_WIDTH;
+    delayms = 50;
+}
+
+void
+LED_sinus1::animation(void)
+{
+    uint32_t piece = 360 / VIEW_WIDTH;
 
     for (uint16_t m = 0; m < VIEW_WIDTH; m++) {
         uint16_t o = m + step;
         float f = piece * M_PI / 180 * o;
-        float s = sin(f);
-       /* 
-        Serial.print("offset: ");
-        Serial.print(o);
-        Serial.print(" f: ");
-        Serial.print(f);
-        Serial.print(" s: ");
-        Serial.print(s);
-        Serial.println("");
-*/
-        led.dot(m, (VIEW_HEIGHT / 2) + s * (VIEW_HEIGHT / 2),
-	    led.colour_yellow);
-        led.dot((m + VIEW_WIDTH / 3) % VIEW_WIDTH,
-	    (VIEW_HEIGHT / 2) + s * (VIEW_HEIGHT / 2), led.colour_blue);
-        led.dot((m + 2 * VIEW_WIDTH / 3) % VIEW_WIDTH,
-	    (VIEW_HEIGHT / 2) + s * (VIEW_HEIGHT / 2), led.colour_green);
+        float s = sin(f) * VIEW_HEIGHT / 2 + VIEW_HEIGHT / 2;
+
+        led.dot(m, s, led.colour_yellow);
+        led.dot((m + VIEW_WIDTH / 3) % VIEW_WIDTH, s, led.colour_blue);
+        led.dot((m + 2 * VIEW_WIDTH / 3) % VIEW_WIDTH, s, led.colour_green);
+    }
+}
+
+// ==============================
+class LED_sinus2 : public LED_Animation {
+    public:
+    LED_sinus2(void);
+    void animation(void);
+    
+    int8_t height;
+    int8_t direction;
+};
+
+LED_sinus2::LED_sinus2(void) : LED_Animation()
+{
+    delayms = 25;
+    height = VIEW_HEIGHT / 2;
+    direction = -1;
+}
+
+void
+LED_sinus2::animation(void)
+{
+    uint32_t piece = 360 / VIEW_WIDTH;
+    if (step % 20 == 0) {
+        height += direction;
+        if (height == VIEW_HEIGHT / 5 || height == VIEW_HEIGHT / 2)
+            direction *= -1;
     }
 
-    step++;
+    for (uint16_t m = 0; m < VIEW_WIDTH; m++) {
+        uint16_t o = m + step;
+        float f = piece * M_PI / 180 * o;
+        float s = sin(f) * height;
+
+        led.dot(m, s + VIEW_HEIGHT / 2, led.colour_yellow);
+    }
 }
 
 // ==============================
@@ -165,24 +202,26 @@ void LED_spaceinvaders::destroy(void)
     free(imgs);
 }
 
-LED_spaceinvaders::LED_spaceinvaders(void)
+LED_spaceinvaders::LED_spaceinvaders(void) : LED_Animation()
 {
-	colours[0] = led.colour_green;
-	colours[1] = led.colour_blue;
-	colours[2] = led.colour_magenta;
-	colours[3] = led.colour_yellow;
-	colours[4] = led.colour_magenta;
-	colours[5] = led.colour_cyan;
-	colours[6] = led.colour_red;
-	colours[7] = led.colour_green;
-	colours[8] = led.colour_magenta;
+    delayms = 150;
+    
+    colours[0] = led.colour_green;
+    colours[1] = led.colour_blue;
+    colours[2] = led.colour_magenta;
+    colours[3] = led.colour_yellow;
+    colours[4] = led.colour_magenta;
+    colours[5] = led.colour_cyan;
+    colours[6] = led.colour_red;
+    colours[7] = led.colour_green;
+    colours[8] = led.colour_magenta;
 
-	imgs = (const char **)malloc(sizeof(char *) * LED_spaceinvaders_IMGS);
+    imgs = (const char **)malloc(sizeof(char *) * LED_spaceinvaders_IMGS);
 
     // From https://0.s3.envato.com/files/69626951/space-invaders-icons-set-colour-prev.jpg
 
-	width[0] = 12;
-	imgs[0] = PSTR(
+    width[0] = 12;
+    imgs[0] = PSTR(
 	"  X      X  "
 	"X  X    X  X"
 	"X XXXXXXXX X"
@@ -193,8 +232,8 @@ LED_spaceinvaders::LED_spaceinvaders(void)
 	" XX      XX "
 	);
 
-	width[1] = 9;
-	imgs[1] = PSTR(
+    width[1] = 9;
+    imgs[1] = PSTR(
 	"  X   X  "
 	"   X X   "
 	"  XXXXX  "
@@ -206,8 +245,8 @@ LED_spaceinvaders::LED_spaceinvaders(void)
 	"  XX XX  "
 	);
 
-	width[2] = 9;
-	imgs[2] = PSTR(
+    width[2] = 9;
+    imgs[2] = PSTR(
 	"   XXX   "
 	"  XXXXX  "
 	" X  X  X "
@@ -217,8 +256,8 @@ LED_spaceinvaders::LED_spaceinvaders(void)
 	"X       X"
 	);
 
-	width[3] = 9;
-	imgs[3] = PSTR(
+    width[3] = 9;
+    imgs[3] = PSTR(
 	"  XXXXX  "
 	" XXXXXXX "
 	"XX  X  XX"
@@ -229,8 +268,8 @@ LED_spaceinvaders::LED_spaceinvaders(void)
 	"X X X X X"
 	);
 
-	width[4] = 10;
-	imgs[4] = PSTR(
+    width[4] = 10;
+    imgs[4] = PSTR(
 	"   XXXX   "
 	" XXXXXXXX "
 	"XXX XX XXX"
@@ -241,8 +280,8 @@ LED_spaceinvaders::LED_spaceinvaders(void)
 	"XX      XX"
 	);
 
-	width[5] = 9;
-	imgs[5] = PSTR(
+    width[5] = 9;
+    imgs[5] = PSTR(
 	"   X X   "
 	"X XXXXX X"
 	"XXX X XXX"
@@ -251,8 +290,8 @@ LED_spaceinvaders::LED_spaceinvaders(void)
 	"XX     XX"
 	);
 
-	width[6] = 9;
-	imgs[6] = PSTR(
+    width[6] = 9;
+    imgs[6] = PSTR(
 	"   X X   "
 	"  XXXXX  "
 	" XXXXXXX "
@@ -262,8 +301,8 @@ LED_spaceinvaders::LED_spaceinvaders(void)
 	"X X X X X"
 	);
 
-	width[7] = 11;
-	imgs[7] = PSTR(
+    width[7] = 11;
+    imgs[7] = PSTR(
 	"  X     X  "
 	"   X   X   "
 	"  XXXXXXX  "
@@ -274,8 +313,8 @@ LED_spaceinvaders::LED_spaceinvaders(void)
 	"   XX XX   "
 	);
 
-	width[8] = 8;
-	imgs[8] = PSTR(
+    width[8] = 8;
+    imgs[8] = PSTR(
 	"   XX   "
 	"  XXXX  "
 	" XXXXXX "
@@ -293,10 +332,9 @@ LED_spaceinvaders::animation(void)
     char ch[256];
     strcpy_P(ch, imgs[imgnr]);
     led.blob(step % (VIEW_WIDTH + 24) - 12, 1, width[imgnr], strlen(ch) / width[imgnr], ch, colours[imgnr]);
-    
-    step++;
 }
 
+//===========================
 void
 led_mario(void)
 {
@@ -470,8 +508,12 @@ setup(void)
 {
     Serial.begin(9600);
     pinMode(PIN_BLINK, OUTPUT);
+    Serial.print(F("free1: "));
+    Serial.println(freeMemory());
     led.view(VIEW_WIDTH, VIEW_HEIGHT);
     led.start();
+    Serial.print(F("free2: "));
+    Serial.println(freeMemory());
 }
 
 LED_Animation *phase[1] = {NULL};
@@ -484,25 +526,35 @@ loop(void)
     static uint16_t phasenr = 0;
     static unsigned long started = 0;
     
-    if (started == 0 || started + 5000 < millis()) {
-        Serial.print("Free Memory before free: ");
+    /* testing */
+    /*
+    static LED_sinus2 *p = new LED_sinus2();
+    p->loop();
+    led.display();
+    started++;
+    return;
+    */
+    
+    if (started == 0 || started + 3 * 1000 < millis()) {
+        Serial.print(F("Free Memory before free: "));
         Serial.println(freeMemory());
         if (phase[0] != NULL) {
             phase[0]->destroy();
             delete(phase[0]);
             phase[0] = NULL;
         }
-        Serial.print("Free Memory after free: ");
+        Serial.print(F("Free Memory after free: "));
         Serial.println(freeMemory());
-        switch (phasenr) {
+        switch (++phasenr % 5) {
             case 0: { LED_led00_blink *p = new LED_led00_blink(); phase[0] = p; break; } 
             case 1: { LED_quickbrowfox *p = new LED_quickbrowfox(); phase[0] = p; break; } 
             case 2: { LED_spaceinvaders *p = new LED_spaceinvaders(); phase[0] = p; break; }
+            case 3: { LED_sinus1 *p = new LED_sinus1(); phase[0] = p; break; }
+            case 4: { LED_sinus2 *p = new LED_sinus2(); phase[0] = p; break; }
+
         }
-        Serial.print("Free Memory after new: ");
+        Serial.print(F("Free Memory after new: "));
         Serial.println(freeMemory());
-        phasenr++;
-        phasenr %= 3;
         started = millis();
     }
     if (phase[0] != NULL)
@@ -514,11 +566,8 @@ loop(void)
     */
     
   
-//    led_text();
 //    led_lines_horver();
 //    led_squares_growing();
-//    led_sinus();	// Needs a delay of 10 ms
-//    led_spaceinvaders();
 //    led_mario();
 //    led_torch1();
 //    led_torch2();
