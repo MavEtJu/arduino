@@ -554,7 +554,11 @@ loop(void)
     return;
     #endif
     
-    if (started == 0 || started + 120 * 1000 < millis()) {
+    //Serial.print(started + 60 * 1000);
+    //Serial.print(" ");
+    //Serial.println(millis());
+    
+    if (started == 0 || started + 120l * 1000l < millis()) {
         Serial.print(F("Free Memory before free: "));
         Serial.println(freeMemory());
         if (phase[0] != NULL) {
