@@ -52,23 +52,23 @@ LED_Animation::animation(void)
 }
 
 // ==============================
-class LED_led00_blink : public LED_Animation {
+class LED_led00_blink1 : public LED_Animation {
     void animation(void);
 };
 
 void
-LED_led00_blink::animation(void)
+LED_led00_blink1::animation(void)
 {
     led.dot(0, 0, led.colour_random());
 }
 
 // ==============================
-class LED_quickbrowfox : public LED_Animation {
+class LED_quickbrowfox1 : public LED_Animation {
     void animation(void);
 };
 
 void
-LED_quickbrowfox::animation(void)
+LED_quickbrowfox1::animation(void)
 {
     const char *s = "the quick brown fox jumped over the lazy dog 0123456789";
     uint16_t w = led.text_width(s);
@@ -77,10 +77,13 @@ LED_quickbrowfox::animation(void)
 }
 
 // ==============================
+class LED_lineshorver1 : public LED_Animation {
+    void animation(void);
+};
+
 void
-led_lines_horver(void)
+LED_lineshorver1::animation(void)
 {
-    static uint32_t step = 0;
     int m = step % (2 * VIEW_HEIGHT);
 
     led.colour_set(led.colour_magenta);
@@ -88,17 +91,19 @@ led_lines_horver(void)
         led.line(0, m, VIEW_WIDTH, m);
     else
         led.line(m % VIEW_HEIGHT, 0, m % VIEW_HEIGHT, VIEW_WIDTH);
-
-    step++;
 }
 
-void
-led_squares_growing(void)
-{
-    static uint32_t step = 0;
-    int m = step % (2 * VIEW_HEIGHT);
-    static LED c = led.colour_black;
+// ============================
+class LED_squares1 : public LED_Animation {
+    void animation(void);
+    LED c = led.colour_random();
+};
 
+void
+LED_squares1::animation(void)
+{
+    int m = step % (2 * VIEW_HEIGHT);
+    
     if (m == 0)
 	c = led.colour_random();
     led.colour_set(c);
@@ -110,14 +115,11 @@ led_squares_growing(void)
         led.line(m, 0, 0, 0);
     } else {
         m %= VIEW_HEIGHT;
-        led.line(VIEW_HEIGHT - 1, VIEW_HEIGHT - 1,
-                 VIEW_HEIGHT - 1, m);
+        led.line(VIEW_HEIGHT - 1, VIEW_HEIGHT - 1, VIEW_HEIGHT - 1, m);
         led.line(VIEW_HEIGHT - 1, m, m, m);
         led.line(m, m, m, VIEW_HEIGHT - 1);
         led.line(m, VIEW_HEIGHT - 1, VIEW_HEIGHT - 1, VIEW_HEIGHT - 1);
     }
-
-    step++;
 }
 
 // ===================
@@ -186,9 +188,9 @@ LED_sinus2::animation(void)
 
 // ==============================
 #define LED_spaceinvaders_IMGS 9
-class LED_spaceinvaders : public LED_Animation {
+class LED_spaceinvaders1 : public LED_Animation {
     public:
-    LED_spaceinvaders(void);
+    LED_spaceinvaders1(void);
     void destroy(void);
     void animation(void);
     const char **imgs;
@@ -196,13 +198,13 @@ class LED_spaceinvaders : public LED_Animation {
     uint8_t width[LED_spaceinvaders_IMGS];
 };
 
-void LED_spaceinvaders::destroy(void)
+void LED_spaceinvaders1::destroy(void)
 {
     // Serial.println("LED_spaceinvaders::destroy");
     free(imgs);
 }
 
-LED_spaceinvaders::LED_spaceinvaders(void) : LED_Animation()
+LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 {
     delayms = 150;
     
@@ -326,7 +328,7 @@ LED_spaceinvaders::LED_spaceinvaders(void) : LED_Animation()
 	);
 }
 void
-LED_spaceinvaders::animation(void)
+LED_spaceinvaders1::animation(void)
 {
     uint8_t imgnr = (step / 100) % LED_spaceinvaders_IMGS;
     char ch[256];
@@ -335,56 +337,64 @@ LED_spaceinvaders::animation(void)
 }
 
 //===========================
-void
-led_mario(void)
+class LED_mario1 : public LED_Animation {
+public:
+    LED_mario1(void);
+    void animation(void);
+    LED colours[6];
+    const char *img;
+    char ps[257];
+    uint8_t COLOUR_RED, COLOUR_SKIN, COLOUR_BROWN, COLOUR_BLACK, COLOUR_BLUE, COLOUR_YELLOW;
+};
+
+LED_mario1::LED_mario1(void) : LED_Animation()
 {
-    static uint32_t step = 0;
-    static const char *img = NULL;
-    static LED colours[6];
-    static char ps[257];
+    /*
+     * R red
+     * S skin
+     * B brown
+     * b black
+     * l blue
+     * y yellow
+     *
+     */
+    img = PSTR(
+        "     RRRRRR     "
+        "    RRRRRRRRRR  "
+        "    BBBSSSbS    "
+        "   BSBSSSSbSSS  "
+        "   BSBSSSSSbSSS "
+        "   BBSSSSSbbbb  "
+        "     SSSSSSSS   "
+        "    RRlRRRl     "
+        "   RRRlRRlRRR   "
+        "  RRRRllllRRRR  "
+        "  SSRlyllylRSS  "
+        "  SSSllllllSSS  "
+        "  SSllllllllSS  "
+        "    lll  lll    "
+        "   BBBB  BBBB   "
+        "  BBBBB  BBBBB  "
+    );
+    COLOUR_RED =	0;
+    COLOUR_SKIN =	1;
+    COLOUR_BROWN =	2;
+    COLOUR_BLACK =	3;
+    COLOUR_BLUE =	4;
+    COLOUR_YELLOW =	5;
+    colours[COLOUR_RED   ] = led.Color(244 >> 4,   0 >> 4,  10 >> 4);
+    colours[COLOUR_SKIN  ] = led.Color(208 >> 4, 189 >> 4, 156 >> 4);
+    colours[COLOUR_BROWN ] = led.Color( 92 >> 4,  68 >> 4,  30 >> 4);
+    colours[COLOUR_BLACK ] = led.Color( 26 >> 4,  26 >> 4,  26 >> 4);
+    colours[COLOUR_BLUE  ] = led.Color( 84 >> 4,  45 >> 4, 214 >> 4);
+    colours[COLOUR_YELLOW] = led.Color(225 >> 4, 202 >> 4,  47 >> 4);
+    
+    strcpy_P(ps, img);
+}
 
-    if (img == NULL) {
-	/*
-	 * R red
-	 " S skin
-	 * B brown
-	 * b black
-	 * l blue
-	 * y yellow
-	 *
-	 */
-	img = PSTR(
-	    "     RRRRRR     "
-	    "    RRRRRRRRRR  "
-	    "    BBBSSSbS    "
-	    "   BSBSSSSbSSS  "
-	    "   BSBSSSSSbSSS "
-	    "   BBSSSSSbbbb  "
-	    "     SSSSSSSS   "
-	    "    RRlRRRl     "
-	    "   RRRlRRlRRR   "
-	    "  RRRRllllRRRR  "
-	    "  SSRlyllylRSS  "
-	    "  SSSllllllSSS  "
-	    "  SSllllllllSS  "
-	    "    lll  lll    "
-	    "   BBBB  BBBB   "
-	    "  BBBBB  BBBBB  "
-	    );
-	#define COLOUR_RED	0
-	#define COLOUR_SKIN	1
-	#define COLOUR_BROWN	2
-	#define COLOUR_BLACK	3
-	#define COLOUR_BLUE	4
-	#define COLOUR_YELLOW	5
-	colours[COLOUR_RED   ] = led.Color(244 >> 4,   0 >> 4,  10 >> 4);
-	colours[COLOUR_SKIN  ] = led.Color(208 >> 4, 189 >> 4, 156 >> 4);
-	colours[COLOUR_BROWN ] = led.Color( 92 >> 4,  68 >> 4,  30 >> 4);
-	colours[COLOUR_BLACK ] = led.Color( 26 >> 4,  26 >> 4,  26 >> 4);
-	colours[COLOUR_BLUE  ] = led.Color( 84 >> 4,  45 >> 4, 214 >> 4);
-	colours[COLOUR_YELLOW] = led.Color(225 >> 4, 202 >> 4,  47 >> 4);
-    }
-
+void
+LED_mario1::animation(void)
+{
     strcpy_P(ps, img);
     for (uint8_t y = 0; y < 16; y++) {
 	for (uint8_t x = 0; x < 16; x++) {
@@ -402,32 +412,39 @@ led_mario(void)
 	    led.dot(x , VIEW_HEIGHT - y, c);
 	}
     }
-
-    step++;
 }
 
+// =======================
 struct coal {
 	int16_t x, y;
         int16_t intensity;
 };
 typedef struct coal coal;
-void
-led_torch1(void)
+#define COALS VIEW_WIDTH
+
+class LED_torch1 : public LED_Animation {
+    public:
+    LED colour_floor;
+
+    coal coals[COALS];
+    
+    LED_torch1(void);
+    void animation(void);
+};
+
+LED_torch1::LED_torch1(void)
 {
-    static uint32_t step = 0;
-    static LED colour_floor = led.Color(8 << 2, 4, 0);
-    #define COALS 10 * VIEW_WIDTH
-    static coal coals[COALS];
-    static byte init = 0;
-
-    if (init == 0) {
-	init = 1;
-	for (uint8_t c = 0; c < COALS; c++) {
-	    coals[c].x = 0;
-	    coals[c].y = 1;
-	}
+    colour_floor = led.Color(9 << 2, 4, 0);
+    
+    for (uint8_t c = 0; c < COALS; c++) {
+        coals[c].x = 0;
+        coals[c].y = 1;
     }
+}
 
+void
+LED_torch1::animation(void)
+{
     for (uint8_t c = 0; c < COALS; c++) {
 	// There is a 50% chance that a light goes higher
 	if (random() % 100 > 66) {
@@ -441,30 +458,30 @@ led_torch1(void)
 	    led.Color((VIEW_HEIGHT - coals[c].y) << 2, VIEW_HEIGHT - coals[c].y > 1, 0));
     }
     led.line(0, 0, VIEW_WIDTH, 0, colour_floor);
+}
 
-    step++;
+// ===============
+class LED_torch2 : public LED_Animation {
+public:
+    LED_torch2(void);
+    void animation(void);
+    coal coals[COALS];
+};
+
+LED_torch2::LED_torch2(void)
+{
+    for (uint8_t c = 0; c < COALS; c++) {
+	coals[c].x = random() % VIEW_WIDTH;
+	coals[c].y = - (random() % VIEW_HEIGHT);
+        coals[c].intensity = VIEW_HEIGHT << 1;
+    }
 }
 
 void
-led_torch2(void)
-{
-    static uint32_t step = 0;
-    
-    #define COALS VIEW_WIDTH
-    static coal coals[COALS];
-    static byte init = 0;
-
-    if (init == 0) {
-	init = 1;
-	for (uint8_t c = 0; c < COALS; c++) {
-	    coals[c].x = 0;
-	    coals[c].y = - (random() % VIEW_HEIGHT);
-            coals[c].intensity = VIEW_HEIGHT << 2 + 2 - (random() % 5);
-	}
-    }
-
+LED_torch2::animation(void)
+{   
     // Change in intensity of the lowest level
-    static uint32_t piece = 360 / (4 * VIEW_WIDTH);
+    uint32_t piece = 360 / (4 * VIEW_WIDTH);
     uint16_t o = step;
     float f = piece * M_PI / 180 * o;
     float s = sin(f) * VIEW_HEIGHT;
@@ -500,7 +517,6 @@ led_torch2(void)
     }
     
     led.line(0, 0, VIEW_WIDTH, 0, colour_floor);
-    step++;
 }
 
 void
@@ -517,25 +533,28 @@ setup(void)
 }
 
 LED_Animation *phase[1] = {NULL};
+
 void
 loop(void)
 {
     loop_blink();
     led.clear();
 
-    static uint16_t phasenr = 0;
+    static uint16_t phasenr = 5;
     static unsigned long started = 0;
     
     /* testing */
-    /*
-    static LED_sinus2 *p = new LED_sinus2();
+    #define TESTING
+    #undef TESTING
+    #ifdef TESTING    
+    static LED_mario1 *p = new LED_mario1();
     p->loop();
     led.display();
     started++;
     return;
-    */
+    #endif
     
-    if (started == 0 || started + 3 * 1000 < millis()) {
+    if (started == 0 || started + 120 * 1000 < millis()) {
         Serial.print(F("Free Memory before free: "));
         Serial.println(freeMemory());
         if (phase[0] != NULL) {
@@ -545,14 +564,20 @@ loop(void)
         }
         Serial.print(F("Free Memory after free: "));
         Serial.println(freeMemory());
-        switch (++phasenr % 5) {
-            case 0: { LED_led00_blink *p = new LED_led00_blink(); phase[0] = p; break; } 
-            case 1: { LED_quickbrowfox *p = new LED_quickbrowfox(); phase[0] = p; break; } 
-            case 2: { LED_spaceinvaders *p = new LED_spaceinvaders(); phase[0] = p; break; }
-            case 3: { LED_sinus1 *p = new LED_sinus1(); phase[0] = p; break; }
-            case 4: { LED_sinus2 *p = new LED_sinus2(); phase[0] = p; break; }
-
+        switch (++phasenr % 10) {
+            #define NEW_ANIMATION(t)    { t *p = new t(); phase[0] = p; break; }
+            case  0: NEW_ANIMATION(LED_led00_blink1)
+            case  1: NEW_ANIMATION(LED_quickbrowfox1)
+            case  2: NEW_ANIMATION(LED_spaceinvaders1)
+            case  3: NEW_ANIMATION(LED_sinus1);
+            case  4: NEW_ANIMATION(LED_sinus2);
+            case  5: NEW_ANIMATION(LED_lineshorver1)
+            case  6: NEW_ANIMATION(LED_squares1)
+            case  7: NEW_ANIMATION(LED_mario1)
+            case  8: NEW_ANIMATION(LED_torch1)
+            case  9: NEW_ANIMATION(LED_torch2)
         }
+        
         Serial.print(F("Free Memory after new: "));
         Serial.println(freeMemory());
         started = millis();
@@ -560,17 +585,5 @@ loop(void)
     if (phase[0] != NULL)
         phase[0]->loop();
  
-    /* 
-    led.dot(1,1,led.colour_random()); led.display();
-    led.dot(1,1,led.colour_red);
-    */
-    
-  
-//    led_lines_horver();
-//    led_squares_growing();
-//    led_mario();
-//    led_torch1();
-//    led_torch2();
-
     led.display();
 }
