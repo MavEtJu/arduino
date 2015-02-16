@@ -8,15 +8,6 @@ void loop(void);
 class Serial Serial;
 time_t time_0 = time(NULL);
 
-int
-main(int argc, char **argv)
-{
-	setup();
-	while (1) {
-		loop();
-	}
-}
-
 const char *
 PSTR(const char *s)
 {

@@ -205,14 +205,71 @@ class LED_spaceinvaders1 : public LED_Animation {
     LED_spaceinvaders1(void);
     void destroy(void);
     void animation(void);
+    void decode(char *img, char *dest, uint16_t length);
+
     const char **imgs;
     LED colours[LED_spaceinvaders_IMGS];
-    uint8_t width[LED_spaceinvaders_IMGS];
+    uint8_t width[LED_spaceinvaders_IMGS], height[LED_spaceinvaders_IMGS];
 };
 
-void LED_spaceinvaders1::destroy(void)
+void
+LED_spaceinvaders1::destroy(void)
 {
     free(imgs);
+}
+
+void
+LED_spaceinvaders1::decode(char *img, char *dest, uint16_t length)
+{
+    uint16_t c;
+    unsigned char ch;
+    dest[0] = 0;
+    for (c = 0; c < length / 8; c++) {
+	ch = img[c];
+	Serial.print(ch);
+	Serial.print(" ");
+	Serial.print(ch >> 4);
+	Serial.print(" ");
+	Serial.print(ch & 0xf); 
+	Serial.print(" ");
+	Serial.println(((ch % 256) << 4) >> 4);
+	switch (ch >> 4) {
+	case  0: strcat(dest, "    "); break;
+	case  1: strcat(dest, "   X"); break;
+	case  2: strcat(dest, "  X "); break;
+	case  3: strcat(dest, "  XX"); break;
+	case  4: strcat(dest, " X  "); break;
+	case  5: strcat(dest, " X X"); break;
+	case  6: strcat(dest, " XX "); break;
+	case  7: strcat(dest, " XXX"); break;
+	case  8: strcat(dest, "X   "); break;
+	case  9: strcat(dest, "X  X"); break;
+	case 10: strcat(dest, "X X "); break;
+	case 11: strcat(dest, "X XX"); break;
+	case 12: strcat(dest, "XX  "); break;
+	case 13: strcat(dest, "XX X"); break;
+	case 14: strcat(dest, "XXX "); break;
+	case 15: strcat(dest, "XXXX"); break;
+	}
+	switch (ch & 0xf) {
+	case  0: strcat(dest, "    "); break;
+	case  1: strcat(dest, "   X"); break;
+	case  2: strcat(dest, "  X "); break;
+	case  3: strcat(dest, "  XX"); break;
+	case  4: strcat(dest, " X  "); break;
+	case  5: strcat(dest, " X X"); break;
+	case  6: strcat(dest, " XX "); break;
+	case  7: strcat(dest, " XXX"); break;
+	case  8: strcat(dest, "X   "); break;
+	case  9: strcat(dest, "X  X"); break;
+	case 10: strcat(dest, "X X "); break;
+	case 11: strcat(dest, "X XX"); break;
+	case 12: strcat(dest, "XX  "); break;
+	case 13: strcat(dest, "XX X"); break;
+	case 14: strcat(dest, "XXX "); break;
+	case 15: strcat(dest, "XXXX"); break;
+	}
+    }
 }
 
 LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
@@ -233,117 +290,148 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 
     // From https://0.s3.envato.com/files/69626951/space-invaders-icons-set-colour-prev.jpg
 
-    width[0] = 12;
+    width[0] = 16;
+    height[0] = 8;
     imgs[0] = PSTR(
-	"  X      X  "
-	"X  X    X  X"
-	"X XXXXXXXX X"
-	"XXX XXXX XXX"
-	" XXXXXXXXXX "
-	"  XXXXXXXX  "
-	"  X      X  "
-	" XX      XX "
+	//  3210|3210|3210|3210
+	// "  X |    | X  |    "
+	// "X  X|    |X  X|    "
+	// "X XX|XXXX|XX X|    "
+	// "XXX |XXXX| XXX|    "
+	// " XXX|XXXX|XXX |    "
+	// "  XX|XXXX|XX  |    "
+	// "  X |    | X  |    "
+	// " XX |    | XX |    "
+	"\x20\x40\x90\x90\xbf\xd0\xef\x70\x7f\xe0\x3f\xc0\x20\x40\x60\x60"
 	);
 
-    width[1] = 9;
+    width[1] = 16;
+    height[1] = 9;
     imgs[1] = PSTR(
-	"  X   X  "
-	"   X X   "
-	"  XXXXX  "
-	" XX X XX "
-	"XXXXXXXXX"
-	"X XXXXX X"
-	"X XXXXX X"
-	"   X X   "
-	"  XX XX  "
+	//  3210|3210|3210|3210
+	// "  X |  X | "
+	// "   X| X  | "
+	// "  XX|XXX | "
+	// " XX |X XX| "
+	// "XXXX|XXXX|X"
+	// "X XX|XXX |X"
+	// "X XX|XXX |X"
+	// "   X| X  | "
+	// "  XX| XX | "
+	"\x24\x00\x14\x00\x3e\x00\x6b\x00\xff\x80\xbe\x80\x14\x00\x36\x00"
 	);
 
-    width[2] = 9;
+    width[2] = 16;
+    height[2] = 7;
     imgs[2] = PSTR(
-	"   XXX   "
-	"  XXXXX  "
-	" X  X  X "
-	" XXXXXXX "
-	"  XXXXX  "
-	" X X X X "
-	"X       X"
+	//  3210|3210|3210|3210
+	// "   X|XX  | "
+	// "  XX|XXX | "
+	// " X  |X  X| "
+	// " XXX|XXXX| "
+	// "  XX|XXX | "
+	// " X X| X X| "
+	// "X   |    |X"
+	"\x1b\x00\x3e\x00\x49\x00\x7f\x00\x3e\x00\x55\x00\x80\x80"
 	);
 
-    width[3] = 9;
+    width[3] = 16;
+    height[3] = 8;
     imgs[3] = PSTR(
-	"  XXXXX  "
-	" XXXXXXX "
-	"XX  X  XX"
-	"XX XX XXX"
-	"XXXXXXXXX"
-	"XXXXXXXXX"
-	"XXXXXXXXX"
-	"X X X X X"
+	//  3210|3210|3210|3210
+	// "  XX|XXX | "
+	// " XXX|XXXX| "
+	// "XX  |X  X|X"
+	// "XX X|X XX|X"
+	// "XXXX|XXXX|X"
+	// "XXXX|XXXX|X"
+	// "XXXX|XXXX|X"
+	// "X X |X X |X"
+	"\x3e\x00\x7f\x00\xc9\x80\xdb\x80\xff\x80\xff\x80\xff\x80\xcc\x80"
 	);
 
-    width[4] = 10;
+    width[4] = 16;
+    height[4] = 8;
     imgs[4] = PSTR(
-	"   XXXX   "
-	" XXXXXXXX "
-	"XXX XX XXX"
-	"XXXXXXXXXX"
-	"XXXXXXXXXX"
-	"  XX  XX  "
-	" XX XX XX "
-	"XX      XX"
+	//  3210|3210|3210|3210
+	// "   X|XXX |  "
+	// " XXX|XXXX|X "
+	// "XXX |XX X|XX"
+	// "XXXX|XXXX|XX"
+	// "XXXX|XXXX|XX"
+	// "  XX|  XX|  "
+	// " XX |XX X|X "
+	// "XX  |    |XX"
+	"\x1e\x00\x7f\x80\xed\xc0\xff\xc0\xff\xc0\x33\x00\x6d\x80\xc0\xc0"
 	);
 
-    width[5] = 9;
+    width[5] = 16;
+    height[5] = 6;
     imgs[5] = PSTR(
-	"   X X   "
-	"X XXXXX X"
-	"XXX X XXX"
-	" XXXXXXX "
-	" X X X X "
-	"XX     XX"
+	//  3210|3210|3210|3210
+	// "   X| X  | "
+	// "X XX|XXX |X"
+	// "XXX |X XX|X"
+	// " XXX|XXXX| "
+	// " X X| X X| "
+	// "XX  |   X|X"
+	"\x14\x00\xbe\x80\xeb\x80\x7f\x00\x55\x00\xc1\x80"
 	);
 
-    width[6] = 9;
+    width[6] = 16;
+    height[7] = 7;
     imgs[6] = PSTR(
-	"   X X   "
-	"  XXXXX  "
-	" XXXXXXX "
-	"XX  X  XX"
-	"XXXXXXXXX"
-	"XXXXXXXXX"
-	"X X X X X"
+	//  3210|3210|3210|3210
+	// "   X| X  | "
+	// "  XX|XXX | "
+	// " XXX|XXXX| "
+	// "XX  |X  X|X"
+	// "XXXX|XXXX|X"
+	// "XXXX|XXXX|X"
+	// "X X |X X |X"
+	"\x14\x00\x3e\x00\x7f\x00\xc9\x80\xff\x80\xff\x80\xaa\x80"
 	);
 
-    width[7] = 11;
+    width[7] = 16;
+    height[7] = 8;
     imgs[7] = PSTR(
-	"  X     X  "
-	"   X   X   "
-	"  XXXXXXX  "
-	" XX XXX XX "
-	"XXXXXXXXXXX"
-	"X XXXXXXX X"
-	"X X     X X"
-	"   XX XX   "
+	//  3210|3210|3210|3210
+	// "  X |    |X   |"
+	// "   X|   X|    |"
+	// "  XX|XXXX|X   |"
+	// " XX |XXX |XX  |"
+	// "XXXX|XXXX|XXX |"
+	// "X XX|XXXX|X X |"
+	// "X X |    |X X |"
+	// "   X|X XX|    |"
+	"\x20\x80\x11\x00\x3f\x80\x6e\xc0\xff\xe0\xbf\xa0\xa0\xa0\x1b\x00"
 	);
 
     width[8] = 8;
+    height[8] = 8;
     imgs[8] = PSTR(
-	"   XX   "
-	"  XXXX  "
-	" XXXXXX "
-	"XX XX XX"
-	"XXXXXXXX"
-	"  X  X  "
-	" X XX X "
-	"X X  X X"
+	//  3210|3210|3210|3210
+	// "   X|X   "
+	// "  XX|XX  "
+	// " XXX|XXX "
+	// "XX X|X XX"
+	// "XXXX|XXXX"
+	// "  X | X  "
+	// " X X|X X "
+	// "X X | X X"
+	"\x18\x3b\x7e\xdc\xff\x24\x5a\xa5"
 	);
 }
 void
 LED_spaceinvaders1::animation(void)
 {
     uint8_t imgnr = (step / 100) % LED_spaceinvaders_IMGS;
-    char ch[256];
-    strcpy_P(ch, imgs[imgnr]);
+    char in[17];
+    char ch[257];
+    strcpy_P(in, imgs[imgnr]);
+    decode(in, ch, width[imgnr] * height[imgnr]);
+    // strcpy_P(ch, decode(imgs[imgnr]));
+
     led.blob(step % (VIEW_WIDTH + 24) - 12, 1, width[imgnr], strlen(ch) / width[imgnr], ch, colours[imgnr]);
 }
 
@@ -563,10 +651,11 @@ loop(void)
     static unsigned long started = 0;
     
     /* testing */
+    #undef SERIAL
     #define TESTING
-    #undef TESTING
+    //#undef TESTING
     #ifdef TESTING    
-    static LED_mario1 *p = new LED_mario1();
+    static LED_spaceinvaders1 *p = new LED_spaceinvaders1();
     p->loop();
     led.display();
     started++;
