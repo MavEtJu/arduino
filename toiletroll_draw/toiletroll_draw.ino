@@ -1,6 +1,8 @@
 
 #include <Arduino.h>
+#ifdef MEMORY
 #include <MemoryFree.h>
+#endif
 #include "led_tools.h"
 
 #define PIN_BLINK   13
@@ -40,7 +42,7 @@ LED_Animation::~LED_Animation(void)
 }
 void LED_Animation::destroy(void)
 {
-    // Serial.println("LED_Animation::~LED_Animation");
+    //
 }
 void
 LED_Animation::loop(void)
@@ -210,7 +212,6 @@ class LED_spaceinvaders1 : public LED_Animation {
 
 void LED_spaceinvaders1::destroy(void)
 {
-    // Serial.println("LED_spaceinvaders::destroy");
     free(imgs);
 }
 
@@ -532,14 +533,22 @@ LED_torch2::animation(void)
 void
 setup(void)
 {
+    #ifdef SERIAL
     Serial.begin(9600);
-    pinMode(PIN_BLINK, OUTPUT);
+    # ifdef MEMORY
     Serial.print(F("free1: "));
     Serial.println(freeMemory());
+    # endif
+    #endif
+    pinMode(PIN_BLINK, OUTPUT);
     led.view(VIEW_WIDTH, VIEW_HEIGHT);
     led.start();
+    #ifdef SERIAL
+    # ifdef MEMORY
     Serial.print(F("free2: "));
     Serial.println(freeMemory());
+    # endif
+    #endif
 }
 
 LED_Animation *phase[1] = {NULL};
@@ -561,24 +570,30 @@ loop(void)
     p->loop();
     led.display();
     started++;
+    #ifdef SERIAL
     Serial.println(started);
+    #endif
     return;
     #endif
     
-//  Serial.print(started);
-//  Serial.print(" ");
-//  Serial.println(millis());
-    
     if (started == 0 || started + 20l * 1000l < millis()) {
+        #ifdef SERIAL
+        # ifdef MEMORY
         Serial.print(F("Free Memory before free: "));
         Serial.println(freeMemory());
+        # endif
+        #endif
         if (phase[0] != NULL) {
             phase[0]->destroy();
             delete(phase[0]);
             phase[0] = NULL;
         }
+        #ifdef SERIAL
+        # ifdef MEMORY
         Serial.print(F("Free Memory after free: "));
         Serial.println(freeMemory());
+        # endif
+        #endif
         switch (++phasenr % 10) {
             #define NEW_ANIMATION(t)    { t *p = new t(); phase[0] = p; break; }
             case  0: NEW_ANIMATION(LED_led00_blink1)
@@ -592,9 +607,12 @@ loop(void)
             case  8: NEW_ANIMATION(LED_torch1)
             case  9: NEW_ANIMATION(LED_torch2)
         }
-        
+        #ifdef SERIAL
+        # ifdef MEMORY
         Serial.print(F("Free Memory after new: "));
         Serial.println(freeMemory());
+        # endif
+        #endif
         started = millis();
     }
     if (phase[0] != NULL)
