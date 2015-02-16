@@ -1,6 +1,6 @@
-char *
+unsigned long
 freeMemory(void)
 {
-	return (char *)"123fake";
+	return 0l;
 }
 

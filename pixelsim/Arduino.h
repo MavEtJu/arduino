@@ -34,4 +34,9 @@ extern Serial Serial;
 
 #define F (char *)
 
+
+// Default options used for simulator
+#define SERIAL
+#define MEMORY
+
 #endif
