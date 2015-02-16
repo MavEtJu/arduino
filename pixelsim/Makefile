@@ -3,7 +3,7 @@
 .SUFFIXES: .ino
 
 # Remove the -O2 since it broke wrefresh(screen) from libcurses for some reason.
-CFLAGS	+= -Wall -Werror -I. -Wno-char-subscripts -g
+CFLAGS	= -Wall -Werror -I. -Wno-char-subscripts -g
 
 all:	test
 
