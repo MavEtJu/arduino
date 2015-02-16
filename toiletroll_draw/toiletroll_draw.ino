@@ -23,6 +23,7 @@ loop_blink(void)
 class LED_Animation {
 public:
     LED_Animation(void);
+    virtual ~LED_Animation(void);
     virtual void destroy(void);
     void loop(void);
     virtual void animation(void);
@@ -33,6 +34,9 @@ LED_Animation::LED_Animation(void)
 {
     step = 0;
     delayms = 100;
+}
+LED_Animation::~LED_Animation(void)
+{
 }
 void LED_Animation::destroy(void)
 {
@@ -95,9 +99,15 @@ LED_lineshorver1::animation(void)
 
 // ============================
 class LED_squares1 : public LED_Animation {
+public:
+    LED_squares1(void);
     void animation(void);
-    LED c = led.colour_random();
+    LED c;
 };
+
+LED_squares1::LED_squares1(void) : LED_Animation() {
+    c = led.colour_random();
+}
 
 void
 LED_squares1::animation(void)
@@ -551,14 +561,15 @@ loop(void)
     p->loop();
     led.display();
     started++;
+    Serial.println(started);
     return;
     #endif
     
-    //Serial.print(started + 60 * 1000);
-    //Serial.print(" ");
-    //Serial.println(millis());
+//  Serial.print(started);
+//  Serial.print(" ");
+//  Serial.println(millis());
     
-    if (started == 0 || started + 120l * 1000l < millis()) {
+    if (started == 0 || started + 20l * 1000l < millis()) {
         Serial.print(F("Free Memory before free: "));
         Serial.println(freeMemory());
         if (phase[0] != NULL) {

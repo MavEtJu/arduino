@@ -1,8 +1,12 @@
 
 #include <Arduino.h>
+#include <time.h>
+#include <Serial.h>
 
 void setup(void);
 void loop(void);
+class Serial Serial;
+time_t time_0 = time(NULL);
 
 int
 main(int argc, char **argv)
@@ -37,3 +41,8 @@ delay(uint32_t ms)
 	usleep(ms * 1000);
 }
 
+unsigned long
+millis(void)
+{
+	return (time(NULL) - time_0) * 1000;
+}

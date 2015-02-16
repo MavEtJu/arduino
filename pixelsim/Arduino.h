@@ -28,5 +28,10 @@ const char *PSTR(const char *s);
 void pinMode(uint8_t pin, uint8_t mode);
 void digitalWrite(uint8_t pin, uint8_t state);
 void delay(uint32_t ms);
+unsigned long millis(void);
+
+extern Serial Serial;
+
+#define F (char *)
 
 #endif

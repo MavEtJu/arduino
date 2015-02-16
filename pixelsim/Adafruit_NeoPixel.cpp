@@ -128,6 +128,15 @@ Adafruit_NeoPixel::show2(void)
 	}
 
 	wattrset(screen, colour[COLOR_WHITE]);
+	int linenr = Serial.lines();
+	y = VIEW_HEIGHT + 3;
+	while (linenr != 1) {
+		mvwprintw(screen, y++, 1, Serial.get());
+		linenr--;
+	}
+	Serial.clear();
+
+	wattrset(screen, colour[COLOR_WHITE]);
 	wrefresh(screen);
 
 	if ((input = wgetch(mainwindow)) == ERR)
