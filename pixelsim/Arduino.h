@@ -19,6 +19,7 @@ typedef int16_t int16_t;
 typedef int32_t int32_t;
 
 #define strcpy_P strcpy
+#define memcpy_P memcpy
 
 #define OUTPUT 1
 #define HIGH 1
