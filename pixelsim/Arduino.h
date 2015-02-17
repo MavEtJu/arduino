@@ -39,5 +39,6 @@ extern Serial Serial;
 // Default options used for simulator
 #define SERIAL
 #define MEMORY
+#define SIMULATOR
 
 #endif
