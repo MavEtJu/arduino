@@ -1,8 +1,10 @@
 //
 
 #include <Arduino.h>
-#include <StringEncode.h>
-#include <stdio.h>
+#include "StringEncode.h"
+#ifdef SIMULATOR
+# include <stdio.h>
+#endif
 
 StringEncode::StringEncode(void)
 {
@@ -42,41 +44,11 @@ StringEncode::DecodePlain(const char *in, char *out, uint16_t encodedLen)
     out[0] = 0;
     for (c = 0; c < encodedLen; c++) {
 	ch = in[c];
-	switch (ch >> 4) {
-	case  0: strcat(out, "    "); break;
-	case  1: strcat(out, "   X"); break;
-	case  2: strcat(out, "  X "); break;
-	case  3: strcat(out, "  XX"); break;
-	case  4: strcat(out, " X  "); break;
-	case  5: strcat(out, " X X"); break;
-	case  6: strcat(out, " XX "); break;
-	case  7: strcat(out, " XXX"); break;
-	case  8: strcat(out, "X   "); break;
-	case  9: strcat(out, "X  X"); break;
-	case 10: strcat(out, "X X "); break;
-	case 11: strcat(out, "X XX"); break;
-	case 12: strcat(out, "XX  "); break;
-	case 13: strcat(out, "XX X"); break;
-	case 14: strcat(out, "XXX "); break;
-	case 15: strcat(out, "XXXX"); break;
-	}
-	switch (ch & 0xf) {
-	case  0: strcat(out, "    "); break;
-	case  1: strcat(out, "   X"); break;
-	case  2: strcat(out, "  X "); break;
-	case  3: strcat(out, "  XX"); break;
-	case  4: strcat(out, " X  "); break;
-	case  5: strcat(out, " X X"); break;
-	case  6: strcat(out, " XX "); break;
-	case  7: strcat(out, " XXX"); break;
-	case  8: strcat(out, "X   "); break;
-	case  9: strcat(out, "X  X"); break;
-	case 10: strcat(out, "X X "); break;
-	case 11: strcat(out, "X XX"); break;
-	case 12: strcat(out, "XX  "); break;
-	case 13: strcat(out, "XX X"); break;
-	case 14: strcat(out, "XXX "); break;
-	case 15: strcat(out, "XXXX"); break;
+	for (int8_t i = 7; i >= 0; i--) {
+	    if ((ch >> i) % 2 != 0)
+		strcat(out, "X");
+	    else
+		strcat(out, " ");
 	}
     }
 }
@@ -84,8 +56,10 @@ StringEncode::DecodePlain(const char *in, char *out, uint16_t encodedLen)
 void
 StringEncode::hexdump(const char *s, uint16_t len)
 {
-	for (uint16_t c = 0; c < len; c++) {
-		printf("\\x%02x", (unsigned char)s[c]);
-	}
-	printf("\n");
+#ifdef SIMULATOR
+    for (uint16_t c = 0; c < len; c++) {
+	printf("\\x%02x", (unsigned char)s[c]);
+    }
+    printf("\n");
+#endif
 }
