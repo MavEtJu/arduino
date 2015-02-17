@@ -387,7 +387,7 @@ LED_spaceinvaders1::animation(void)
 {
     uint8_t imgnr = (step / 100) % LED_spaceinvaders_IMGS;
     char in[17];
-    char ch[257];
+    char ch[16 * 9 + 1];
     memcpy_P(in, imgs[imgnr], height[imgnr] * width[imgnr] / 8);
     enc->DecodePlain(in, ch, width[imgnr] * height[imgnr] / 8);
     // strcpy_P(ch, decode(imgs[imgnr]));
@@ -584,8 +584,10 @@ setup(void)
     #ifdef SERIAL
     Serial.begin(9600);
     # ifdef MEMORY
+    #  ifndef SIMULATOR
     Serial.print(F("free1: "));
     Serial.println(freeMemory());
+    #  endif
     # endif
     #endif
     pinMode(PIN_BLINK, OUTPUT);
@@ -593,8 +595,10 @@ setup(void)
     led.start();
     #ifdef SERIAL
     # ifdef MEMORY
+    #  ifndef SIMULATOR
     Serial.print(F("free2: "));
     Serial.println(freeMemory());
+    #  endif
     # endif
     #endif
 }
@@ -611,9 +615,8 @@ loop(void)
     static unsigned long started = 0;
     
     /* testing */
-    #undef SERIAL
     #define TESTING
-    //#undef TESTING
+    #undef TESTING
     #ifdef TESTING    
     static LED_spaceinvaders1 *p = new LED_spaceinvaders1();
     p->loop();
@@ -628,8 +631,10 @@ loop(void)
     if (started == 0 || started + 20l * 1000l < millis()) {
         #ifdef SERIAL
         # ifdef MEMORY
+	#  ifndef SIMULATOR
         Serial.print(F("Free Memory before free: "));
         Serial.println(freeMemory());
+        #  endif
         # endif
         #endif
         if (phase[0] != NULL) {
@@ -639,8 +644,10 @@ loop(void)
         }
         #ifdef SERIAL
         # ifdef MEMORY
+	#  ifndef SIMULATOR
         Serial.print(F("Free Memory after free: "));
         Serial.println(freeMemory());
+        #  endif
         # endif
         #endif
         switch (++phasenr % 10) {
@@ -652,14 +659,16 @@ loop(void)
             case  4: NEW_ANIMATION(LED_sinus2);
             case  5: NEW_ANIMATION(LED_lineshorver1)
             case  6: NEW_ANIMATION(LED_squares1)
-            case  7: NEW_ANIMATION(LED_mario1)
-            case  8: NEW_ANIMATION(LED_torch1)
+            case  7: NEW_ANIMATION(LED_torch1)
+            case  8: NEW_ANIMATION(LED_mario1)
             case  9: NEW_ANIMATION(LED_torch2)
         }
         #ifdef SERIAL
         # ifdef MEMORY
+	#  ifndef SIMULATOR
         Serial.print(F("Free Memory after new: "));
         Serial.println(freeMemory());
+        #  endif
         # endif
         #endif
         started = millis();
