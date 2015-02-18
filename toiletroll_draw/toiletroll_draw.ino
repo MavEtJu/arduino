@@ -157,9 +157,9 @@ LED_sinus1::animation(void)
         float f = piece * M_PI / 180 * o;
         float s = sin(f) * VIEW_HEIGHT / 2 + VIEW_HEIGHT / 2;
 
-        led.dot(m, s, led.colour_yellow);
-        led.dot((m + VIEW_WIDTH / 3) % VIEW_WIDTH, s, led.colour_blue);
-        led.dot((m + 2 * VIEW_WIDTH / 3) % VIEW_WIDTH, s, led.colour_green);
+        led.dot(m, (int)s, led.colour_yellow);
+        led.dot((m + VIEW_WIDTH / 3) % VIEW_WIDTH, (int)s, led.colour_blue);
+        led.dot((m + 2 * VIEW_WIDTH / 3) % VIEW_WIDTH, (int)s, led.colour_green);
     }
 }
 
@@ -195,7 +195,7 @@ LED_sinus2::animation(void)
         float f = piece * M_PI / 180 * o;
         float s = sin(f) * height;
 
-        led.dot(m, s + VIEW_HEIGHT / 2, led.colour_yellow);
+        led.dot(m, (int)s + VIEW_HEIGHT / 2, led.colour_yellow);
     }
 }
 
@@ -547,7 +547,7 @@ LED_torch2::animation(void)
     uint16_t o = step;
     float f = piece * M_PI / 180 * o;
     float s = sin(f) * VIEW_HEIGHT;
-    uint8_t floor_intensity = (VIEW_HEIGHT << 1) + s;
+    uint8_t floor_intensity = (VIEW_HEIGHT << 1) + (int)s;
     LED colour_floor = led.Color(floor_intensity, floor_intensity, 0);
 
     for (uint8_t c = 0; c < COALS; c++) {
