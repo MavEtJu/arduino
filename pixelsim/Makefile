@@ -4,7 +4,7 @@
 
 # Remove the -O2 since it broke wrefresh(screen) from libcurses for some reason.
 CFLAGS	= -Wall -Werror -I. -Wno-char-subscripts -g
-CXXFLAGS	= -Wall -Werror -I. -Wno-char-subscripts -g
+CXXFLAGS	= ${CFLAGS}
 
 all:	test StringEncodeMain
 
