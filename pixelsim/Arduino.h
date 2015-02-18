@@ -3,6 +3,7 @@
 #define Arduino__h
 
 #include <sys/types.h>
+#include <stdint.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
