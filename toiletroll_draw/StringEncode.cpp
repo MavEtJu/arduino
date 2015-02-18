@@ -11,57 +11,56 @@ StringEncode::StringEncode(void)
     // Nothing
 }
 
-uint16_t
-StringEncode::EncodePlain(const char *in, char *out, uint16_t plainLen, uint16_t *encodedLen)
+void
+StringEncode::EncodePlain(const char *in, char *out, uint16_t plainBytes, uint16_t *encodedBits, uint16_t *encodedBytes)
 {
-    uint16_t c;
+    uint16_t c, i;
     uint16_t bits[8];
 
-    *encodedLen = 0;
-    // printf("plainLen:%d\n", plainLen);
-    for (c = 0; c < plainLen; c += 8) {
+    *encodedBits = 0;
+    *encodedBytes = 0;
+    for (c = 0; c < plainBytes; c += 8) {
 	// printf("c:%d\n", c);
-	bits[7] = in[c + 0] != ' ';
-	bits[6] = in[c + 1] != ' ';
-	bits[5] = in[c + 2] != ' ';
-	bits[4] = in[c + 3] != ' ';
-	bits[3] = in[c + 4] != ' ';
-	bits[2] = in[c + 5] != ' ';
-	bits[1] = in[c + 6] != ' ';
-	bits[0] = in[c + 7] != ' ';
+	memset(bits, 0, sizeof(bits));
+	for (i = 0; i < 8; i++) {
+	    if (c + i < plainBytes) {
+		bits[7-i] = in[c + i] != ' ';
+		(*encodedBits)++;
+	    }
+	}
 	if (out != NULL)
 	    out[c / 8] = (bits[7] << 7) + (bits[6] << 6) + (bits[5] << 5) +
 			 (bits[4] << 4) + (bits[3] << 3) + (bits[2] << 2) +
 			 (bits[1] << 1) + bits[0];
 	// printf("x:%x\n", out[c/8]);
-	(*encodedLen)++;
+	(*encodedBytes)++;
     }
-    return *encodedLen;
 }
 
-uint16_t
-StringEncode::DecodePlain(const char *in, char *out, uint16_t encodedLen, uint16_t *decodedLen)
+void
+StringEncode::DecodePlain(const char *in, char *out, uint16_t encodedBits, uint16_t *decodedBytes)
 {
     uint16_t c;
     unsigned char ch;
 
-    *decodedLen = 0;
+    *decodedBytes = 0;
 
     if (out != NULL)
 	out[0] = 0;
-    for (c = 0; c < encodedLen; c++) {
-	ch = in[c];
+    for (c = 0; c < encodedBits; c += 8) {
+	ch = in[c / 8];
 	for (int8_t i = 7; i >= 0; i--) {
-	    if (out != NULL) {
-		if ((ch >> i) % 2 != 0)
-		    strcat(out, "X");
-		else
-		    strcat(out, " ");
+	    if (c + (7 - i) < encodedBits) {
+		if (out != NULL) {
+		    if ((ch >> i) % 2 != 0)
+			strcat(out, "X");
+		    else
+			strcat(out, " ");
+		}
+		(*decodedBytes)++;
 	    }
-	    (*decodedLen)++;
 	}
     }
-    return *decodedLen;
 }
 
 void
