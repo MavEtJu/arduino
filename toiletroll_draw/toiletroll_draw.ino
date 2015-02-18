@@ -211,7 +211,8 @@ class LED_spaceinvaders1 : public LED_Animation {
     StringEncode *enc;
     const char **imgs;
     LED colours[LED_spaceinvaders_IMGS];
-    uint8_t width[LED_spaceinvaders_IMGS], height[LED_spaceinvaders_IMGS];
+    uint8_t width[LED_spaceinvaders_IMGS];
+    uint8_t enclen[LED_spaceinvaders_IMGS];
 };
 
 void
@@ -241,7 +242,7 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
     // From https://0.s3.envato.com/files/69626951/space-invaders-icons-set-colour-prev.jpg
 
     width[0] = 16;
-    height[0] = 8;
+    enclen[0] = 16;
     imgs[0] = PSTR(
 	/*
 	|  X      X  |
@@ -257,7 +258,7 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 	);
 
     width[1] = 16;
-    height[1] = 9;
+    enclen[1] = 18;
     imgs[1] = PSTR(
 	/*
 	|  X   X  |
@@ -274,7 +275,7 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 	);
 
     width[2] = 16;
-    height[2] = 7;
+    enclen[2] = 14;
     imgs[2] = PSTR(
 	/*
 	|   XXX   |
@@ -289,7 +290,7 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 	);
 
     width[3] = 16;
-    height[3] = 8;
+    enclen[3] = 16;
     imgs[3] = PSTR(
 	/*
 	|  XXXXX  |
@@ -305,7 +306,7 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 	);
 
     width[4] = 16;
-    height[4] = 8;
+    enclen[4] = 16;
     imgs[4] = PSTR(
 	/*
 	|   XXXX   |
@@ -321,7 +322,7 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 	);
 
     width[5] = 16;
-    height[5] = 6;
+    enclen[5] = 12;
     imgs[5] = PSTR(
 	/*
 	|   X X   |
@@ -335,7 +336,7 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 	);
 
     width[6] = 16;
-    height[7] = 7;
+    enclen[6] = 14;
     imgs[6] = PSTR(
 	/*
 	|   X X   |
@@ -350,7 +351,7 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 	);
 
     width[7] = 16;
-    height[7] = 8;
+    enclen[7] = 16;
     imgs[7] = PSTR(
 	/*
 	|  X     X  |
@@ -366,7 +367,7 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 	);
 
     width[8] = 8;
-    height[8] = 8;
+    enclen[8] = 8;
     imgs[8] = PSTR(
 	/*
 	|   XX   |
@@ -388,11 +389,13 @@ LED_spaceinvaders1::animation(void)
     uint8_t imgnr = (step / 100) % LED_spaceinvaders_IMGS;
     char in[17];
     char ch[16 * 9 + 1];
-    memcpy_P(in, imgs[imgnr], height[imgnr] * width[imgnr] / 8);
-    enc->DecodePlain(in, ch, width[imgnr] * height[imgnr] / 8);
+    uint16_t declen;
+
+    memcpy_P(in, imgs[imgnr], enclen[imgnr]);
+    enc->DecodePlain(in, ch, enclen[imgnr], &declen);
     // strcpy_P(ch, decode(imgs[imgnr]));
 
-    led.blob(step % (VIEW_WIDTH + 24) - 12, 1, width[imgnr], strlen(ch) / width[imgnr], ch, colours[imgnr]);
+    led.blob(step % (VIEW_WIDTH + 24) - 12, 1, width[imgnr], declen / width[imgnr], ch, colours[imgnr]);
 }
 
 //===========================
