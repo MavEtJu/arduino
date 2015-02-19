@@ -9,8 +9,8 @@
 #define PIN_BLINK   13
 #define PIN_STRIP    6
 
-#define VIEW_WIDTH   17
-#define VIEW_HEIGHT  14
+#define VIEW_WIDTH   16
+#define VIEW_HEIGHT  16
 
 LEDstrip led = LEDstrip(VIEW_WIDTH * VIEW_HEIGHT, PIN_STRIP);
 
@@ -476,7 +476,6 @@ LED_mario1::LED_mario1(void) : LED_Animation()
 void
 LED_mario1::animation(void)
 {
-    strcpy_P(ps, img);
     for (uint8_t y = 0; y < 16; y++) {
 	for (uint8_t x = 0; x < 16; x++) {
 	    LED c = led.colour_black;
@@ -490,7 +489,7 @@ LED_mario1::animation(void)
 	    }
 
 //	    led.dot((x + step) % VIEW_HEIGHT, VIEW_HEIGHT - y, c);
-	    led.dot(x , VIEW_HEIGHT - y, c);
+	    led.dot(x , VIEW_HEIGHT - 1 - y, c);
 	}
     }
 }
@@ -613,7 +612,7 @@ setup(void)
     # endif
     #endif
     pinMode(PIN_BLINK, OUTPUT);
-    led.view(VIEW_WIDTH, VIEW_HEIGHT);
+    led.view(VIEW_WIDTH, VIEW_HEIGHT, VIEW_SQUARE);
     led.start();
     #ifdef SERIAL
     # ifdef MEMORY
@@ -640,7 +639,7 @@ loop(void)
     #define TESTING
     #undef TESTING
     #ifdef TESTING    
-    static LED_spaceinvaders1 *p = new LED_spaceinvaders1();
+    static LED_mario1 *p = new LED_mario1();
     p->loop();
     led.display();
     started++;
@@ -650,7 +649,7 @@ loop(void)
     return;
     #endif
     
-    if (started == 0 || started + 20l * 1000l < millis()) {
+    if (started == 0 || started + 30l * 1000l < millis()) {
         #ifdef SERIAL
         # ifdef MEMORY
 	#  ifndef SIMULATOR

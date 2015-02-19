@@ -6,6 +6,8 @@
 
 #include <Adafruit_NeoPixel.h>
 
+#define VIEW_SQUARE  1
+
 struct LED {
     uint8_t green;
     uint8_t red;
@@ -19,7 +21,7 @@ class LEDstrip : public Adafruit_NeoPixel {
     void start(void);
     
     // Set the size of the view
-    void view(uint16_t xmax, uint16_t ymax);
+    void view(uint16_t xmax, uint16_t ymax, uint8_t options);
     
     // Display the current view
     void display(void);
@@ -72,6 +74,7 @@ class LEDstrip : public Adafruit_NeoPixel {
     LED *_strip;
     LED _colourlast;
     uint16_t _xmax, _ymax;
+    uint8_t _options;
     const char **letters;
     void letters_init(void);
 
