@@ -20,6 +20,7 @@ LEDstrip::LEDstrip(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin
     _matrix = NULL;
     _ymax = 0;
     _xmax = 0;
+    _options = 0;
     letters_init();
 }
 
@@ -42,7 +43,7 @@ LEDstrip::start(void)
 
 // Set the size of the view
 void
-LEDstrip::view(uint16_t xmax, uint16_t ymax)
+LEDstrip::view(uint16_t xmax, uint16_t ymax, uint8_t options)
 {
     _xmax = xmax;
     _ymax = ymax;
@@ -50,12 +51,29 @@ LEDstrip::view(uint16_t xmax, uint16_t ymax)
     for (uint16_t y = 0; y < _ymax; y++) {
         _matrix[y] = _strip + y * _xmax;
     }
+    _options = options;
 }
 
 // Display the drawn objects to the LED strip
 void
 LEDstrip::display(void)
 {
+    if (_options & VIEW_SQUARE != 0) {
+        char s[3 * 20];
+        
+        // Even lines go RTL, odd lines go LTR
+        for (uint8_t y = 0; y < _ymax; y++) {
+            if (y % 2 == 0)
+                continue;
+            LED l;
+            LED *line = _matrix[y];
+            for (uint8_t x = 0; x < VIEW_WIDTH / 2; x++) {
+                l = line[x];
+                line[x] = line[VIEW_WIDTH - 1 - x];
+                line[VIEW_WIDTH - 1 - x] = l;
+            }
+        }
+    }
     show();
 }
 
