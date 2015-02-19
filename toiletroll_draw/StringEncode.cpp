@@ -20,7 +20,6 @@ StringEncode::EncodePlain(const char *in, char *out, uint16_t plainBytes, uint16
     *encodedBits = 0;
     *encodedBytes = 0;
     for (c = 0; c < plainBytes; c += 8) {
-	// printf("c:%d\n", c);
 	memset(bits, 0, sizeof(bits));
 	for (i = 0; i < 8; i++) {
 	    if (c + i < plainBytes) {
@@ -32,7 +31,6 @@ StringEncode::EncodePlain(const char *in, char *out, uint16_t plainBytes, uint16
 	    out[c / 8] = (bits[7] << 7) + (bits[6] << 6) + (bits[5] << 5) +
 			 (bits[4] << 4) + (bits[3] << 3) + (bits[2] << 2) +
 			 (bits[1] << 1) + bits[0];
-	// printf("x:%x\n", out[c/8]);
 	(*encodedBytes)++;
     }
 }
