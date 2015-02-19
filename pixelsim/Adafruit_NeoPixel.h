@@ -14,11 +14,16 @@ class Adafruit_NeoPixel {
 	char *pixels;
 	void begin(void);
 	void show(void);
+	#ifdef SIMULATOR
+	void setsize(uint16_t w, uint16_t h);
+	#endif
 
     private:
 	WINDOW *mainwindow;
-	WINDOW *screen;
+	WINDOW *screenLED;
+	WINDOW *screenSerial;
 	int colour[8];
+	uint16_t VIEW_HEIGHT, VIEW_WIDTH;
 
 	void show1(void);
 	void show2(void);

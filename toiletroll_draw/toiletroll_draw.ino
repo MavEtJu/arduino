@@ -612,7 +612,11 @@ setup(void)
     # endif
     #endif
     pinMode(PIN_BLINK, OUTPUT);
+    #ifdef SIMULATOR
+    led.view(VIEW_WIDTH, VIEW_HEIGHT, 0);
+    #else
     led.view(VIEW_WIDTH, VIEW_HEIGHT, VIEW_SQUARE);
+    #endif
     led.start();
     #ifdef SERIAL
     # ifdef MEMORY
@@ -637,9 +641,9 @@ loop(void)
     
     /* testing */
     #define TESTING
-    #undef TESTING
+    //#undef TESTING
     #ifdef TESTING    
-    static LED_mario1 *p = new LED_mario1();
+    static LED_squares1 *p = new LED_squares1();
     p->loop();
     led.display();
     started++;

@@ -14,6 +14,13 @@ Adafruit_NeoPixel::begin(void)
 }
 
 void
+Adafruit_NeoPixel::setsize(uint16_t w, uint16_t h)
+{
+	VIEW_WIDTH = w;
+	VIEW_HEIGHT = h;
+}
+
+void
 Adafruit_NeoPixel::initcurses(void)
 {
 	mainwindow = initscr();
@@ -34,7 +41,8 @@ Adafruit_NeoPixel::initcurses(void)
 	wattrset(mainwindow, COLOR_PAIR(COLOR_WHITE));
 	refresh();
 	wrefresh(mainwindow);
-	screen = newwin(0, 0, 0, 0);
+	screenLED = newwin(VIEW_HEIGHT + 2, VIEW_WIDTH + 2, 0, 0);
+	screenSerial = newwin(10, 80, VIEW_HEIGHT + 3, 0);
 }
 
 void
@@ -61,24 +69,21 @@ Adafruit_NeoPixel::show2(void)
 		nodelay(mainwindow, TRUE);
 	}
 
-	#define VIEW_WIDTH   17
-	#define VIEW_HEIGHT  14
 
-
-	wattrset(screen, colour[COLOR_WHITE]);
-	werase(screen);
+	wattrset(screenLED, colour[COLOR_WHITE]);
+	werase(screenLED);
 	curs_set(0);
-	mvwprintw(screen, 0, 0, "+");
-	mvwprintw(screen, 0, VIEW_WIDTH + 1, "+");
-	mvwprintw(screen, VIEW_HEIGHT + 1, 0, "+");
-	mvwprintw(screen, VIEW_HEIGHT + 1, VIEW_WIDTH + 1, "+");
+	mvwprintw(screenLED, 0, 0, "+");
+	mvwprintw(screenLED, 0, VIEW_WIDTH + 1, "+");
+	mvwprintw(screenLED, VIEW_HEIGHT + 1, 0, "+");
+	mvwprintw(screenLED, VIEW_HEIGHT + 1, VIEW_WIDTH + 1, "+");
 	for (x = 0; x < VIEW_WIDTH; x++) {
-		mvwprintw(screen, 0, 1 + x, "-");
-		mvwprintw(screen, VIEW_HEIGHT + 1, 1 + x, "-");
+		mvwprintw(screenLED, 0, 1 + x, "-");
+		mvwprintw(screenLED, VIEW_HEIGHT + 1, 1 + x, "-");
 	}
 	for (y = 0; y < VIEW_HEIGHT; y++) {
-		mvwprintw(screen, 1 + y, 0, "|");
-		mvwprintw(screen, 1 + y, VIEW_WIDTH + 1, "|");
+		mvwprintw(screenLED, 1 + y, 0, "|");
+		mvwprintw(screenLED, 1 + y, VIEW_WIDTH + 1, "|");
 	}
 
 	c = COLOR_BLACK;
@@ -119,25 +124,28 @@ Adafruit_NeoPixel::show2(void)
 				}
 			}
 
-			wattrset(screen, colour[c]);
+			wattrset(screenLED, colour[c]);
 			if (c == COLOR_BLACK)
-				mvwprintw(screen, VIEW_HEIGHT - y, 1 + x, " ");
+				mvwprintw(screenLED, VIEW_HEIGHT - y, 1 + x, " ");
 			else
-				mvwprintw(screen, VIEW_HEIGHT - y, 1 + x, "X");
+				mvwprintw(screenLED, VIEW_HEIGHT - y, 1 + x, "X");
 		}
 	}
+	wrefresh(screenLED);
 
-	wattrset(screen, colour[COLOR_WHITE]);
+	// Serial logging
+	wattrset(screenSerial, colour[COLOR_WHITE]);
+	werase(screenLED);
+	curs_set(0);
 	int linenr = Serial.lines();
-	y = VIEW_HEIGHT + 3;
-	while (linenr != 1) {
-		mvwprintw(screen, y++, 1, Serial.get());
+	y = 0;
+	while (linenr != 0) {
+		char *l = Serial.get();
+		mvwprintw(screenSerial, y++, 1, l);
 		linenr--;
 	}
 	Serial.clear();
-
-	wattrset(screen, colour[COLOR_WHITE]);
-	wrefresh(screen);
+	wrefresh(screenSerial);
 
 	if ((input = wgetch(mainwindow)) == ERR)
 		return;
@@ -150,8 +158,6 @@ Adafruit_NeoPixel::show2(void)
 void
 Adafruit_NeoPixel::show1(void)
 {
-	#define VIEW_WIDTH   17
-	#define VIEW_HEIGHT  14
 	int16_t x, y;
 
 	printf("\033[H");

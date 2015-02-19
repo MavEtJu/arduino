@@ -52,25 +52,27 @@ LEDstrip::view(uint16_t xmax, uint16_t ymax, uint8_t options)
         _matrix[y] = _strip + y * _xmax;
     }
     _options = options;
+
+    #ifdef SIMULATOR
+    setsize(xmax, ymax);
+    #endif
 }
 
 // Display the drawn objects to the LED strip
 void
 LEDstrip::display(void)
 {
-    if (_options & VIEW_SQUARE != 0) {
-        char s[3 * 20];
-        
+    if ((_options & VIEW_SQUARE) != 0) {
         // Even lines go RTL, odd lines go LTR
         for (uint8_t y = 0; y < _ymax; y++) {
             if (y % 2 == 0)
                 continue;
             LED l;
             LED *line = _matrix[y];
-            for (uint8_t x = 0; x < VIEW_WIDTH / 2; x++) {
+            for (uint8_t x = 0; x < _xmax / 2; x++) {
                 l = line[x];
-                line[x] = line[VIEW_WIDTH - 1 - x];
-                line[VIEW_WIDTH - 1 - x] = l;
+                line[x] = line[_xmax - 1 - x];
+                line[_xmax - 1 - x] = l;
             }
         }
     }

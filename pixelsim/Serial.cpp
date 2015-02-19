@@ -12,7 +12,8 @@ Serial::Serial(void)
 	// 10k should be enough
 	log = (char **)malloc(sizeof(char *) * LOGNR);
 	for (int c = 0; c < LOGNR; c++) {
-		log[c] = (char *)malloc(sizeof(char) * 80);
+		log[c] = (char *)malloc(sizeof(char) * 50);
+		memset(log[c], 0, 49);
 	}
 	lognr_written = 0;
 	lognr_read = 0;
