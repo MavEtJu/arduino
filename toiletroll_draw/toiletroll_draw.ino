@@ -1,5 +1,6 @@
 
 #include <Arduino.h>
+#include <time.h>
 #ifdef MEMORY
 #include <MemoryFree.h>
 #endif
@@ -200,7 +201,7 @@ LED_sinus2::animation(void)
 }
 
 // ==============================
-#define LED_spaceinvaders_IMGS 9
+#define LED_spaceinvaders_IMGS 11
 class LED_spaceinvaders1 : public LED_Animation {
     public:
     LED_spaceinvaders1(void);
@@ -210,8 +211,9 @@ class LED_spaceinvaders1 : public LED_Animation {
 
     StringEncode *enc;
     const char **imgs;
-    char img[100];
+    char img[128];
     uint16_t imglen;
+    uint16_t x;
     uint8_t imgnr;
     LED colours[LED_spaceinvaders_IMGS];
     uint8_t width[LED_spaceinvaders_IMGS];
@@ -229,7 +231,7 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 {
     delayms = 150;
 
-    imgnr = LED_spaceinvaders_IMGS;
+    imgnr = 255;
 
     colours[0] = led.colour_green;
     colours[1] = led.colour_blue;
@@ -240,6 +242,8 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
     colours[6] = led.colour_red;
     colours[7] = led.colour_green;
     colours[8] = led.colour_magenta;
+    colours[9] = led.colour_green;
+    colours[10] = led.colour_white;
     enc = new StringEncode();
 
     imgs = (const char **)malloc(sizeof(char *) * LED_spaceinvaders_IMGS);
@@ -386,6 +390,37 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
 	*/
 	"\x18\x3c\x7e\xdb\xff\x24\x5a\xa5"
 	);
+
+    width[9] = 15;
+    encbits[9] = 105;
+    imgs[9] = PSTR(
+	/*
+	|       X       |
+	|      XXX      |
+	|      XXX      |
+	| XXXXXXXXXXXXX |
+	|XXXXXXXXXXXXXXX|
+	|XXXXXXXXXXXXXXX|
+	|XXXXXXXXXXXXXXX|
+	*/
+	"\x01\x00\x07\x00\x0e\x03\xff\xef\xff\xff\xff\xff\xff\x80"
+	);
+
+    width[10] = 16;
+    encbits[10] = 112;
+    imgs[10] = PSTR(
+	/*
+	|     XXXXXX     |
+	|   XXXXXXXXXX   |
+	|  XXXXXXXXXXXX  |
+	| XX XX XX XX XX |
+	|XXXXXXXXXXXXXXXX|
+	|  XXX  XX  XXX  |
+	|   X        X   |
+	*/
+	"\x07\xe0\x1f\xf8\x3f\xfc\x6d\xb6\xff\xff\x39\x9c\x10\x08"
+	);
+
 }
 
 void
@@ -393,9 +428,9 @@ LED_spaceinvaders1::animation(void)
 {
     uint8_t height;
 
-    if (step % 50 == 0) {
+    if (imgnr > LED_spaceinvaders_IMGS || x == VIEW_WIDTH) {
 	uint16_t encbytes;
-	char in[14];
+	char in[16];
 
 	imgnr++;
 	imgnr %= LED_spaceinvaders_IMGS;
@@ -403,6 +438,8 @@ LED_spaceinvaders1::animation(void)
 	encbytes = 1 + encbits[imgnr] / 8;
 	memcpy_P(in, imgs[imgnr], encbytes);
 	enc->DecodePlain(in, img, encbits[imgnr], &imglen);
+
+	x = -width[imgnr];
 
 	Serial.print("imgnr:");
 	Serial.print(imgnr);
@@ -414,7 +451,7 @@ LED_spaceinvaders1::animation(void)
 
     height = imglen / width[imgnr];
 
-    led.blob((step - 9) % (VIEW_WIDTH + 9), 2, width[imgnr], height, img, colours[imgnr]);
+    led.blob(x++, 2, width[imgnr], height, img, colours[imgnr]);
 }
 
 //===========================
@@ -602,6 +639,7 @@ LED_torch2::animation(void)
 void
 setup(void)
 {
+    srandom(time(NULL));
     #ifdef SERIAL
     Serial.begin(9600);
     # ifdef MEMORY
@@ -643,12 +681,12 @@ loop(void)
     #define TESTING
     //#undef TESTING
     #ifdef TESTING    
-    static LED_squares1 *p = new LED_squares1();
+    static LED_spaceinvaders1 *p = new LED_spaceinvaders1();
     p->loop();
     led.display();
     started++;
     #ifdef SERIAL
-    Serial.println(started);
+    //Serial.println(started);
     #endif
     return;
     #endif
