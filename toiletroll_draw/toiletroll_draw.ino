@@ -1,6 +1,8 @@
 
 #include <Arduino.h>
+#ifdef SIMULATOR
 #include <time.h>
+#endif
 #ifdef MEMORY
 #include <MemoryFree.h>
 #endif
@@ -99,6 +101,129 @@ LED_lineshorver1::animation(void)
         led.line(0, m, VIEW_WIDTH, m);
     else
         led.line(m % VIEW_HEIGHT, 0, m % VIEW_HEIGHT, VIEW_WIDTH);
+}
+
+// ============================
+class LED_lines1 : public LED_Animation {
+    public:
+    LED_lines1(void);
+    void animation(void);
+    LED c;
+    char dir;
+    uint16_t x1, x2, y1, y2;
+    int16_t dx1, dx2, dy1, dy2;
+    uint16_t x1_final, x2_final, y1_final, y2_final;
+};
+
+LED_lines1::LED_lines1(void)
+{
+    x1 = y1 = 0;
+    x2 = VIEW_WIDTH - 1;
+    y2 = VIEW_HEIGHT - 1;
+    x1_final = x1;
+    x2_final = x2;
+    y1_final = y1;
+    y2_final = y2;
+    dir = 0;
+    c = led.colour_red;
+    delayms = 20;
+}
+
+void
+LED_lines1::animation(void)
+{
+    /* There are several different modes:
+     *
+     * 0: x1, y1 move, x2, y2 still
+     * 1: x1, y1 still, x2, y2 move
+     * 2: x1, x2 move, y1, y2 still
+     * 3: x1, x2 still, y1, y2 move
+     * 4: x1 move, y1, x2, y2 still
+     * 5: y1 move, x1, x2, y2 still
+     * 6: x2 move, x1, y1, y2 still
+     * 7: y2 move, x1, y1, x2 still
+     
+     */
+     
+    if (x1 == x1_final && x2 == x2_final && y1 == y1_final && y2 == y2_final) {
+        dir = random() % 8;
+        switch (dir) {
+            case 0:
+                dx1 = x1 == 0 ? 1 : -1;
+                dy1 = y1 == 0 ? 1 : -1;
+                dx2 = dy2 = 0;
+                x1_final = dx1 == 1 ? VIEW_WIDTH - 1 : 0;
+                y1_final = dy1 == 1 ? VIEW_HEIGHT - 1 : 0;
+                x2_final = x2;
+                y2_final = y2;
+                break;
+            case 1:
+                dx1 = dy1 = 0;
+                dx2 = x2 == 0 ? 1 : -1;
+                dy2 = y2 == 0 ? 1 : -1;
+                x1_final = x1;
+                y1_final = y1;
+                x2_final = dx2 == 1 ? VIEW_WIDTH - 1 : 0;
+                y2_final = dy2 == 1 ? VIEW_HEIGHT - 1 : 0;
+                break;
+            case 2:
+                dx1 = x1 == 0 ? 1 : -1;
+                dx2 = x2 == 0 ? 1 : -1;
+                dy1 = dy2 = 0;
+                x1_final = dx1 == 1 ? VIEW_WIDTH - 1 : 0;
+                x2_final = dx2 == 1 ? VIEW_WIDTH - 1 : 0;
+                y1_final = y1;
+                y2_final = y2;
+                break;
+            case 3:
+                dx1 = dx2 = 0;
+                dy1 = y1 == 0 ? 1 : -1;
+                dy2 = y2 == 0 ? 1 : -1;
+                x1_final = x1;
+                x2_final = x2;
+                y1_final = dy1 == 1 ? VIEW_HEIGHT - 1 : 0;
+                y2_final = dy2 == 1 ? VIEW_HEIGHT - 1 : 0;
+                break;
+            case 4:
+                dx1 = x1 == 0 ? 1 : -1;
+                dy1 = dx2 = dy2 = 0;
+                x1_final = dx1 == 1 ? VIEW_WIDTH - 1 : 0;
+                y1_final = y1;
+                x2_final = x2;
+                y2_final = y2;
+                break;
+            case 5:
+                dy1 = y1 == 0 ? 1 : -1;
+                dx1 = dx2 = dy2 = 0;
+                x1_final = x1;
+                y1_final = dy1 == 1 ? VIEW_HEIGHT - 1 : 0;
+                x2_final = x2;
+                y2_final = y2;
+                break;
+            case 6:
+                dx2 = x2 == 0 ? 1 : -1;
+                dx1 = dy1 = dy2 = 0;
+                x1_final = x1;
+                y1_final = y1;
+                x2_final = dx2 == 1 ? VIEW_WIDTH - 1 : 0;
+                y2_final = y2;
+                break;
+            case 7:
+                dy2 = y2 == 0 ? 1 : -1;
+                dx1 = dy1 = dx2 = 0;
+                x1_final = x1;
+                y1_final = y1;
+                x2_final = x2;
+                y2_final = dy2 == 1 ? VIEW_HEIGHT - 1 : 0;
+                break;
+        }
+    }
+    
+    x1 += dx1;
+    y1 += dy1;
+    x2 += dx2;
+    y2 += dy2;    
+    led.line(x1, y1, x2, y2, c);
 }
 
 // ============================
@@ -441,12 +566,14 @@ LED_spaceinvaders1::animation(void)
 
 	x = -width[imgnr];
 
+#ifdef SERIAL
 	Serial.print("imgnr:");
 	Serial.print(imgnr);
 	Serial.print(" - width:");
 	Serial.print(width[imgnr]);
 	Serial.print(" - imglen:");
 	Serial.println(imglen);
+#endif
     }
 
     height = imglen / width[imgnr];
@@ -639,31 +766,35 @@ LED_torch2::animation(void)
 void
 setup(void)
 {
+#ifdef SIMULATOR
     srandom(time(NULL));
-    #ifdef SERIAL
+#else
+    randomSeed(analogRead(0));
+#endif
+#ifdef SERIAL
     Serial.begin(9600);
-    # ifdef MEMORY
-    #  ifndef SIMULATOR
+# ifdef MEMORY
+#  ifndef SIMULATOR
     Serial.print(F("free1: "));
     Serial.println(freeMemory());
-    #  endif
-    # endif
-    #endif
+#  endif
+# endif
+#endif
     pinMode(PIN_BLINK, OUTPUT);
-    #ifdef SIMULATOR
+#ifdef SIMULATOR
     led.view(VIEW_WIDTH, VIEW_HEIGHT, 0);
-    #else
+#else
     led.view(VIEW_WIDTH, VIEW_HEIGHT, VIEW_SQUARE);
-    #endif
+#endif
     led.start();
-    #ifdef SERIAL
-    # ifdef MEMORY
-    #  ifndef SIMULATOR
+#ifdef SERIAL
+# ifdef MEMORY
+#  ifndef SIMULATOR
     Serial.print(F("free2: "));
     Serial.println(freeMemory());
-    #  endif
-    # endif
-    #endif
+#  endif
+# endif
+#endif
 }
 
 LED_Animation *phase[1] = {NULL};
@@ -678,41 +809,41 @@ loop(void)
     static unsigned long started = 0;
     
     /* testing */
-    #define TESTING
-    //#undef TESTING
-    #ifdef TESTING    
-    static LED_spaceinvaders1 *p = new LED_spaceinvaders1();
+#define TESTING
+//#undef TESTING
+#ifdef TESTING    
+    static LED_lines1 *p = new LED_lines1();
     p->loop();
     led.display();
     started++;
-    #ifdef SERIAL
-    //Serial.println(started);
-    #endif
+# ifdef SERIAL
+    Serial.println(started);
+# endif
     return;
-    #endif
+#endif
     
     if (started == 0 || started + 30l * 1000l < millis()) {
-        #ifdef SERIAL
-        # ifdef MEMORY
-	#  ifndef SIMULATOR
+#ifdef SERIAL
+# ifdef MEMORY
+#  ifndef SIMULATOR
         Serial.print(F("Free Memory before free: "));
         Serial.println(freeMemory());
-        #  endif
-        # endif
-        #endif
+#  endif
+# endif
+#endif
         if (phase[0] != NULL) {
             phase[0]->destroy();
             delete(phase[0]);
             phase[0] = NULL;
         }
-        #ifdef SERIAL
-        # ifdef MEMORY
-	#  ifndef SIMULATOR
+#ifdef SERIAL
+# ifdef MEMORY
+#  ifndef SIMULATOR
         Serial.print(F("Free Memory after free: "));
         Serial.println(freeMemory());
-        #  endif
-        # endif
-        #endif
+#  endif
+# endif
+#endif
         switch (++phasenr % 10) {
             #define NEW_ANIMATION(t)    { t *p = new t(); phase[0] = p; break; }
             case  0: NEW_ANIMATION(LED_led00_blink1)
@@ -726,14 +857,14 @@ loop(void)
             case  8: NEW_ANIMATION(LED_mario1)
             case  9: NEW_ANIMATION(LED_torch2)
         }
-        #ifdef SERIAL
-        # ifdef MEMORY
-	#  ifndef SIMULATOR
+#ifdef SERIAL
+# ifdef MEMORY
+#  ifndef SIMULATOR
         Serial.print(F("Free Memory after new: "));
         Serial.println(freeMemory());
-        #  endif
-        # endif
-        #endif
+#  endif
+# endif
+#endif
         started = millis();
     }
     if (phase[0] != NULL)
