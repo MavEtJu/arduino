@@ -135,7 +135,7 @@ Adafruit_NeoPixel::show2(void)
 
 	// Serial logging
 	wattrset(screenSerial, colour[COLOR_WHITE]);
-	werase(screenLED);
+	werase(screenSerial);
 	curs_set(0);
 	int linenr = Serial.lines();
 	y = 0;
