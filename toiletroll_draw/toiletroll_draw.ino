@@ -1,3 +1,4 @@
+#define MEMORY
 
 #include <Arduino.h>
 #ifdef SIMULATOR
@@ -46,7 +47,6 @@ LED_Animation::~LED_Animation(void)
 }
 void LED_Animation::destroy(void)
 {
-    //
 }
 void
 LED_Animation::loop(void)
@@ -57,6 +57,61 @@ LED_Animation::loop(void)
 }
 void
 LED_Animation::animation(void)
+{
+    // Nothing yet
+}
+
+// ==============================
+class LED_Slideshow {
+    public:
+    LED_Slideshow(void);
+    virtual ~LED_Slideshow(void);
+    virtual void display();
+    virtual void destroy(void);
+    void loop(void);
+    
+    const char **imgs;
+    uint8_t imgnr, imgnrs;
+    
+    LED colours[5];
+    uint8_t COLOUR_RED, COLOUR_WHITE, COLOUR_BLUE, COLOUR_YELLOW, COLOUR_GREEN, COLOUR_BROWN, COLOUR_BLACK;
+
+    
+    void set_imgnr(uint8_t nrs);
+    char shown;
+};
+LED_Slideshow::LED_Slideshow(void)
+{
+    imgnr = 0;
+    shown = 0;
+    imgs = NULL;
+}
+LED_Slideshow::~LED_Slideshow(void)
+{
+    if (imgs != NULL)
+        free(imgs);
+}
+void
+LED_Slideshow::set_imgnr(uint8_t nrs)
+{
+    imgnrs = nrs;
+    imgs = (const char **)malloc(sizeof(const char *) * imgnrs);
+}
+void LED_Slideshow::destroy(void)
+{
+}
+void
+LED_Slideshow::loop(void)
+{
+    if (shown)
+        display();
+    shown = 1;
+    delay(1000);
+    imgnr++;
+    imgnr %= imgnrs;
+}
+void
+LED_Slideshow::display(void)
 {
     // Nothing yet
 }
@@ -104,15 +159,19 @@ LED_lineshorver1::animation(void)
 }
 
 // ============================
+#define LED_lines1_history    5
 class LED_lines1 : public LED_Animation {
     public:
     LED_lines1(void);
     void animation(void);
-    LED c;
+    void shift_history(void);
+    LED c[LED_lines1_history];
     char dir;
     uint16_t x1, x2, y1, y2;
     int16_t dx1, dx2, dy1, dy2;
     uint16_t x1_final, x2_final, y1_final, y2_final;
+    
+    uint16_t x1s[LED_lines1_history], x2s[LED_lines1_history], y1s[LED_lines1_history], y2s[LED_lines1_history];
 };
 
 LED_lines1::LED_lines1(void)
@@ -124,9 +183,35 @@ LED_lines1::LED_lines1(void)
     x2_final = x2;
     y1_final = y1;
     y2_final = y2;
+    
+    for (uint8_t i = 0; i < 3; i++) {
+        x1s[i] = x1;
+        y1s[i] = y1;
+        x2s[i] = x2;
+        y2s[i] = y2;
+    }
     dir = 0;
-    c = led.colour_red;
-    delayms = 20;
+    c[0] = led.Color(16, 0, 0);
+    c[1] = led.Color(8, 0, 0);
+    c[2] = led.Color(4, 0, 0);
+    c[3] = led.Color(2, 0, 0);
+    c[4] = led.Color(1, 0, 0);
+    delayms = 40;
+}
+
+void
+LED_lines1::shift_history(void)
+{
+    for (uint8_t i = LED_lines1_history - 1; i > 0; i--) {
+        x1s[i] = x1s[i - 1];
+        y1s[i] = y1s[i - 1];
+        x2s[i] = x2s[i - 1];
+        y2s[i] = y2s[i - 1];
+    }
+    x1s[0] = x1;
+    y1s[0] = y1;
+    x2s[0] = x2;
+    y2s[0] = y2;
 }
 
 void
@@ -222,8 +307,12 @@ LED_lines1::animation(void)
     x1 += dx1;
     y1 += dy1;
     x2 += dx2;
-    y2 += dy2;    
-    led.line(x1, y1, x2, y2, c);
+    y2 += dy2;
+    shift_history();
+    for (int8_t i = LED_lines1_history - 1; i >= 0; i--) {
+        led.line(x1s[i], y1s[i], x2s[i], y2s[i], c[i]);
+    }
+
 }
 
 // ============================
@@ -582,17 +671,14 @@ LED_spaceinvaders1::animation(void)
 }
 
 //===========================
-class LED_mario1 : public LED_Animation {
+class LED_mario1 : public LED_Slideshow {
 public:
     LED_mario1(void);
-    void animation(void);
-    LED colours[6];
-    const char *img;
-    char ps[257];
-    uint8_t COLOUR_RED, COLOUR_SKIN, COLOUR_BROWN, COLOUR_BLACK, COLOUR_BLUE, COLOUR_YELLOW;
+    void display(void);
+    uint8_t COLOUR_SKIN;
 };
 
-LED_mario1::LED_mario1(void) : LED_Animation()
+LED_mario1::LED_mario1(void) : LED_Slideshow()
 {
     /*
      * R red
@@ -638,7 +724,7 @@ LED_mario1::LED_mario1(void) : LED_Animation()
 }
 
 void
-LED_mario1::animation(void)
+LED_mario1::display(void)
 {
     for (uint8_t y = 0; y < 16; y++) {
 	for (uint8_t x = 0; x < 16; x++) {
@@ -652,11 +738,189 @@ LED_mario1::animation(void)
 	    case 'y': c = colours[COLOUR_YELLOW]; break;
 	    }
 
-//	    led.dot((x + step) % VIEW_HEIGHT, VIEW_HEIGHT - y, c);
 	    led.dot(x , VIEW_HEIGHT - 1 - y, c);
 	}
     }
 }
+
+//===========================
+class LED_mushroom1 : public LED_Slideshow {
+public:
+    LED_mushroom1(void);
+    void display(void);
+    LED colours[3];
+    const char *img;
+    char ps[257];
+    uint8_t COLOUR_RED, COLOUR_WHITE, COLOUR_BLACK;
+};
+
+LED_mushroom1::LED_mushroom1(void) : LED_Slideshow()
+{
+    /*
+     * R red
+     * W white
+     * B blue
+     *
+     */
+    img = PSTR(
+        "     BBBBBB     "
+        "   BBRRRR..BB   "
+        "  B..RRRR....B  "
+        " B..RRRRRR....B "
+        " B..R....RR...B "
+        "BRRR......RRRRRB"
+        "BRRR......RR..RB"
+        "B.RR......R....B"
+        "B..RR....RR....B"
+        "B..RRRRRRRRR..RB"
+        "B.RRBBBBBBBBRRRB"
+        " BBB..B..B..BBB "
+        "  B...B..B...B  "
+        "  B..........B  "
+        "   BB......BB   "
+        "     BBBBBB     "
+    );
+    COLOUR_RED =	0;
+    COLOUR_WHITE =	1;
+    COLOUR_BLACK =	2;
+    colours[COLOUR_RED   ] = led.Color(244 >> 4,   0 >> 4,  10 >> 4);
+    colours[COLOUR_BLACK ] = led.Color( 26 >> 4,  26 >> 4,  26 >> 4);
+    colours[COLOUR_WHITE ] = led.Color(255 >> 4, 255 >> 4, 255 >> 4);
+    
+    strcpy_P(ps, img);
+}
+
+void
+LED_mushroom1::display(void)
+{
+    for (uint8_t y = 0; y < 16; y++) {
+	for (uint8_t x = 0; x < 16; x++) {
+	    LED c = led.colour_black;
+	    switch (ps[y * 16 + x]) {
+	    case 'R': c = colours[COLOUR_RED   ]; break;
+	    case '.': c = colours[COLOUR_WHITE ]; break;
+	    case 'B': c = colours[COLOUR_BLACK ]; break;
+	    }
+
+	    led.dot(x , VIEW_HEIGHT - 1 - y, c);
+	}
+    }
+}
+
+// =======================
+#define LED_galaga1_IMGS    3
+class LED_galaga1 : public LED_Slideshow {
+public:
+    LED_galaga1(void);
+    void display(void);
+};
+
+LED_galaga1::LED_galaga1(void) : LED_Slideshow()
+{
+    /*
+     * R red
+     * W white
+     * B blue
+     *
+     * http://kandipatterns.com/patterns/misc/galaga-ship-5207
+     *
+     */
+    set_imgnr(LED_galaga1_IMGS);
+    imgs[0] = PSTR(
+        "       W        "
+        "       W        "
+        "       W        "
+        "      WWW       "
+        "      WWW       "
+        "      WWW       "
+        "   R  WWW  R    "
+        "   R WWWWW R    "
+        "R  WBWWRWWBW  R "
+        "R  BWWRRRWWB  R "
+        "W  WWWRWRWWW  W "
+        "W WWWWWWWWWWW W "
+        "WWWWWRWWWRWWWWW "
+        "WWW RRWWWRR WWW "
+        "WW  RR W RR  WW "
+        "W      W      W "
+    );
+    
+    /*
+     * From http://fc03.deviantart.net/fs50/f/2009/271/8/f/Galaga_Sprites_by_mammaDX.png
+     */
+    imgs[1] = PSTR(
+        "                "
+        "                "
+        " BB   Y   BB    "
+        "  BBYRYRYBB     "
+        "   BRRYRRB      "
+        "    YYYYY       "
+        "    BYYYB       "
+        "  BBBRRRBBB     "
+        " BBB RRR BBB    "
+        "BBBB YYY BBBB   "
+        "BBB  RRR  BBB   "
+        "BBB   R   BBB   "
+        "                "
+        "                "
+        "                "
+        "                "
+    );
+    
+    imgs[2] = PSTR(
+        "      G G       "
+        "      G G       "
+        "   GGRRGRRGG    "
+        "    GRRGRRG     "
+        "     GGGGG      "
+        "    GYYGYYG     "
+        "  GGGYYYYYGGG   "
+        "GGGGGYYYYYGGGG  "
+        " GGGGYYYYYGGG   "
+        " GRGG R R GGRG  "
+        "GGRG  R R  GRGG "
+        "GRGG       GGRG "
+        "GRRG       GRRG "
+        "GRRG       GRRG "
+        "GGGG       GGGG "
+        " GG         GG "
+    );
+    
+    COLOUR_RED =	0;
+    COLOUR_WHITE =	1;
+    COLOUR_BLUE =	2;
+    COLOUR_YELLOW =     3;
+    COLOUR_GREEN =      4;
+    colours[COLOUR_RED   ] = led.Color(244 >> 4,   0 >> 4,  10 >> 4);
+    colours[COLOUR_BLUE  ] = led.Color( 84 >> 4,  45 >> 4, 214 >> 4);
+    colours[COLOUR_WHITE ] = led.Color(255 >> 4, 255 >> 4, 255 >> 4);
+    colours[COLOUR_YELLOW] = led.Color(225 >> 4, 202 >> 4,  47 >> 4);
+    colours[COLOUR_GREEN ] = led.Color(  0 >> 4, 255 >> 4,   0 >> 4);
+}
+
+void
+LED_galaga1::display(void)
+{
+    char ps[257];
+    strcpy_P(ps, imgs[imgnr]);
+    
+    for (uint8_t y = 0; y < 16; y++) {
+	for (uint8_t x = 0; x < 16; x++) {
+	    LED c = led.colour_black;
+	    switch (ps[y * 16 + x]) {
+	    case 'R': c = colours[COLOUR_RED   ]; break;
+	    case 'W': c = colours[COLOUR_WHITE ]; break;
+	    case 'B': c = colours[COLOUR_BLUE  ]; break;
+            case 'Y': c = colours[COLOUR_YELLOW]; break;
+            case 'G': c = colours[COLOUR_GREEN ]; break;
+	    }
+
+	    led.dot(x , VIEW_HEIGHT - 1 - y, c);
+	}
+    }
+}
+
+
 
 // =======================
 struct coal {
@@ -797,7 +1061,8 @@ setup(void)
 #endif
 }
 
-LED_Animation *phase[1] = {NULL};
+LED_Animation *animation[1] = {NULL};
+LED_Slideshow *slideshow[1] = {NULL};
 
 void
 loop(void)
@@ -809,10 +1074,11 @@ loop(void)
     static unsigned long started = 0;
     
     /* testing */
-#define TESTING
-//#undef TESTING
+Serial.println(freeMemory());
+
+//#define TESTING
 #ifdef TESTING    
-    static LED_lines1 *p = new LED_lines1();
+    static LED_galaga1 *p = new LED_galaga1();
     p->loop();
     led.display();
     started++;
@@ -822,7 +1088,7 @@ loop(void)
     return;
 #endif
     
-    if (started == 0 || started + 30l * 1000l < millis()) {
+    if (started == 0 || started + 3l * 1000l < millis()) {
 #ifdef SERIAL
 # ifdef MEMORY
 #  ifndef SIMULATOR
@@ -831,10 +1097,15 @@ loop(void)
 #  endif
 # endif
 #endif
-        if (phase[0] != NULL) {
-            phase[0]->destroy();
-            delete(phase[0]);
-            phase[0] = NULL;
+        if (animation[0] != NULL) {
+            animation[0]->destroy();
+            delete(animation[0]);
+            animation[0] = NULL;
+        }
+        if (slideshow[0] != NULL) {
+            slideshow[0]->destroy();
+            delete(slideshow[0]);
+            slideshow[0] = NULL;
         }
 #ifdef SERIAL
 # ifdef MEMORY
@@ -844,18 +1115,25 @@ loop(void)
 #  endif
 # endif
 #endif
-        switch (++phasenr % 10) {
-            #define NEW_ANIMATION(t)    { t *p = new t(); phase[0] = p; break; }
+        switch (++phasenr % 13) {
+            slideshow[0] = NULL;
+            animation[0] = NULL;
+            
+            #define NEW_ANIMATION(t)  { t *p = new t(); animation[0] = p; break; }
+            #define NEW_SLIDESHOW(t)    { t *p = new t(); slideshow[0] = p; break; }
             case  0: NEW_ANIMATION(LED_led00_blink1)
             case  1: NEW_ANIMATION(LED_quickbrowfox1)
             case  2: NEW_ANIMATION(LED_spaceinvaders1)
             case  3: NEW_ANIMATION(LED_sinus1);
-            case  4: NEW_ANIMATION(LED_sinus2);
-            case  5: NEW_ANIMATION(LED_lineshorver1)
-            case  6: NEW_ANIMATION(LED_squares1)
-            case  7: NEW_ANIMATION(LED_torch1)
-            case  8: NEW_ANIMATION(LED_mario1)
-            case  9: NEW_ANIMATION(LED_torch2)
+            case  4: NEW_ANIMATION(LED_lines1);
+            case  5: NEW_ANIMATION(LED_sinus2);
+            case  6: NEW_ANIMATION(LED_lineshorver1)
+            case  7: NEW_ANIMATION(LED_squares1)
+            case  8: NEW_ANIMATION(LED_torch1)
+            case  9: NEW_SLIDESHOW(LED_mario1)
+            case 10: NEW_SLIDESHOW(LED_mushroom1)
+            case 11: NEW_SLIDESHOW(LED_galaga1)
+            case 12: NEW_ANIMATION(LED_torch2)
         }
 #ifdef SERIAL
 # ifdef MEMORY
@@ -867,8 +1145,10 @@ loop(void)
 #endif
         started = millis();
     }
-    if (phase[0] != NULL)
-        phase[0]->loop();
+    if (animation[0] != NULL)
+        animation[0]->loop();
+    if (slideshow[0] != NULL)
+        slideshow[0]->loop();
  
     led.display();
 }
