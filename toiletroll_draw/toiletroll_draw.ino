@@ -1097,7 +1097,7 @@ Serial.println(freeMemory());
             case  6: NEW_ANIMATION(LED_lineshorver1)
             case  7: NEW_ANIMATION(LED_squares1)
             case  8: NEW_ANIMATION(LED_torch1)
-       //     case  9: NEW_SLIDESHOW(LED_mario1)
+            case  9: NEW_SLIDESHOW(LED_mario1)
             case 10: NEW_SLIDESHOW(LED_galaga1)
             case 11: NEW_ANIMATION(LED_torch2)
         }
