@@ -62,7 +62,7 @@ LED_Animation::animation(void)
 }
 
 // ==============================
-#define LED_Slideshow_MAX    20
+#define LED_Slideshow_MAX    15
 enum {
     COLOUR_RED, COLOUR_WHITE,COLOUR_BLUE, COLOUR_YELLOW, COLOUR_GREEN, COLOUR_BROWN, COLOUR_BLACK,
     COLOUR_MAGENTA, COLOUR_CYAN, COLOUR_REALBLACK, COLOUR_BRIGHTWHITE,
@@ -74,13 +74,15 @@ class LED_Slideshow {
     virtual ~LED_Slideshow(void);
     virtual void display();
     virtual void destroy(void);
+    void add_colourmap(char c, uint8_t value, uint8_t r, uint8_t g, uint8_t b);
+    LED find_colourmap(char c);
     void loop(void);
-    
+
     const char **imgs;
     uint8_t imgnr, imgnrs;
 
     LED colours[LED_Slideshow_MAX];
-    uint8_t colourmap[128];
+    uint8_t colourmap[LED_Slideshow_MAX];
 
     void set_imgs(uint8_t nrs);
     char shown;
@@ -102,32 +104,37 @@ LED_Slideshow::LED_Slideshow(void)
      * r brown
      * m magenta
      */
-    colourmap[' '] = COLOUR_REALBLACK;
-    colourmap['.'] = COLOUR_BLACK;
-    colourmap['W'] = COLOUR_WHITE;
-    colourmap['y'] = COLOUR_YELLOW;
-    colourmap['G'] = COLOUR_GREEN;
-    colourmap['R'] = COLOUR_RED;
-    colourmap['B'] = COLOUR_BLUE;
-    colourmap['r'] = COLOUR_BROWN;
-    colourmap['m'] = COLOUR_MAGENTA;
-
-    colours[COLOUR_REALBLACK  ] = led.Color(  0,   0,   0);
-    colours[COLOUR_BRIGHTWHITE] = led.Color(255, 255, 255);
-    colours[COLOUR_BLACK      ] = led.Color(  1,   1,   1);
-    colours[COLOUR_WHITE      ] = led.Color(  8,   8,   8);
-    colours[COLOUR_YELLOW     ] = led.Color(  8,   8,   0);
-    colours[COLOUR_GREEN      ] = led.Color(  0,   8,   0);
-    colours[COLOUR_RED        ] = led.Color(  8,   0,   0);
-    colours[COLOUR_BLUE       ] = led.Color(  0,   0,   8);
-    colours[COLOUR_BROWN      ] = led.Color(  8,   8,   8);
-    colours[COLOUR_MAGENTA    ] = led.Color(  8,   0,   8);
-    colours[COLOUR_CYAN       ] = led.Color(  0,   8,   8);
+    add_colourmap(' ' , COLOUR_REALBLACK,     0,   0,   0);
+    add_colourmap('\0', COLOUR_BRIGHTWHITE, 255, 255, 255);
+    add_colourmap('.' , COLOUR_BLACK,         1,   1,   1);
+    add_colourmap('W' , COLOUR_WHITE,         8,   8,   8);
+    add_colourmap('y' , COLOUR_YELLOW,        8,   8,   0);
+    add_colourmap('G' , COLOUR_GREEN,         0,   8,   0);
+    add_colourmap('R' , COLOUR_RED,           8,   0,   0);
+    add_colourmap('B' , COLOUR_BLUE,          0,   0,   8);
+    add_colourmap('r' , COLOUR_BROWN,         6,   2,   2);
+    add_colourmap('m' , COLOUR_MAGENTA,       8,   0,   8);
+    add_colourmap('c' , COLOUR_CYAN,          0,   8,   8);
 }
 LED_Slideshow::~LED_Slideshow(void)
 {
     if (imgs != NULL)
         free(imgs);
+}
+void
+LED_Slideshow::add_colourmap(char c, uint8_t v, uint8_t r, uint8_t g, uint8_t b)
+{
+    colourmap[v] = c;
+    colours[v] = led.Color(r, g, b);
+}
+LED
+LED_Slideshow::find_colourmap(char c)
+{
+    for (uint8_t i = 0; i < LED_Slideshow_MAX; i++) {
+        if (colourmap[i] == c)
+            return colours[i];
+    }
+    return find_colourmap('\0');
 }
 void
 LED_Slideshow::set_imgs(uint8_t nrs)
@@ -208,7 +215,7 @@ class LED_lines1 : public LED_Animation {
     uint16_t x1, x2, y1, y2;
     int16_t dx1, dx2, dy1, dy2;
     uint16_t x1_final, x2_final, y1_final, y2_final;
-    
+
     uint16_t x1s[LED_lines1_history], x2s[LED_lines1_history], y1s[LED_lines1_history], y2s[LED_lines1_history];
 };
 
@@ -221,7 +228,7 @@ LED_lines1::LED_lines1(void)
     x2_final = x2;
     y1_final = y1;
     y2_final = y2;
-    
+
     for (uint8_t i = 0; i < 3; i++) {
         x1s[i] = x1;
         y1s[i] = y1;
@@ -265,9 +272,9 @@ LED_lines1::animation(void)
      * 5: y1 move, x1, x2, y2 still
      * 6: x2 move, x1, y1, y2 still
      * 7: y2 move, x1, y1, x2 still
-     
+
      */
-     
+
     if (x1 == x1_final && x2 == x2_final && y1 == y1_final && y2 == y2_final) {
         dir = random() % 8;
         switch (dir) {
@@ -341,7 +348,7 @@ LED_lines1::animation(void)
                 break;
         }
     }
-    
+
     x1 += dx1;
     y1 += dy1;
     x2 += dx2;
@@ -369,7 +376,7 @@ void
 LED_squares1::animation(void)
 {
     int m = step % (2 * VIEW_HEIGHT);
-    
+
     if (m == 0)
 	c = led.colour_random();
     led.colour_set(c);
@@ -421,7 +428,7 @@ class LED_sinus2 : public LED_Animation {
     public:
     LED_sinus2(void);
     void animation(void);
-    
+
     int8_t height;
     int8_t direction;
 };
@@ -773,20 +780,18 @@ LED_mario1::LED_mario1(void) : LED_Slideshow()
         "   ..WWWWWW..   "
         "     ......     "
     );
-    colourmap['S'] = COLOUR_SKIN;
-    COLOUR_SKIN =	COLOUR_MAX + 1;
-    colours[COLOUR_SKIN  ] = led.Color(208 >> 4, 189 >> 4, 156 >> 4);
+    add_colourmap('S', COLOUR_MAX + 1, 208 >> 4, 189 >> 4, 156 >> 4);
 }
 
 void
 LED_mario1::display(void)
-{  
+{
     char ps[257];
     strcpy_P(ps, imgs[imgnr]);
-    
+
     for (uint8_t y = 0; y < 16; y++) {
 	for (uint8_t x = 0; x < 16; x++) {
-	    LED c = colours[colourmap[ps[y * 16 + x]]];
+	    LED c = find_colourmap(ps[y * 16 + x]);
 	    led.dot(x , VIEW_HEIGHT - 1 - y, c);
 	}
     }
@@ -794,7 +799,6 @@ LED_mario1::display(void)
 }
 
 // =======================
-#define LED_galaga1_IMGS    3
 class LED_galaga1 : public LED_Slideshow {
 public:
     LED_galaga1(void);
@@ -811,7 +815,7 @@ LED_galaga1::LED_galaga1(void) : LED_Slideshow()
      * http://kandipatterns.com/patterns/misc/galaga-ship-5207
      *
      */
-    set_imgs(LED_galaga1_IMGS);
+    set_imgs(3);
     imgs[0] = PSTR(
         "       W        "
         "       W        "
@@ -830,7 +834,7 @@ LED_galaga1::LED_galaga1(void) : LED_Slideshow()
         "WW  RR W RR  WW "
         "W      W      W "
     );
-    
+
     /*
      * From http://fc03.deviantart.net/fs50/f/2009/271/8/f/Galaga_Sprites_by_mammaDX.png
      */
@@ -852,7 +856,7 @@ LED_galaga1::LED_galaga1(void) : LED_Slideshow()
         "                "
         "                "
     );
-    
+
     imgs[2] = PSTR(
         "      G G       "
         "      G G       "
@@ -878,10 +882,10 @@ LED_galaga1::display(void)
 {
     char ps[257];
     strcpy_P(ps, imgs[imgnr]);
-    
+
     for (uint8_t y = 0; y < 16; y++) {
 	for (uint8_t x = 0; x < 16; x++) {
-	    LED c = colours[colourmap[ps[y * 16 + x]]];
+	    LED c = find_colourmap(ps[y * 16 + x]);
 	    led.dot(x , VIEW_HEIGHT - 1 - y, c);
 	}
     }
@@ -902,7 +906,7 @@ class LED_torch1 : public LED_Animation {
     LED colour_floor;
 
     coal coals[COALS];
-    
+
     LED_torch1(void);
     void animation(void);
 };
@@ -910,7 +914,7 @@ class LED_torch1 : public LED_Animation {
 LED_torch1::LED_torch1(void)
 {
     colour_floor = led.Color(9 << 2, 4, 0);
-    
+
     for (uint8_t c = 0; c < COALS; c++) {
         coals[c].x = 0;
         coals[c].y = 1;
@@ -954,7 +958,7 @@ LED_torch2::LED_torch2(void)
 
 void
 LED_torch2::animation(void)
-{   
+{
     // Change in intensity of the lowest level
     uint32_t piece = 360 / (4 * VIEW_WIDTH);
     uint16_t o = step;
@@ -990,8 +994,125 @@ LED_torch2::animation(void)
             led.dot(x, y + 1, colour_spark);
         }
     }
-    
+
     led.line(0, 0, VIEW_WIDTH, 0, colour_floor);
+}
+
+// =================================
+class LED_minecraft1 : public LED_Slideshow {
+    public:
+    LED_minecraft1(void);
+    void display(void);
+};
+
+LED_minecraft1::LED_minecraft1(void)
+{
+    set_imgs(4);
+
+    add_colourmap('0',  0, 137 >> 3, 103 >> 3,  39 >> 3);
+    add_colourmap('1',  1, 104 >> 3,  78 >> 3,  30 >> 3);
+    add_colourmap('2',  2,  73 >> 3,  54 >> 3,  21 >> 3);
+    add_colourmap('3',  3,  40 >> 3,  30 >> 3,  11 >> 3);
+    add_colourmap('4',  4, 255 >> 3, 255 >> 3, 255 >> 3);
+    add_colourmap('5',  5, 216 >> 3, 216 >> 3, 216 >> 3);
+    add_colourmap('6',  6, 150 >> 3, 150 >> 3, 150 >> 3);
+    add_colourmap('7',  7, 107 >> 3, 107 >> 3, 107 >> 3);
+    add_colourmap('8',  8,  68 >> 3,  68 >> 3,  68 >> 3);
+    add_colourmap('9',  9,  40 >> 3,  40 >> 3,  40 >> 3);
+    add_colourmap(' ', 10,   0 >> 3,   0 >> 3,   0 >> 3);
+
+
+    /* From http://fc04.deviantart.net/fs71/f/2013/162/9/5/minecraft_sword_patterns_by_sarrel-d68p8xf.png */
+    imgs[0] = PSTR(
+        "             888"
+        "            8458"
+        "           84548"
+        "          84548 "
+        "         84548  "
+        "        84548   "
+        "  99   84548    "
+        "  979 84548     "
+        "   9694548      "
+        "   969548       "
+        "    9699        "
+        "   219669       "
+        "  203 9979      "
+        "9913            "
+        "969             "
+        "999             "
+        );
+
+    /* http://fc04.deviantart.net/fs71/f/2013/162/9/8/minecraft_pickaxe_patterns_by_sarrel-d68p8h7.png */
+    imgs[1] = PSTR(
+        "                "
+        "                "
+        "     88888      "
+        "    845665821   "
+        "     88886603   "
+        "         2568   "
+        "        213658  "
+        "       203 868  "
+        "      213  868  "
+        "     203   858  "
+        "    213    848  "
+        "   203      8   "
+        "  213           "
+        " 203            "
+        " 13             "
+        "                "
+    );
+    /* http://fc06.deviantart.net/fs70/f/2013/162/8/5/minecraft_axe_patterns_by_sarrel-d68p7v3.png */
+    imgs[2] = PSTR(
+        "                "
+        "         88     "
+        "        8448    "
+        "       84658    "
+        "      8466621   "
+        "      8456763   "
+        "       8826768  "
+        "        203668  "
+        "       213 88   "
+        "      203       "
+        "     213        "
+        "    203         "
+        "   213          "
+        "  203           "
+        "  13            "
+        "                "
+        );
+
+    /* http://fc07.deviantart.net/fs70/f/2013/162/e/1/minecraft_shovel_patterns_by_sarrel-d68p8pl.png */
+    imgs[3] = PSTR(
+        "                "
+        "                "
+        "          888   "
+        "         84468  "
+        "        845648  "
+        "       8456548  "
+        "        26548   "
+        "       20348    "
+        "      203 8     "
+        "     213        "
+        "    203         "
+        "   213          "
+        " 3203           "
+        " 213            "
+        "  23            "
+        "                "
+        );
+}
+void
+LED_minecraft1::display(void)
+{
+    char ps[257];
+    strcpy_P(ps, imgs[imgnr]);
+
+    for (uint8_t y = 0; y < 16; y++) {
+	for (uint8_t x = 0; x < 16; x++) {
+	    LED c = find_colourmap(ps[y * 16 + x]);
+	    led.dot(x , VIEW_HEIGHT - 1 - y, c);
+	}
+    }
 }
 
 void
@@ -1039,13 +1160,15 @@ loop(void)
 
     static uint16_t phasenr = 5;
     static unsigned long started = 0;
-    
-    /* testing */
-Serial.println(freeMemory());
 
-//#define TESTING
-#ifdef TESTING    
-    static LED_mario1 *p = new LED_mario1();
+    /* testing */
+#ifdef SERIAL
+    Serial.println(freeMemory());
+#endif
+
+#define TESTING
+#ifdef TESTING
+    static LED_minecraft1 *p = new LED_minecraft1();
     p->loop();
     led.display();
     started++;
@@ -1054,7 +1177,7 @@ Serial.println(freeMemory());
 # endif
     return;
 #endif
-    
+
     if (started == 0 || started + 30l * 1000l < millis()) {
 #ifdef SERIAL
 # ifdef MEMORY
@@ -1082,10 +1205,10 @@ Serial.println(freeMemory());
 #  endif
 # endif
 #endif
-        switch (++phasenr % 12) {
+        switch (++phasenr % 13) {
             slideshow[0] = NULL;
             animation[0] = NULL;
-            
+
             #define NEW_ANIMATION(t)  { t *p = new t(); animation[0] = p; break; }
             #define NEW_SLIDESHOW(t)    { t *p = new t(); slideshow[0] = p; break; }
             case  0: NEW_ANIMATION(LED_led00_blink1)
@@ -1100,6 +1223,8 @@ Serial.println(freeMemory());
             case  9: NEW_SLIDESHOW(LED_mario1)
             case 10: NEW_SLIDESHOW(LED_galaga1)
             case 11: NEW_ANIMATION(LED_torch2)
+            case 12: NEW_SLIDESHOW(LED_minecraft1)
+
         }
 #ifdef SERIAL
 # ifdef MEMORY
@@ -1115,6 +1240,6 @@ Serial.println(freeMemory());
         animation[0]->loop();
     if (slideshow[0] != NULL)
         slideshow[0]->loop();
- 
+
     led.display();
 }
