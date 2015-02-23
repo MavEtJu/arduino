@@ -7,6 +7,8 @@
 #endif
 #include "led_tools.h"
 #include "StringEncode.h"
+#include "LED_Slideshow.h"
+#include "LED_Animation.h"
 
 #define PIN_BLINK   13
 #define PIN_STRIP    6
@@ -23,156 +25,6 @@ loop_blink(void)
     static byte onoff = 0;
     digitalWrite(PIN_BLINK, (++onoff % 8) == 0 ? HIGH : LOW);
 }
-
-// ==============================
-class LED_Animation {
-public:
-    LED_Animation(void);
-    virtual ~LED_Animation(void);
-    virtual void destroy(void);
-    void loop(void);
-    virtual void animation(void);
-    uint16_t step;
-    uint8_t delayms;
-};
-LED_Animation::LED_Animation(void)
-{
-    step = 0;
-    delayms = 100;
-}
-LED_Animation::~LED_Animation(void)
-{
-}
-void LED_Animation::destroy(void)
-{
-}
-void
-LED_Animation::loop(void)
-{
-    animation();
-    delay(delayms);
-    step++;
-}
-void
-LED_Animation::animation(void)
-{
-    // Nothing yet
-}
-
-// ==============================
-#define LED_Slideshow_MAX    30
-enum {
-    COLOUR_RED, COLOUR_WHITE,COLOUR_BLUE, COLOUR_YELLOW, COLOUR_GREEN, COLOUR_BROWN, COLOUR_BLACK,
-    COLOUR_MAGENTA, COLOUR_CYAN, COLOUR_REALBLACK,
-    COLOUR_MAX
-};
-class LED_Slideshow {
-    public:
-    LED_Slideshow(void);
-    virtual ~LED_Slideshow(void);
-    virtual void display();
-    virtual void destroy(void);
-    virtual void create_colourmap(void);
-    void add_colourmap(char c, uint8_t value, uint8_t r, uint8_t g, uint8_t b);
-    LED find_colourmap(char c);
-    void loop(void);
-
-    const char **imgs;
-    uint8_t imgnr, imgnrs;
-
-    LED colours[LED_Slideshow_MAX];
-    uint8_t colourmap[LED_Slideshow_MAX];
-
-    void set_imgs(uint8_t nrs);
-    char shown;
-};
-LED_Slideshow::LED_Slideshow(void)
-{
-    imgnr = 0;
-    shown = 0;
-    imgs = NULL;
-    create_colourmap();
-}
-
-void
-LED_Slideshow::create_colourmap(void)
-{
-    memset(&colourmap, 0, sizeof(colourmap));
-
-    /*
-     * . black
-     * W white
-     * R red
-     * G green
-     * B blue
-     * y yellow
-     * r brown
-     * m magenta
-     */
-    add_colourmap(' ' , COLOUR_REALBLACK,     0,   0,   0);
-    add_colourmap('.' , COLOUR_BLACK,         1,   1,   1);
-    add_colourmap('W' , COLOUR_WHITE,         8,   8,   8);
-    add_colourmap('y' , COLOUR_YELLOW,        8,   8,   0);
-    add_colourmap('G' , COLOUR_GREEN,         0,   8,   0);
-    add_colourmap('R' , COLOUR_RED,           8,   0,   0);
-    add_colourmap('B' , COLOUR_BLUE,          0,   0,   8);
-    add_colourmap('r' , COLOUR_BROWN,         6,   2,   2);
-    add_colourmap('m' , COLOUR_MAGENTA,       8,   0,   8);
-    add_colourmap('c' , COLOUR_CYAN,          0,   8,   8);
-}
-LED_Slideshow::~LED_Slideshow(void)
-{
-    if (imgs != NULL)
-        free(imgs);
-}
-void
-LED_Slideshow::add_colourmap(char c, uint8_t v, uint8_t r, uint8_t g, uint8_t b)
-{
-    colourmap[v] = c;
-    colours[v] = led.Color(r, g, b);
-}
-LED
-LED_Slideshow::find_colourmap(char c)
-{
-    for (uint8_t i = 0; i < LED_Slideshow_MAX; i++) {
-        if (colourmap[i] == c)
-            return colours[i];
-    }
-    return led.Color(255, 255, 255);
-}
-void
-LED_Slideshow::set_imgs(uint8_t nrs)
-{
-    imgnrs = nrs;
-    imgs = (const char **)malloc(sizeof(const char *) * imgnrs);
-}
-void LED_Slideshow::destroy(void)
-{
-}
-void
-LED_Slideshow::loop(void)
-{
-    if (shown)
-        display();
-    shown = 1;
-    delay(1000);
-    imgnr++;
-    imgnr %= imgnrs;
-}
-void
-LED_Slideshow::display(void)
-{
-    char ps[257];
-    strcpy_P(ps, imgs[imgnr]);
-
-    for (uint8_t y = 0; y < 16; y++) {
-	for (uint8_t x = 0; x < 16; x++) {
-	    LED c = find_colourmap(ps[y * 16 + x]);
-	    led.dot(x, VIEW_HEIGHT - 1 - y, c);
-	}
-    }
-}
-
 
 // ==============================
 class LED_led00_blink1 : public LED_Animation {
@@ -734,7 +586,7 @@ public:
     uint8_t COLOUR_SKIN;
 };
 
-LED_mario1::LED_mario1(void) : LED_Slideshow()
+LED_mario1::LED_mario1(void) : LED_Slideshow(&led, VIEW_HEIGHT)
 {
     /*
      * . black
@@ -800,7 +652,7 @@ public:
     LED_galaga1(void);
 };
 
-LED_galaga1::LED_galaga1(void) : LED_Slideshow()
+LED_galaga1::LED_galaga1(void) : LED_Slideshow(&led, VIEW_HEIGHT)
 {
     /*
      * R red
@@ -1025,7 +877,7 @@ LED_minecraft1::create_colourmap(void)
     add_colourmap('s', 29, 255 >> 4, 210 >> 4,   4 >> 4);
 }
 
-LED_minecraft1::LED_minecraft1(void) : LED_Slideshow()
+LED_minecraft1::LED_minecraft1(void) : LED_Slideshow(&led, VIEW_HEIGHT)
 {
     create_colourmap();
     set_imgs(6);
