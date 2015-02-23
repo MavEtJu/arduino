@@ -1,5 +1,3 @@
-#define MEMORY
-
 #include <Arduino.h>
 #ifdef SIMULATOR
 #include <time.h>
@@ -62,10 +60,10 @@ LED_Animation::animation(void)
 }
 
 // ==============================
-#define LED_Slideshow_MAX    15
+#define LED_Slideshow_MAX    30
 enum {
     COLOUR_RED, COLOUR_WHITE,COLOUR_BLUE, COLOUR_YELLOW, COLOUR_GREEN, COLOUR_BROWN, COLOUR_BLACK,
-    COLOUR_MAGENTA, COLOUR_CYAN, COLOUR_REALBLACK, COLOUR_BRIGHTWHITE,
+    COLOUR_MAGENTA, COLOUR_CYAN, COLOUR_REALBLACK,
     COLOUR_MAX
 };
 class LED_Slideshow {
@@ -74,6 +72,7 @@ class LED_Slideshow {
     virtual ~LED_Slideshow(void);
     virtual void display();
     virtual void destroy(void);
+    virtual void create_colourmap(void);
     void add_colourmap(char c, uint8_t value, uint8_t r, uint8_t g, uint8_t b);
     LED find_colourmap(char c);
     void loop(void);
@@ -92,7 +91,13 @@ LED_Slideshow::LED_Slideshow(void)
     imgnr = 0;
     shown = 0;
     imgs = NULL;
-    memset(&colourmap, COLOUR_BRIGHTWHITE, sizeof(colourmap));
+    create_colourmap();
+}
+
+void
+LED_Slideshow::create_colourmap(void)
+{
+    memset(&colourmap, 0, sizeof(colourmap));
 
     /*
      * . black
@@ -105,7 +110,6 @@ LED_Slideshow::LED_Slideshow(void)
      * m magenta
      */
     add_colourmap(' ' , COLOUR_REALBLACK,     0,   0,   0);
-    add_colourmap('\0', COLOUR_BRIGHTWHITE, 255, 255, 255);
     add_colourmap('.' , COLOUR_BLACK,         1,   1,   1);
     add_colourmap('W' , COLOUR_WHITE,         8,   8,   8);
     add_colourmap('y' , COLOUR_YELLOW,        8,   8,   0);
@@ -134,7 +138,7 @@ LED_Slideshow::find_colourmap(char c)
         if (colourmap[i] == c)
             return colours[i];
     }
-    return find_colourmap('\0');
+    return led.Color(255, 255, 255);
 }
 void
 LED_Slideshow::set_imgs(uint8_t nrs)
@@ -158,8 +162,17 @@ LED_Slideshow::loop(void)
 void
 LED_Slideshow::display(void)
 {
-    // Nothing yet
+    char ps[257];
+    strcpy_P(ps, imgs[imgnr]);
+
+    for (uint8_t y = 0; y < 16; y++) {
+	for (uint8_t x = 0; x < 16; x++) {
+	    LED c = find_colourmap(ps[y * 16 + x]);
+	    led.dot(x, VIEW_HEIGHT - 1 - y, c);
+	}
+    }
 }
+
 
 // ==============================
 class LED_led00_blink1 : public LED_Animation {
@@ -466,7 +479,6 @@ class LED_spaceinvaders1 : public LED_Animation {
     LED_spaceinvaders1(void);
     void destroy(void);
     void animation(void);
-    void decode(char *img, char *dest, uint16_t length);
 
     StringEncode *enc;
     const char **imgs;
@@ -719,7 +731,6 @@ LED_spaceinvaders1::animation(void)
 class LED_mario1 : public LED_Slideshow {
 public:
     LED_mario1(void);
-    void display(void);
     uint8_t COLOUR_SKIN;
 };
 
@@ -783,26 +794,10 @@ LED_mario1::LED_mario1(void) : LED_Slideshow()
     add_colourmap('S', COLOUR_MAX + 1, 208 >> 4, 189 >> 4, 156 >> 4);
 }
 
-void
-LED_mario1::display(void)
-{
-    char ps[257];
-    strcpy_P(ps, imgs[imgnr]);
-
-    for (uint8_t y = 0; y < 16; y++) {
-	for (uint8_t x = 0; x < 16; x++) {
-	    LED c = find_colourmap(ps[y * 16 + x]);
-	    led.dot(x , VIEW_HEIGHT - 1 - y, c);
-	}
-    }
-
-}
-
 // =======================
 class LED_galaga1 : public LED_Slideshow {
 public:
     LED_galaga1(void);
-    void display(void);
 };
 
 LED_galaga1::LED_galaga1(void) : LED_Slideshow()
@@ -876,22 +871,6 @@ LED_galaga1::LED_galaga1(void) : LED_Slideshow()
         " GG         GG  "
     );
 }
-
-void
-LED_galaga1::display(void)
-{
-    char ps[257];
-    strcpy_P(ps, imgs[imgnr]);
-
-    for (uint8_t y = 0; y < 16; y++) {
-	for (uint8_t x = 0; x < 16; x++) {
-	    LED c = find_colourmap(ps[y * 16 + x]);
-	    led.dot(x , VIEW_HEIGHT - 1 - y, c);
-	}
-    }
-}
-
-
 
 // =======================
 struct coal {
@@ -1002,14 +981,18 @@ LED_torch2::animation(void)
 class LED_minecraft1 : public LED_Slideshow {
     public:
     LED_minecraft1(void);
-    void display(void);
+    void create_colourmap(void);
 };
 
-LED_minecraft1::LED_minecraft1(void)
+void
+LED_minecraft1::create_colourmap(void)
 {
-    set_imgs(4);
+    memset(&colourmap, 0, sizeof(colourmap));
 
-    add_colourmap('0',  0, 137 >> 3, 103 >> 3,  39 >> 3);
+    add_colourmap(' ',  0,   0 >> 3,   0 >> 3,   0 >> 3);
+
+    // Tools (sword, pickaxe, shovel, axe)
+    add_colourmap('0', 10, 137 >> 3, 103 >> 3,  39 >> 3);
     add_colourmap('1',  1, 104 >> 3,  78 >> 3,  30 >> 3);
     add_colourmap('2',  2,  73 >> 3,  54 >> 3,  21 >> 3);
     add_colourmap('3',  3,  40 >> 3,  30 >> 3,  11 >> 3);
@@ -1019,9 +1002,35 @@ LED_minecraft1::LED_minecraft1(void)
     add_colourmap('7',  7, 107 >> 3, 107 >> 3, 107 >> 3);
     add_colourmap('8',  8,  68 >> 3,  68 >> 3,  68 >> 3);
     add_colourmap('9',  9,  40 >> 3,  40 >> 3,  40 >> 3);
-    add_colourmap(' ', 10,   0 >> 3,   0 >> 3,   0 >> 3);
+    
+    // Buckets
+    add_colourmap('a', 26,  53 >> 4,  53 >> 4,  53 >> 4);
+    add_colourmap('b', 11,  81 >> 4,  81 >> 4,  81 >> 4);
+    add_colourmap('c', 12, 114 >> 4, 114 >> 4, 114 >> 4);
+    add_colourmap('d', 13, 150 >> 4, 150 >> 4, 150 >> 4);
+    add_colourmap('e', 14, 168 >> 4, 168 >> 4, 168 >> 4);
+    add_colourmap('f', 15, 216 >> 4, 216 >> 4, 216 >> 4);
+    add_colourmap('g', 16, 255 >> 4, 255 >> 4, 255 >> 4);
+    add_colourmap('h', 17,  71 >> 4, 114 >> 4, 236 >> 4);
+    add_colourmap('i', 18,  58 >> 4, 101 >> 4, 223 >> 4);
+    add_colourmap('j', 19,  52 >> 4,  95 >> 4, 218 >> 4);
+    add_colourmap('k', 20,  50 >> 4,  93 >> 4, 215 >> 4);
+    add_colourmap('l', 21,  45 >> 4,  89 >> 4, 211 >> 4);
+    add_colourmap('m', 22,  63 >> 4,  87 >> 4, 154 >> 4);
+    add_colourmap('n', 23,  75 >> 4, 100 >> 4, 167 >> 4);
+    add_colourmap('o', 24,  82 >> 4, 105 >> 4, 174 >> 4);
+    add_colourmap('p', 25, 100 >> 4, 124 >> 4, 191 >> 4);
+    add_colourmap('q', 27, 255 >> 4,   2 >> 4,   0 >> 4);
+    add_colourmap('r', 28, 247 >> 4, 150 >> 4,  37 >> 4);
+    add_colourmap('s', 29, 255 >> 4, 210 >> 4,   4 >> 4);
+}
 
+LED_minecraft1::LED_minecraft1(void) : LED_Slideshow()
+{
+    create_colourmap();
+    set_imgs(6);
 
+    
     /* From http://fc04.deviantart.net/fs71/f/2013/162/9/5/minecraft_sword_patterns_by_sarrel-d68p8xf.png */
     imgs[0] = PSTR(
         "             888"
@@ -1100,19 +1109,101 @@ LED_minecraft1::LED_minecraft1(void)
         "  23            "
         "                "
         );
-}
-void
-LED_minecraft1::display(void)
-{
-    char ps[257];
-    strcpy_P(ps, imgs[imgnr]);
 
-    for (uint8_t y = 0; y < 16; y++) {
-	for (uint8_t x = 0; x < 16; x++) {
-	    LED c = find_colourmap(ps[y * 16 + x]);
-	    led.dot(x , VIEW_HEIGHT - 1 - y, c);
-	}
-    }
+    /* Water and lava bucket */
+    imgs[4] = PSTR(
+        "                "
+        "                "
+        "     aaabbb     "
+        "   aanoooopbb   "
+        "  ammkjjjjippa  "
+        "  balkkjjjiiaa  "
+        "  bfaakjjjaaca  "
+        "  bfffaaaaiica  "
+        "  bffgheeeidca  "
+        "   bfgfeeeica   "
+        "   bffgfeddca   "
+        "   bffgfedica   "
+        "    bfffedda    "
+        "    bdffddda    "
+        "     aaaaaa     "
+        "                "
+        );
+
+    imgs[5] = PSTR(
+        "                "
+        "                "
+        "     aaabbb     "
+        "   aarrssrqbb   "
+        "  asrqrssrqqsa  "
+        "  barssrssrqaa  "
+        "  bfaasqrraaca  "
+        "  bfffaaaassca  "
+        "  bffgqeeerdca  "
+        "   bfgfeeeqca   "
+        "   bffgfeddca   "
+        "   bffgfedqca   "
+        "    bfffedda    "
+        "    bdffddda    "
+        "     aaaaaa     "
+        "                "
+        );
+
+   
+//    /* Gold block from http://i.imgur.com/ksa9hqZ.png */
+//    imgs[4] = PSTR(
+//        "abbbbaccdcabbbba"
+//        "aaccccccbcccdaab"
+//        "adbbbbbegbaadbaa"
+//        "acaaddaefhbbbbba"
+//        "accghbbbbbcccccd"
+//        "bbaeeaabaddghbda"
+//        "ccaaabbbaageeccd"
+//        "aaabbbhgbdbbbbaa"
+//        "ahddcefabdcccccc"
+//        "afgbbbbaddbgebca"
+//        "aegbcccbdbhfeaaa"
+//        "deaabaaagcaccccd"
+//        "abbbbbbggaaacbba"
+//        "acbghaaeeabggacc"
+//        "aaagebbbaaceebba"
+//        "bbbbdccaaaabbbaa"
+//        );
+//
+//    add_colourmap('a', 11, 127 >> 4, 127 >> 4, 127 >> 4);
+//    add_colourmap('b', 12, 116 >> 4, 116 >> 4, 116 >> 4);
+//    add_colourmap('c', 13, 143 >> 4, 143 >> 4, 143 >> 4);
+//    add_colourmap('d', 14, 104 >> 4, 104 >> 4, 104 >> 4);
+//    add_colourmap('e', 15, 248 >> 2, 175 >> 2,  42 >> 2);
+//    add_colourmap('f', 16, 255 >> 2, 255 >> 2, 181 >> 2);
+//    add_colourmap('g', 17, 252 >> 2, 238 >> 2,  75 >> 2);
+//    add_colourmap('h', 18, 255 >> 2, 255 >> 2, 255 >> 2);
+//    
+//    /* Diamond block from http://i.imgur.com/ksa9hqZ.png */
+//    imgs[5] = PSTR(
+//        "abbbbaccdcabcbba"
+//        "accccccdbccccbbb"
+//        "aaaabbbikbaaabba"
+//        "acaabbbjjlbbabca"
+//        "acbdijbbbbabbccd"
+//        "bcadkmbaabbimbba"
+//        "caacbbababllmbcd"
+//        "aabcaaijabbbbbaa"
+//        "abkbckmabbcbbccc"
+//        "ablibaabccdimaca"
+//        "abmjbcbccbljmbaa"
+//        "abkbcbbbibbbbccd"
+//        "aabbbbbjicbcbaba"
+//        "acbijbalkcbijbcc"
+//        "aaakmbbdbbbkmbba"
+//        "bbbbbccabbabbbaa"
+//        );
+//    add_colourmap('i', 19, 200 >> 2, 255 >> 2, 255 >> 2);
+//    add_colourmap('j', 20, 141 >> 2, 255 >> 2, 255 >> 2);
+//    add_colourmap('k', 21,   3 >> 2, 255 >> 2, 255 >> 2);
+//    add_colourmap('l', 22,   3 >> 2, 223 >> 2, 228 >> 2);
+//    add_colourmap('m', 23,   3 >> 2, 223 >> 2, 255 >> 2);
+
 }
 
 void
@@ -1163,7 +1254,11 @@ loop(void)
 
     /* testing */
 #ifdef SERIAL
+# ifdef MEMORY
+#  ifndef SIMULATOR
     Serial.println(freeMemory());
+#  endif
+# endif
 #endif
 
 #define TESTING
