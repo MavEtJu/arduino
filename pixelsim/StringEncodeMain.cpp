@@ -11,7 +11,7 @@ test(void)
 	StringEncode *enc = new StringEncode();
 	int width;
 	uint16_t encbytes1, encbits1, decbytes1, encbytes2, encbits2, decbytes2;
-	char encstring1[100], encstring2[100];
+	char encstring1[300], encstring2[300];
 	char decstring1[300], decstring2[300];
 
 	/* Decoding test */
@@ -48,7 +48,7 @@ test(void)
 
 
 	/* Encoding test */
-	printf("--Encoding\n");
+	printf("\n--Encoding\n");
 	enc->EncodePlain(decstring1, encstring2, decbytes1, &encbits2, &encbytes2);
 
 	printf("decbytes1: %d\nencbits2: %d\nencbytes2: %d\n",
@@ -72,13 +72,42 @@ test(void)
 		printf("|%s|\n", ss);
 	}
 
+	/*******************/
+	printf("\n--EncodingMulti\n");
+	strcpy(decstring1, "     RRRRRR         RRRRRRRRRR      rrrSSS.S       rSrSSSS.SSS     rSrSSSSS.SSS    rrSSSSS....       SSSSSSSS       RRBRRRB        RRRBRRBRRR     RRRRBBBBRRRR    SSRByBByBRSS    SSSBBBBBBSSS    SSBBBBBBBBSS      BBB  BBB       ....  ....     .....  .....  ");
+
+	width = 16;
+	for (int i = 0; i < strlen(decstring1); i+= width) {
+		char ss[20];
+		memset(ss, 0, sizeof(ss));
+		strncpy(ss, decstring1 + i, width);
+		printf("|%s|\n", ss);
+	}
+	enc->EncodeMulti(decstring1, encstring1, strlen(decstring1), &encbits1, &encbytes1);
+
+	printf("decbytes1: %d\nencbits1: %d\nencbytes1: %d\n",
+	    decbytes1, encbits1, encbytes1);
+	printf("encstring1: ");
+	enc->hexdump(encstring1, encbytes1);
+	printf("\n");
+
+	printf("\n");
+	enc->DecodeMulti(encstring1, decstring2, encbits1, &decbytes2);
+	printf("decbytes2: %d\n", decbytes2);
+	for (int i = 0; i < decbytes2; i+= width) {
+		char ss[20];
+		memset(ss, 0, sizeof(ss));
+		strncpy(ss, decstring2 + i, width);
+		printf("|%s|\n", ss);
+	}
+
 }
 
 void
 process(char *f)
 {
 	FILE *fin;
-	char s[10000], *ps, out[1000], line[100], *pline;
+	char s[10000], *ps, out[1000], line[100], *pline, del;
 	int width, height;
 	uint16_t declen, encbits, encbytes;
 	StringEncode *enc = new StringEncode();
@@ -90,10 +119,15 @@ process(char *f)
 	while (!feof(fin)) {
 		if (fgets(line, 100, fin) == NULL)
 			break;
-		if (strchr(line, '|') == NULL)
+		del = '\0';
+		if (strchr(line, '|') != NULL)
+			del = '|';
+		if (strchr(line, '\"') != NULL)
+			del = '\"';
+		if (del == '\0')
 			continue;
-		strcpy(line, strchr(line, '|') + 1);
-		if ((pline = strchr(line, '|')) == NULL)
+		strcpy(line, strchr(line, del) + 1);
+		if ((pline = strchr(line, del)) == NULL)
 			continue;;
 		*pline = '\0';
 		width = strlen(line);
@@ -106,8 +140,12 @@ process(char *f)
 
 	declen = strlen(s);
 	enc->EncodePlain(s, out, declen, &encbits, &encbytes);
+	printf("Plain:\nwidth: %d\nheight: %d\ndeclen: %d\nencbits: %d\nencbytes: %d\n", width, height, declen, encbits, encbytes);
 	enc->hexdump(out, encbytes);
-	printf("width: %d\nheight: %d\ndeclen: %d\nencbits: %d\nencbytes: %d\n", width, height, declen, encbits, encbytes);
+
+	enc->EncodeMulti(s, out, declen, &encbits, &encbytes);
+	printf("\nMulti:\nwidth: %d\nheight: %d\ndeclen: %d\nencbits: %d\nencbytes: %d\n", width, height, declen, encbits, encbytes);
+	enc->hexdump(out, encbytes);
 }
 
 

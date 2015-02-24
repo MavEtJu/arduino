@@ -14,6 +14,12 @@ class StringEncode {
 	    uint16_t *encBits, uint16_t *encBytes);
 	void DecodePlain(const char *in, char *out, uint16_t bits_in,
 	    uint16_t *bytes_out);
+
+	void EncodeMulti(const char *in, char *out, uint16_t plainLen,
+	    uint16_t *encBits, uint16_t *encBytes);
+	void DecodeMulti(const char *in, char *out, uint16_t bits_in,
+	    uint16_t *bytes_out);
+
 	void hexdump(const char *s, uint16_t len);
 };
 
