@@ -1,6 +1,8 @@
 #ifndef LED_Slideshow__h
 #define LED_Slideshow__h
 
+#include "StringEncode.h"
+
 // ==============================
 #define LED_Slideshow_MAX    30
 enum {
@@ -10,7 +12,7 @@ enum {
 };
 class LED_Slideshow {
     public:
-    LED_Slideshow(LEDstrip *led, uint16_t VIEW_HEIGHT);
+    LED_Slideshow(LEDstrip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
     virtual ~LED_Slideshow(void);
     virtual void display();
     virtual void destroy(void);
@@ -19,8 +21,11 @@ class LED_Slideshow {
     LED find_colourmap(char c);
     void loop(void);
 
+    uint16_t *width;
+    uint16_t *bits;
     const char **imgs;
     uint8_t imgnr, imgnrs;
+    StringEncode *enc;
 
     LED colours[LED_Slideshow_MAX];
     uint8_t colourmap[LED_Slideshow_MAX];
@@ -29,6 +34,7 @@ class LED_Slideshow {
     char shown;
     LEDstrip *_led;
     uint16_t _VIEW_HEIGHT;
+    uint16_t _VIEW_WIDTH;
 };
 
 #endif
