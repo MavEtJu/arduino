@@ -93,14 +93,13 @@ StringEncode::EncodeMulti(const char *in, char *out, uint16_t plainLen,
     }
 
     bits = 8;
-    if (letters < 128) bits = 7;
-    if (letters <  64) bits = 6;
-    if (letters <  32) bits = 5;
-    if (letters <  16) bits = 4;
-    if (letters <   8) bits = 3;
-    if (letters <   4) bits = 2;
-    if (letters <   2) bits = 1;
-    if (letters <   1) bits = 0;
+    if (letters <= 128) bits = 7;
+    if (letters <=  64) bits = 6;
+    if (letters <=  32) bits = 5;
+    if (letters <=  16) bits = 4;
+    if (letters <=   8) bits = 3;
+    if (letters <=   4) bits = 2;
+    if (letters <=   2) bits = 1;
     //printf("\nbits: %d\n", bits);
 
     //printf("Alphabet: 0x%x \"", letters);
@@ -173,7 +172,6 @@ StringEncode::DecodeMulti(const char *in, char *out, uint16_t bits_in,
     if (letters <=   8) bits = 3;
     if (letters <=   4) bits = 2;
     if (letters <=   2) bits = 1;
-    if (letters <=   1) bits = 0;
     //printf("Bits: %d\n", bits);
 
     bitmask = 0;
