@@ -1,3 +1,6 @@
+#define MEMORY
+#define SERIAL
+
 #include <Arduino.h>
 #ifdef SIMULATOR
 #include <time.h>
@@ -332,7 +335,7 @@ class LED_spaceinvaders1 : public LED_Animation {
     void destroy(void);
     void animation(void);
 
-    StringEncode *enc;
+    StringEncodePlain *enc;
     const char **imgs;
     char img[128];
     uint16_t imglen;
@@ -367,7 +370,7 @@ LED_spaceinvaders1::LED_spaceinvaders1(void) : LED_Animation()
     colours[8] = led.colour_magenta;
     colours[9] = led.colour_green;
     colours[10] = led.colour_white;
-    enc = new StringEncode();
+    enc = new StringEncodePlain();
 
     imgs = (const char **)malloc(sizeof(char *) * LED_spaceinvaders_IMGS);
 
@@ -560,7 +563,7 @@ LED_spaceinvaders1::animation(void)
 
 	encbytes = 1 + encbits[imgnr] / 8;
 	memcpy_P(in, imgs[imgnr], encbytes);
-	enc->DecodePlain(in, img, encbits[imgnr], &imglen);
+	enc->decode(in, img, encbits[imgnr], &imglen);
 
 	x = -width[imgnr];
 
@@ -1136,7 +1139,7 @@ loop(void)
     loop_blink();
     led.clear();
 
-    static uint16_t phasenr = 5;
+    static uint16_t phasenr = 8;
     static unsigned long started = 0;
 
     /* testing */
@@ -1148,7 +1151,7 @@ loop(void)
 # endif
 #endif
 
-#define TESTING
+//#define TESTING
 #ifdef TESTING
     static LED_galaga1 *p = new LED_galaga1();
     p->loop();
@@ -1179,6 +1182,7 @@ loop(void)
             delete(slideshow[0]);
             slideshow[0] = NULL;
         }
+
 #ifdef SERIAL
 # ifdef MEMORY
 #  ifndef SIMULATOR
@@ -1193,19 +1197,20 @@ loop(void)
 
             #define NEW_ANIMATION(t)  { t *p = new t(); animation[0] = p; break; }
             #define NEW_SLIDESHOW(t)    { t *p = new t(); slideshow[0] = p; break; }
-            case  0: NEW_ANIMATION(LED_led00_blink1)
-            case  1: NEW_ANIMATION(LED_quickbrowfox1)
-            case  2: NEW_ANIMATION(LED_spaceinvaders1)
-            case  3: NEW_ANIMATION(LED_sinus1);
-            case  4: NEW_ANIMATION(LED_lines1);
-            case  5: NEW_ANIMATION(LED_sinus2);
-            case  6: NEW_ANIMATION(LED_lineshorver1)
-            case  7: NEW_ANIMATION(LED_squares1)
-            case  8: NEW_ANIMATION(LED_torch1)
-            case  9: NEW_SLIDESHOW(LED_mario1)
-            case 10: NEW_SLIDESHOW(LED_galaga1)
-            case 11: NEW_ANIMATION(LED_torch2)
-            case 12: NEW_SLIDESHOW(LED_minecraft1)
+//            case  0: NEW_ANIMATION(LED_led00_blink1)
+//            case  1: NEW_ANIMATION(LED_quickbrowfox1)
+//            case  2: NEW_ANIMATION(LED_spaceinvaders1)
+//            case  3: NEW_ANIMATION(LED_sinus1);
+//            case  4: NEW_ANIMATION(LED_lines1);
+//            case  5: NEW_ANIMATION(LED_sinus2);
+//            case  6: NEW_ANIMATION(LED_lineshorver1)
+//            case  7: NEW_ANIMATION(LED_squares1)
+//            case  8: NEW_ANIMATION(LED_torch1)
+//            case  9: NEW_SLIDESHOW(LED_mario1)
+//            case 10: NEW_SLIDESHOW(LED_galaga1)
+//            case 11: NEW_ANIMATION(LED_torch2)
+//            case 12: NEW_SLIDESHOW(LED_minecraft1)
+            default: NEW_SLIDESHOW(LED_galaga1);
 
         }
 #ifdef SERIAL
