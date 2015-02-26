@@ -6,13 +6,8 @@
 # include <stdio.h>
 #endif
 
-StringEncode::StringEncode(void)
-{
-    // Nothing
-}
-
 void
-StringEncode::EncodePlain(const char *in, char *out, uint16_t plainBytes, uint16_t *encodedBits, uint16_t *encodedBytes)
+StringEncodePlain::encode(const char *in, char *out, uint16_t plainBytes, uint16_t *encodedBits, uint16_t *encodedBytes)
 {
     uint16_t c, i;
     uint16_t bits[8];
@@ -36,7 +31,7 @@ StringEncode::EncodePlain(const char *in, char *out, uint16_t plainBytes, uint16
 }
 
 void
-StringEncode::DecodePlain(const char *in, char *out, uint16_t encodedBits, uint16_t *decodedBytes)
+StringEncodePlain::decode(const char *in, char *out, uint16_t encodedBits, uint16_t *decodedBytes)
 {
     uint16_t c;
     unsigned char ch;
@@ -74,7 +69,7 @@ _bits(uint8_t b)
 }
 
 void
-StringEncode::EncodeMulti(const char *in, char *out, uint16_t plainLen,
+StringEncodeMulti::encode(const char *in, char *out, uint16_t plainLen,
 	    uint16_t *encBits, uint16_t *encBytes)
 {
     uint8_t alphabet[128];
@@ -147,7 +142,7 @@ StringEncode::EncodeMulti(const char *in, char *out, uint16_t plainLen,
 }
 
 void
-StringEncode::DecodeMulti(const char *in, char *out, uint16_t bits_in,
+StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
 	    uint16_t *bytes_out)
 {
     uint8_t letters, bits;
@@ -224,13 +219,14 @@ StringEncode::DecodeMulti(const char *in, char *out, uint16_t bits_in,
     }
 }
 
-void
-StringEncode::hexdump(const char *s, uint16_t len)
-{
 #ifdef SIMULATOR
+void
+hexdump(const char *s, uint16_t len)
+{
     for (uint16_t c = 0; c < len; c++) {
 	printf("\\x%02x", (unsigned char)s[c]);
     }
     printf("\n");
-#endif
 }
+#endif
+
