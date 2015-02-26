@@ -7,7 +7,7 @@ LED_Slideshow::LED_Slideshow(LEDstrip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_H
 {
     imgnr = 0;
     shown = 0;
-    imgs = NULL;
+    images = NULL;
     create_colourmap();
     _led = led;
     _VIEW_HEIGHT = VIEW_HEIGHT;
@@ -44,10 +44,8 @@ LED_Slideshow::create_colourmap(void)
 
 LED_Slideshow::~LED_Slideshow(void)
 {
-    if (imgs != NULL) {
-        free(imgs);
-	free(bits);
-	free(width);
+    if (images != NULL) {
+        free(images);
     }
     delete(enc);
 }
@@ -72,11 +70,21 @@ LED_Slideshow::find_colourmap(char c)
 void
 LED_Slideshow::set_imgs(uint8_t nrs)
 {
-    imgnrs = nrs;
-    imgs = (const char **)malloc(sizeof(const char *) * imgnrs);
-    bits = (uint16_t *)malloc(sizeof(uint16_t) * imgnrs);
-    width = (uint16_t *)malloc(sizeof(uint16_t) * imgnrs);
+    imgnrs = 0;
+    images = (struct SlideshowImage *)malloc(imgnrs * sizeof(struct SlideshowImage));
+    imgnr = 0;
 }
+
+
+void
+LED_Slideshow::add_image(uint16_t width, uint16_t bits, const char *img)
+{
+    images[imgnrs].width = width;
+    images[imgnrs].bits = bits;
+    images[imgnrs].image = img;
+    imgnrs++;
+}
+
 
 void LED_Slideshow::destroy(void)
 {
@@ -88,21 +96,21 @@ LED_Slideshow::loop(void)
     if (shown)
 	delay(1000);
     shown = 1;
-    display();
+    display(&images[imgnr]);
     imgnr++;
     imgnr %= imgnrs;
 }
 
 void
-LED_Slideshow::display(void)
+LED_Slideshow::display(struct SlideshowImage *img)
 {
     char ps[257];
     uint8_t W, H;
     uint16_t imglen;
 
-    if (bits[imgnr] == 0) {
+    if (img->bits == 0) {
 	// Simple bitmap image 16x16
-	strcpy_P(ps, imgs[imgnr]);
+	strcpy_P(ps, img->image);
 	W = 16;
 	H = 16;
     } else {
@@ -112,15 +120,15 @@ LED_Slideshow::display(void)
 	// alphabet size counter
 	len = 1;
 	// alphabet size
-	memcpy(in, imgs[imgnr], 1);
+	memcpy(in, img->image, 1);
 	len += in[0];
 	// bits in the image
-	len += bits[imgnr] / 8 + (bits[imgnr] % 8 == 0 ? 0 : 1);
+	len += img->bits / 8 + (img->bits % 8 == 0 ? 0 : 1);
 
-	memcpy(in, imgs[imgnr], len);
-	enc->DecodeMulti(in, ps, bits[imgnr], &imglen);
+	memcpy(in, img->image, len);
+	enc->DecodeMulti(in, ps, img->bits, &imglen);
 
-	W = width[imgnr];
+	W = img->width;
 	H = imglen / W;
 	free(in);
     }
