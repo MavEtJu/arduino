@@ -1,8 +1,6 @@
 #ifndef LED_Slideshow__h
 #define LED_Slideshow__h
 
-#include "StringEncode.h"
-
 struct SlideshowImage {
     uint16_t width;
     uint16_t bits;
@@ -28,7 +26,6 @@ class LED_Slideshow {
 
     struct SlideshowImage *images;
     uint8_t imgnr, imgnrs;
-    StringEncodeMulti *encMulti;
 
     LED colours[LED_Slideshow_MAX];
     uint8_t colourmap[LED_Slideshow_MAX];
