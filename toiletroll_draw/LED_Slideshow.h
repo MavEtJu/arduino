@@ -25,7 +25,7 @@ class LED_Slideshow {
     uint16_t *bits;
     const char **imgs;
     uint8_t imgnr, imgnrs;
-    StringEncode *enc;
+    StringEncodeMulti *encMulti;
 
     LED colours[LED_Slideshow_MAX];
     uint8_t colourmap[LED_Slideshow_MAX];
