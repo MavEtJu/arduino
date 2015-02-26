@@ -12,7 +12,7 @@ LED_Slideshow::LED_Slideshow(LEDstrip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_H
     _led = led;
     _VIEW_HEIGHT = VIEW_HEIGHT;
     _VIEW_WIDTH = VIEW_WIDTH;
-    enc = new StringEncode();
+    encMulti = NULL;
 }
 
 void
@@ -47,7 +47,8 @@ LED_Slideshow::~LED_Slideshow(void)
     if (images != NULL) {
         free(images);
     }
-    delete(enc);
+    if (encMulti != NULL)
+        delete(encMulti);
 }
 
 void
@@ -126,7 +127,9 @@ LED_Slideshow::display(struct SlideshowImage *img)
 	len += img->bits / 8 + (img->bits % 8 == 0 ? 0 : 1);
 
 	memcpy(in, img->image, len);
-	enc->DecodeMulti(in, ps, img->bits, &imglen);
+        encMulti = new StringEncodeMulti();
+	encMulti->decode(in, ps, img->bits, &imglen);
+        delete(encMulti);
 
 	W = img->width;
 	H = imglen / W;

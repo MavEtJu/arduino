@@ -28,7 +28,7 @@ class LED_Slideshow {
 
     struct SlideshowImage *images;
     uint8_t imgnr, imgnrs;
-    StringEncode *enc;
+    StringEncodeMulti *encMulti;
 
     LED colours[LED_Slideshow_MAX];
     uint8_t colourmap[LED_Slideshow_MAX];

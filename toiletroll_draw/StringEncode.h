@@ -5,22 +5,25 @@
 
 #include <Arduino.h>
 
-class StringEncode {
+class StringEncodePlain {
 	public:
-	StringEncode(void);
-
 	// Decode a byte value into a "X XX" pattern. Len is the expanded size.
-	void EncodePlain(const char *in, char *out, uint16_t plainLen,
+	void encode(const char *in, char *out, uint16_t plainLen,
 	    uint16_t *encBits, uint16_t *encBytes);
-	void DecodePlain(const char *in, char *out, uint16_t bits_in,
+	void decode(const char *in, char *out, uint16_t bits_in,
 	    uint16_t *bytes_out);
-
-	void EncodeMulti(const char *in, char *out, uint16_t plainLen,
-	    uint16_t *encBits, uint16_t *encBytes);
-	void DecodeMulti(const char *in, char *out, uint16_t bits_in,
-	    uint16_t *bytes_out);
-
-	void hexdump(const char *s, uint16_t len);
 };
+
+class StringEncodeMulti {
+	public:
+	void encode(const char *in, char *out, uint16_t plainLen,
+	    uint16_t *encBits, uint16_t *encBytes);
+	void decode(const char *in, char *out, uint16_t bits_in,
+	    uint16_t *bytes_out);
+};
+
+#ifdef SIMULATOR
+void hexdump(const char *s, uint16_t len);
+#endif
 
 #endif
