@@ -2,6 +2,8 @@
 #include "led_tools.h"
 #include "LED_Slideshow.h"
 #include "StringEncode.h"
+#include <MemoryFree.h>
+
 
 LED_Slideshow::LED_Slideshow(LEDstrip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT)
 {
@@ -69,7 +71,7 @@ void
 LED_Slideshow::set_imgs(uint8_t nrs)
 {
     imgnrs = 0;
-    images = (struct SlideshowImage *)malloc(imgnrs * sizeof(struct SlideshowImage));
+    images = (struct SlideshowImage *)malloc(nrs * sizeof(struct SlideshowImage));
     imgnr = 0;
 }
 
@@ -77,6 +79,8 @@ LED_Slideshow::set_imgs(uint8_t nrs)
 void
 LED_Slideshow::add_image(uint16_t width, uint16_t bits, const char *img)
 {
+    Serial.print(F("Loading image "));
+    Serial.println(imgnrs);
     images[imgnrs].width = width;
     images[imgnrs].bits = bits;
     images[imgnrs].image = img;
@@ -94,6 +98,9 @@ LED_Slideshow::loop(void)
     if (shown)
 	delay(1000);
     shown = 1;
+    Serial.print(F("imgnr: "));
+    Serial.println(imgnr);
+    delay(50);
     display(&images[imgnr]);
     imgnr++;
     imgnr %= imgnrs;
@@ -105,7 +112,11 @@ LED_Slideshow::display(struct SlideshowImage *img)
     char ps[257];
     uint8_t W, H;
     uint16_t imglen;
-    StringEncodeMulti *encMulti;
+    StringEncodeMulti *enc;
+    
+    Serial.print(F("bit: "));
+    Serial.println(img->bits);
+    delay(50);
 
     if (img->bits == 0) {
 	// Simple bitmap image 16x16
@@ -113,25 +124,44 @@ LED_Slideshow::display(struct SlideshowImage *img)
 	W = 16;
 	H = 16;
     } else {
-	char *in = (char *)malloc(257 * sizeof(char));
+	char *in;
+        unsigned char c;
 	uint16_t len;
 
 	// alphabet size counter
 	len = 1;
 	// alphabet size
-	memcpy(in, img->image, 1);
-	len += in[0];
+	memcpy_P(&c, img->image, 1);
+	len += c;
 	// bits in the image
 	len += img->bits / 8 + (img->bits % 8 == 0 ? 0 : 1);
+Serial.print(F("len: "));
+Serial.println(len);
+Serial.print(F("freeMemory: "));
+Serial.println(freeMemory());
+Serial.print(F("Size: "));
+Serial.println(len * sizeof(char));
+delay(50);
+        in = (char *)malloc(len * sizeof(char));
+        if (in == NULL) {
+            Serial.println(F("in = NULL"));
+            delay(100);
+            return;
+        }
 
-	memcpy(in, img->image, len);
-        encMulti = new StringEncodeMulti();
-	encMulti->decode(in, ps, img->bits, &imglen);
-        delete(encMulti);
+	memcpy_P(in, img->image, len);
+
+        enc = new StringEncodeMulti();
+        enc->decode(in, ps, img->bits, &imglen);
+        delete(enc);
+	free(in);
+
+Serial.print(F("imglen: "));
+Serial.println(imglen);
+delay(50);
 
 	W = img->width;
 	H = imglen / W;
-	free(in);
     }
 
     uint8_t xoffset = (_VIEW_WIDTH - W) / 2;
