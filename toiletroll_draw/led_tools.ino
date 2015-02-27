@@ -24,7 +24,7 @@ LEDstrip::LEDstrip(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin
     _ymax = 0;
     _xmax = 0;
     _options = 0;
-    letters_init();
+ //   letters_init();
 #ifdef SIMULATOR
     srandom(time(NULL));
 #else
