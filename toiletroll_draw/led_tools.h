@@ -33,6 +33,7 @@ class LEDstrip : public Adafruit_NeoPixel {
     
     // Set the current colour
     void colour_set(LED colour);
+    LED colour_get(void);
     
     // Colour the LEDs in the strip from offset 1 to offset 2
     void strip_o1_o2(uint16_t o1, uint16_t o2);
@@ -58,11 +59,6 @@ class LEDstrip : public Adafruit_NeoPixel {
     void blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, LED *colour);
     void blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, const char *s, LED colour);
     
-    // Draw a character
-    void text(int16_t x, int16_t y, const char *text);
-    void text(int16_t x, int16_t y, const char *text, LED colour);
-    uint16_t text_width(const char *text);
-
     // Predefined colours
     LED colour_red, colour_green, colour_blue;
     LED colour_magenta, colour_cyan, colour_yellow;
@@ -75,10 +71,6 @@ class LEDstrip : public Adafruit_NeoPixel {
     LED _colourlast;
     uint16_t _xmax, _ymax;
     uint8_t _options;
-    const char **letters;
-    void letters_init(void);
-
-    
 };
 
 #endif

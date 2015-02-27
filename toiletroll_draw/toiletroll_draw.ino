@@ -12,6 +12,7 @@
 #include "StringEncode.h"
 #include "LED_Slideshow.h"
 #include "LED_Animation.h"
+#include "LED_Text.h"
 
 #define PIN_BLINK   13
 #define PIN_STRIP    6
@@ -42,16 +43,30 @@ LED_led00_blink1::animation(void)
 
 // ==============================
 class LED_quickbrowfox1 : public LED_Animation {
+    public:
+    LED_quickbrowfox1(void);
+    ~LED_quickbrowfox1(void);
     void animation(void);
+    LED_Text *text;
 };
+
+LED_quickbrowfox1::LED_quickbrowfox1(void)
+{
+    text = new LED_Text(&led);
+}
+
+LED_quickbrowfox1::~LED_quickbrowfox1(void)
+{
+    delete(text);
+}
 
 void
 LED_quickbrowfox1::animation(void)
 {
     const char *s = "the quick brown fox jumped over the lazy dog 0123456789";
-    uint16_t w = led.text_width(s);
+    uint16_t w = text->text_width(s);
     uint16_t i = step % (w + 2 * VIEW_WIDTH);
-    led.text(VIEW_WIDTH - i, 2, s, led.colour_magenta);
+    text->text(VIEW_WIDTH - i, 2, s, led.colour_red);
 }
 
 // ==============================
@@ -1169,7 +1184,7 @@ loop(void)
 
 #define TESTING
 #ifdef TESTING
-    static LED_minecraft1 *p = new LED_minecraft1();
+    static LED_quickbrowfox1 *p = new LED_quickbrowfox1();
     //static LED_quickbrowfox1 *p = new LED_quickbrowfox1();
     p->loop();
     led.display();
@@ -1215,7 +1230,7 @@ loop(void)
             #define NEW_ANIMATION(t)  { t *p = new t(); animation[0] = p; break; }
             #define NEW_SLIDESHOW(t)    { t *p = new t(); slideshow[0] = p; break; }
             case  0: NEW_ANIMATION(LED_led00_blink1)
-            //case  1: NEW_ANIMATION(LED_quickbrowfox1)
+            case  1: NEW_ANIMATION(LED_quickbrowfox1)
             case  2: NEW_ANIMATION(LED_spaceinvaders1)
             case  3: NEW_ANIMATION(LED_sinus1);
             case  4: NEW_ANIMATION(LED_lines1);
