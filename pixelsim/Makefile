@@ -45,6 +45,10 @@ LED_Slideshow.cpp:
 	ln -fs ../toiletroll_draw/LED_Slideshow.cpp LED_Slideshow.cpp
 LED_Slideshow.h:
 	ln -fs ../toiletroll_draw/LED_Slideshow.h LED_Slideshow.h
+LED_Text.cpp:
+	ln -fs ../toiletroll_draw/LED_Text.cpp LED_Text.cpp
+LED_Text.h:
+	ln -fs ../toiletroll_draw/LED_Text.h LED_Text.h
 led_tools.ino:
 	ln -fs ../toiletroll_draw/led_tools.ino led_tools.ino
 led_tools.h:
