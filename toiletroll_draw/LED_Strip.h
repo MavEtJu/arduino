@@ -1,8 +1,8 @@
 //
 //
 
-#if !defined led_tools__h
-#define led_tools__h
+#if !defined LED_Strip__h
+#define LED_Strip__h
 
 #include <Adafruit_NeoPixel.h>
 
@@ -15,9 +15,9 @@ struct LED {
 };
 typedef struct LED LED;
 
-class LEDstrip : public Adafruit_NeoPixel {
+class LED_Strip : public Adafruit_NeoPixel {
     public:
-    LEDstrip(uint16_t amount, uint8_t pin);
+    LED_Strip(uint16_t amount, uint8_t pin);
     void start(void);
     
     // Set the size of the view

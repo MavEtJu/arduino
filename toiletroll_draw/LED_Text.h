@@ -2,12 +2,12 @@
 #ifndef LED_Text__h
 #define LED_Text__h
 
-#include "led_tools.h"
+#include "LED_Strip.h"
 
 // ==============================
 class LED_Text {
 public:
-    LED_Text(LEDstrip *LEDstrip);
+    LED_Text(LED_Strip *led);
     ~LED_Text(void);
     void letters_init(void);
 
@@ -15,7 +15,7 @@ public:
     uint16_t text_width(const char *string);
 
     const char **letters;
-    LEDstrip *_led;
+    LED_Strip *_led;
 
 };
 

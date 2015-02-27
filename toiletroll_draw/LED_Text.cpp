@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "LED_Text.h"
 
-LED_Text::LED_Text(LEDstrip *led)
+LED_Text::LED_Text(LED_Strip *led)
 {
     letters_init();
     _led = led;

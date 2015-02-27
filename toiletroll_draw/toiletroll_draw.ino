@@ -8,7 +8,7 @@
 #ifdef MEMORY
 #include <MemoryFree.h>
 #endif
-#include "led_tools.h"
+#include "LED_Strip.h"
 #include "StringEncode.h"
 #include "LED_Slideshow.h"
 #include "LED_Animation.h"
@@ -20,7 +20,7 @@
 #define VIEW_WIDTH   16
 #define VIEW_HEIGHT  16
 
-LEDstrip led = LEDstrip(VIEW_WIDTH * VIEW_HEIGHT, PIN_STRIP);
+LED_Strip led = LED_Strip(VIEW_WIDTH * VIEW_HEIGHT, PIN_STRIP);
 
 void
 loop_blink(void)

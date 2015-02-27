@@ -6,9 +6,9 @@
 #ifdef SIMULATOR
 #include <time.h>
 #endif
-#include "led_tools.h"
+#include "LED_Strip.h"
 
-LEDstrip::LEDstrip(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin, NEO_GRB + NEO_KHZ800)
+LED_Strip::LED_Strip(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin, NEO_GRB + NEO_KHZ800)
 {
     _colourlast = Color(0, 0, 0);
     colour_red = Color(8, 0, 0);
@@ -33,7 +33,7 @@ LEDstrip::LEDstrip(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin
 }
 
 LED
-LEDstrip::Color(uint8_t r, uint8_t g, uint8_t b)
+LED_Strip::Color(uint8_t r, uint8_t g, uint8_t b)
 {
     LED l;
     l.red = r;
@@ -43,7 +43,7 @@ LEDstrip::Color(uint8_t r, uint8_t g, uint8_t b)
 }
 
 void
-LEDstrip::start(void)
+LED_Strip::start(void)
 {
     this->begin();
     this->show();
@@ -51,7 +51,7 @@ LEDstrip::start(void)
 
 // Set the size of the view
 void
-LEDstrip::view(uint16_t xmax, uint16_t ymax, uint8_t options)
+LED_Strip::view(uint16_t xmax, uint16_t ymax, uint8_t options)
 {
     _xmax = xmax;
     _ymax = ymax;
@@ -68,7 +68,7 @@ LEDstrip::view(uint16_t xmax, uint16_t ymax, uint8_t options)
 
 // Display the drawn objects to the LED strip
 void
-LEDstrip::display(void)
+LED_Strip::display(void)
 {
     if ((_options & VIEW_SQUARE) != 0) {
         // Even lines go RTL, odd lines go LTR
@@ -89,13 +89,13 @@ LEDstrip::display(void)
 
 // Clear everything
 void
-LEDstrip::clear(void)
+LED_Strip::clear(void)
 {
     clear(colour_black);
 }
 
 void
-LEDstrip::clear(LED colour)
+LED_Strip::clear(LED colour)
 {
     for (uint16_t x = 0; x < _xmax * _ymax; x++) {
         _strip[x] = colour_black;
@@ -105,19 +105,19 @@ LEDstrip::clear(LED colour)
 
 // Set the current colour
 void
-LEDstrip::colour_set(LED colour)
+LED_Strip::colour_set(LED colour)
 {
     _colourlast = colour;
 }
 
 LED
-LEDstrip::colour_get(void)
+LED_Strip::colour_get(void)
 {
     return _colourlast;
 }
 
 LED
-LEDstrip::colour_random(void)
+LED_Strip::colour_random(void)
 {
     switch (rand() % 8) {
         case 0: return colour_white;
@@ -136,14 +136,14 @@ LEDstrip::colour_random(void)
 
 // Colour the LEDs in the strip from offset 1 to offset 2
 void
-LEDstrip::strip_o1_o2(uint16_t o1, uint16_t o2)
+LED_Strip::strip_o1_o2(uint16_t o1, uint16_t o2)
 {
     for (uint16_t o = o1; o <= o2; o++) {
         _strip[o] = _colourlast;
     }
 }
 void
-LEDstrip::strip_o1_o2(uint16_t o1, uint16_t o2, LED colour)
+LED_Strip::strip_o1_o2(uint16_t o1, uint16_t o2, LED colour)
 {
     _colourlast = colour;
     strip_o1_o2(o1, o2);
@@ -151,14 +151,14 @@ LEDstrip::strip_o1_o2(uint16_t o1, uint16_t o2, LED colour)
 
 // Colour the LEDs in the strip from offset to offset + length
 void
-LEDstrip::strip_o_length(uint16_t o, uint16_t length)
+LED_Strip::strip_o_length(uint16_t o, uint16_t length)
 {
     for (uint16_t x = o; x < o + length; x++) {
         _strip[x] = _colourlast;
     }
 }
 void
-LEDstrip::strip_o_length(uint16_t o, uint16_t length, LED colour)
+LED_Strip::strip_o_length(uint16_t o, uint16_t length, LED colour)
 {
     _colourlast = colour;
     strip_o_length(o, length);
@@ -166,7 +166,7 @@ LEDstrip::strip_o_length(uint16_t o, uint16_t length, LED colour)
 
 // Plot a dot
 void
-LEDstrip::dot(int16_t x, int16_t y)
+LED_Strip::dot(int16_t x, int16_t y)
 {
     if (x < 0 || x >= _xmax)
         return;
@@ -176,7 +176,7 @@ LEDstrip::dot(int16_t x, int16_t y)
 }
 
 void
-LEDstrip::dot(int16_t x, int16_t y, LED colour)
+LED_Strip::dot(int16_t x, int16_t y, LED colour)
 {
     _colourlast = colour;
     dot(x, y);
@@ -184,7 +184,7 @@ LEDstrip::dot(int16_t x, int16_t y, LED colour)
 
 // Colour the LEDs in the matrix from (x1, y1) x (x2, y2)
 void
-LEDstrip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy)
+LED_Strip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy)
 {
     for (int16_t x = 0; x < dx; x++) {
         if (xo + x < 0 || xo + x >= _xmax)
@@ -198,7 +198,7 @@ LEDstrip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy)
 }
 
 void
-LEDstrip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy, LED colour)
+LED_Strip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy, LED colour)
 {
     _colourlast = colour;
     square(xo, yo, dx, dy);
@@ -208,7 +208,7 @@ LEDstrip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy, LED colour)
 // http://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm#Algorithm_for_integer_arithmetic
 // http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
 void
-LEDstrip::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2)
+LED_Strip::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2)
 {
     int w = x2 - x1;
     int h = y2 - y1;
@@ -254,7 +254,7 @@ LEDstrip::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2)
 }
 
 void
-LEDstrip::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, LED colour)
+LED_Strip::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, LED colour)
 {
     _colourlast = colour;
     line(x1, y1, x2, y2);
@@ -262,7 +262,7 @@ LEDstrip::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, LED colour)
 
 // Copy the blob into the matrix
 void
-LEDstrip::blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, LED *colour)
+LED_Strip::blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, LED *colour)
 {
     for (int16_t y = 0; y < dy; y++) {
         for (int16_t x = 0; x < dx; x++) {
@@ -272,7 +272,7 @@ LEDstrip::blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, LED *colour)
 }
 
 void
-LEDstrip::blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, const char *s, LED colour)
+LED_Strip::blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, const char *s, LED colour)
 {
     for (int16_t y = 0; y < dy; y++) {
         for (int16_t x = 0; x < dx; x++) {

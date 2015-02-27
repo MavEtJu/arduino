@@ -15,7 +15,7 @@ enum {
 };
 class LED_Slideshow {
     public:
-    LED_Slideshow(LEDstrip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    LED_Slideshow(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
     virtual ~LED_Slideshow(void);
     virtual void display(struct SlideshowImage *img);
     virtual void destroy(void);
@@ -33,7 +33,7 @@ class LED_Slideshow {
     void add_image(uint16_t width, uint16_t bits, const char *img);
     void set_imgs(uint8_t nrs);
     char shown;
-    LEDstrip *_led;
+    LED_Strip *_led;
     uint16_t _VIEW_HEIGHT;
     uint16_t _VIEW_WIDTH;
 };

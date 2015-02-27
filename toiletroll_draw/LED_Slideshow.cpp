@@ -1,11 +1,11 @@
 #include <Arduino.h>
-#include "led_tools.h"
+#include "LED_Strip.h"
 #include "LED_Slideshow.h"
 #include "StringEncode.h"
 #include <MemoryFree.h>
 
 
-LED_Slideshow::LED_Slideshow(LEDstrip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT)
+LED_Slideshow::LED_Slideshow(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT)
 {
     imgnr = 0;
     shown = 0;
