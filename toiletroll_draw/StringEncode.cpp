@@ -2,10 +2,12 @@
 
 #include <Arduino.h>
 #include "StringEncode.h"
+#include "A_Tools.h"
 #ifdef SIMULATOR
 # include <stdio.h>
 #endif
 
+#ifdef SIMULATOR
 void
 StringEncodePlain::encode(const char *in, char *out, uint16_t plainBytes, uint16_t *encodedBits, uint16_t *encodedBytes)
 {
@@ -29,6 +31,7 @@ StringEncodePlain::encode(const char *in, char *out, uint16_t plainBytes, uint16
 	(*encodedBytes)++;
     }
 }
+#endif
 
 void
 StringEncodePlain::decode(const char *in, char *out, uint16_t encodedBits, uint16_t *decodedBytes)
@@ -56,6 +59,7 @@ StringEncodePlain::decode(const char *in, char *out, uint16_t encodedBits, uint1
     }
 }
 
+#ifdef SIMULATOR
 char *
 _bits(uint8_t b)
 {
@@ -67,7 +71,9 @@ _bits(uint8_t b)
 	s[8] = '\0';
 	return s ;
 }
+#endif
 
+#ifdef SIMULATOR
 void
 StringEncodeMulti::encode(const char *in, char *out, uint16_t plainLen,
 	    uint16_t *encBits, uint16_t *encBytes)
@@ -95,6 +101,7 @@ StringEncodeMulti::encode(const char *in, char *out, uint16_t plainLen,
     if (letters <=   8) bits = 3;
     if (letters <=   4) bits = 2;
     if (letters <=   2) bits = 1;
+    assert(letters <= 32);
     //printf("\nbits: %d\n", bits);
 
     //printf("Alphabet: 0x%x \"", letters);
@@ -140,28 +147,31 @@ StringEncodeMulti::encode(const char *in, char *out, uint16_t plainLen,
     if (*encBits % 8 != 0)
 	(*encBytes)++;
 }
+#endif
 
 void
 StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
-	    uint16_t *bytes_out)
+	    uint16_t *bytes_out, uint16_t max_bytes_out)
 {
     uint8_t letters, bits;
-    uint8_t alphabet[128];
+    uint8_t alphabet[32];
     const char *pin = in;
     uint8_t left, right, c, bitmask;
     uint8_t bits_left, bits_right, i;
     uint16_t bit_offset = 0;
 
+    FREERAM(F("StringEncodeMulti::decode"));
+    
     //printf("DecodeMulti:\n");
     //printf("bits_in: %d\n", bits_in);
 
+    *bytes_out = 0;
+    
     letters = in[0];
     pin++;
     //printf("Letters: %d\n", letters);
 
-    bits = 8;
-    if (letters <= 128) bits = 7;
-    if (letters <=  64) bits = 6;
+    bits = 5;
     if (letters <=  32) bits = 5;
     if (letters <=  16) bits = 4;
     if (letters <=   8) bits = 3;
@@ -183,7 +193,6 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
     }
     //printf("\"\n");
 
-    *bytes_out = 0;
     for (bit_offset = 0; bit_offset < bits_in; bit_offset += bits) {
 	left = pin[bit_offset / 8];
 	right = pin[1 + bit_offset / 8];
@@ -212,11 +221,15 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
 
 	//printf("%2d: %d:%d %s:%s %x\n",
 	//    bit_offset, bits_left, bits_right, _bits(left), _bits(right), i);
-
         *out = alphabet[i];
 	out++;
 	(*bytes_out)++;
+        if (*bytes_out == max_bytes_out) {
+            Serial.println(F("Reached max_bytes_out"));
+            return;
+        }
     }
+
 }
 
 #ifdef SIMULATOR
