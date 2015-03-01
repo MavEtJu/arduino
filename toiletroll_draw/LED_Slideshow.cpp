@@ -2,6 +2,7 @@
 #include "LED_Strip.h"
 #include "LED_Slideshow.h"
 #include "StringEncode.h"
+#include "A_Tools.h"
 #include <MemoryFree.h>
 
 
@@ -100,8 +101,11 @@ LED_Slideshow::loop(void)
     shown = 1;
     Serial.print(F("imgnr: "));
     Serial.println(imgnr);
+
+    FREEMEMORY(F("freememory before display: "));
     delay(50);
     display(&images[imgnr]);
+    FREEMEMORY(F("freememory after display: "));
     imgnr++;
     imgnr %= imgnrs;
 }
@@ -113,11 +117,12 @@ LED_Slideshow::display(struct SlideshowImage *img)
     uint8_t W, H;
     uint16_t imglen;
     StringEncodeMulti *enc;
-    
-    Serial.print(F("bit: "));
-    Serial.println(img->bits);
-    delay(50);
 
+    FREERAM(F("LED_Slideshow::display"));
+
+//    FREEMEMORY(F("freememory in display()"));
+    delay(50);
+   
     if (img->bits == 0) {
 	// Simple bitmap image 16x16
 	strcpy_P(ps, img->image);
@@ -135,30 +140,44 @@ LED_Slideshow::display(struct SlideshowImage *img)
 	len += c;
 	// bits in the image
 	len += img->bits / 8 + (img->bits % 8 == 0 ? 0 : 1);
-Serial.print(F("len: "));
-Serial.println(len);
-Serial.print(F("freeMemory: "));
-Serial.println(freeMemory());
-Serial.print(F("Size: "));
-Serial.println(len * sizeof(char));
-delay(50);
+
         in = (char *)malloc(len * sizeof(char));
+//FREEMEMORY(F("malloc done for in"));
         if (in == NULL) {
-            Serial.println(F("in = NULL"));
+            Serial.print(F("in = NULL for "));
+            Serial.print(len);
+            Serial.println(F(" bytes"));
+            FREERAM(F("in = NULL"));
+            FREEMEMORY(F("in = NULL"));
             delay(100);
             return;
         }
 
 	memcpy_P(in, img->image, len);
 
-        enc = new StringEncodeMulti();
-        enc->decode(in, ps, img->bits, &imglen);
-        delete(enc);
-	free(in);
+        FREERAM(F("LED_Slideshow::display:before new"));
 
-Serial.print(F("imglen: "));
-Serial.println(imglen);
-delay(50);
+        enc = new StringEncodeMulti();
+        if (enc == NULL) {
+            Serial.println(F("enc = NULL"));
+            free(in);
+            delay(100);
+            return;
+        }
+        memset(ps, '\0', sizeof(ps));
+//FREEMEMORY(F("new done"));
+        FREERAM(F("LED_Slideshow::display:before decode"));
+        enc->decode(in, ps, img->bits, &imglen, sizeof(ps) - 1);
+        FREERAM(F("LED_Slideshow::display:after decode"));
+
+//FREEMEMORY(F("decode done"));
+//Serial.print("imglen: ");
+//Serial.println(imglen);
+        delete(enc);
+//FREEMEMORY(F("delete done"));
+	free(in);
+//FREEMEMORY(F("free"));
+//delay(50);
 
 	W = img->width;
 	H = imglen / W;
