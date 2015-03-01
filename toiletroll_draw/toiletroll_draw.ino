@@ -1177,14 +1177,14 @@ loop(void)
 #ifdef SERIAL
 # ifdef MEMORY
 #  ifndef SIMULATOR
-    Serial.println(freeMemory());
+    FREEMEMORY(F("loop"));
 #  endif
 # endif
 #endif
 
-#define TESTING
+//#define TESTING
 #ifdef TESTING
-    static LED_quickbrowfox1 *p = new LED_quickbrowfox1();
+    static LED_mario1 *p = new LED_mario1();
     //static LED_quickbrowfox1 *p = new LED_quickbrowfox1();
     p->loop();
     led.display();
@@ -1195,7 +1195,7 @@ loop(void)
     return;
 #endif
 
-    if (started == 0 || started + 30l * 1000l < millis()) {
+    if (started == 0 || started + 5l * 1000l < millis()) {
 #ifdef SERIAL
 # ifdef MEMORY
 #  ifndef SIMULATOR
@@ -1223,6 +1223,7 @@ loop(void)
 #  endif
 # endif
 #endif
+
         switch (++phasenr % 13) {
             slideshow[0] = NULL;
             animation[0] = NULL;
@@ -1231,14 +1232,14 @@ loop(void)
             #define NEW_SLIDESHOW(t)    { t *p = new t(); slideshow[0] = p; break; }
             case  0: NEW_ANIMATION(LED_led00_blink1)
             case  1: NEW_ANIMATION(LED_quickbrowfox1)
-            case  2: NEW_ANIMATION(LED_spaceinvaders1)
+            case  9: NEW_ANIMATION(LED_spaceinvaders1)
             case  3: NEW_ANIMATION(LED_sinus1);
             case  4: NEW_ANIMATION(LED_lines1);
             case  5: NEW_ANIMATION(LED_sinus2);
             case  6: NEW_ANIMATION(LED_lineshorver1)
             case  7: NEW_ANIMATION(LED_squares1)
             case  8: NEW_ANIMATION(LED_torch1)
-            case  9: NEW_SLIDESHOW(LED_mario1)
+            case  2: NEW_SLIDESHOW(LED_mario1)
             case 10: NEW_SLIDESHOW(LED_galaga1)
             case 11: NEW_ANIMATION(LED_torch2)
             case 12: NEW_SLIDESHOW(LED_minecraft1)
