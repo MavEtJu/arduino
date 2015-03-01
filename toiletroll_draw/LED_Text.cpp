@@ -12,6 +12,7 @@ LED_Text::LED_Text(LED_Strip *led)
 
 LED_Text::~LED_Text(void)
 {
+    free(letters);
 }
 
 
