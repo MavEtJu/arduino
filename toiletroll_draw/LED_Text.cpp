@@ -64,12 +64,6 @@ LED_Text::text_width(const char *string)
 void
 LED_Text::letters_init(void)
 {
-    static int initialized = false;
-
-    if (initialized)
-        return;
-    initialized = true;
-    
     letters = (const char **) malloc(sizeof(char *) * 128);
     for (int c = 0; c < 128; c++) {
         letters[c] = NULL;
