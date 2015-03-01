@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include "A_Tools.h"
 
 void
 printText(char *decstring1, int width)
@@ -102,7 +103,8 @@ testMulti3(void)
 	printf("\n");
 
 	printf("\n");
-	enc->decode(encstring1, decstring2, encbits1, &decbytes2);
+	enc->decode(encstring1, decstring2, encbits1, &decbytes2,
+	    sizeof(decstring2));
 	printf("decbytes2: %d\n", decbytes2);
 	for (int i = 0; i < decbytes2; i+= width) {
 		char ss[20];

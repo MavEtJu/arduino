@@ -5,6 +5,7 @@
 #include "A_Tools.h"
 #ifdef SIMULATOR
 # include <stdio.h>
+# include <assert.h>
 #endif
 
 #ifdef SIMULATOR

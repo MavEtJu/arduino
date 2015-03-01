@@ -11,10 +11,10 @@ all:	test StringEncodeMain
 .ino.o:
 	${CXX} ${CXXFLAGS} -x c++ -o $@ -c $<
 
-test: LED_Strip.o Arduino.o ArduinoMain.o Adafruit_NeoPixel.o toiletroll_draw.o MemoryFree.o Serial.o StringEncode.o LED_Slideshow.o LED_Animation.o LED_Text.o
+test: LED_Strip.o Arduino.o ArduinoMain.o Adafruit_NeoPixel.o toiletroll_draw.o MemoryFree.o Serial.o StringEncode.o LED_Slideshow.o LED_Animation.o LED_Text.o A_Tools.o
 	${CXX} ${CXXFLAGS} -o $@ $> -lcurses
 
-StringEncodeMain: StringEncode.o StringEncodeMain.o Arduino.o Serial.o
+StringEncodeMain: StringEncode.o StringEncodeMain.o Arduino.o Serial.o A_Tools.o
 	${CXX} ${CXXFLAGS} -o $@ $>
 
 test.o: test.ino
@@ -28,12 +28,13 @@ Arduino.o: Arduino.cpp Arduino.h Serial.h
 ArduinoMain.o: ArduinoMain.cpp Arduino.h Serial.h
 MemoryFree.o: MemoryFree.cpp MemoryFree.h
 Serial.o: Serial.cpp Serial.h
+A_Tools.o: A_Tools.cpp A_Tools.h
 StringEncode.o: StringEncode.cpp StringEncode.h Arduino.h
 StringEncodeMain.o: StringEncodeMain.cpp StringEncode.h Arduino.h
 Adafruit_NeoPixel.o: Adafruit_NeoPixel.cpp Adafruit_NeoPixel.h Arduino.h \
 	Serial.h
 Arduino.cpp: Arduino.h
-Arduino.h: Serial.h
+Arduino.h: Serial.h A_Tools.h
 
 toiletroll_draw.ino: LED_Strip.h Arduino.h
 	ln -fs ../toiletroll_draw/toiletroll_draw.ino toiletroll_draw.ino
@@ -49,6 +50,10 @@ LED_Text.cpp:
 	ln -fs ../toiletroll_draw/LED_Text.cpp LED_Text.cpp
 LED_Text.h:
 	ln -fs ../toiletroll_draw/LED_Text.h LED_Text.h
+A_Tools.cpp:
+	ln -fs ../toiletroll_draw/A_Tools.cpp A_Tools.cpp
+A_Tools.h:
+	ln -fs ../toiletroll_draw/A_Tools.h A_Tools.h
 LED_Strip.ino:
 	ln -fs ../toiletroll_draw/LED_Strip.ino LED_Strip.ino
 LED_Strip.h:
