@@ -1,6 +1,6 @@
 unsigned long
 freeMemory(void)
 {
-	return 0l;
+	return 2048l;
 }
 
