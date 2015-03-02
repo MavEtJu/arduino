@@ -80,8 +80,8 @@ LED_Slideshow::set_imgs(uint8_t nrs)
 void
 LED_Slideshow::add_image(uint16_t width, uint16_t bits, const char *img)
 {
-    Serial.print(F("Loading image "));
-    Serial.println(imgnrs);
+    //Serial.print(F("Loading image "));
+    //Serial.println(imgnrs);
     images[imgnrs].width = width;
     images[imgnrs].bits = bits;
     images[imgnrs].image = img;
@@ -99,13 +99,13 @@ LED_Slideshow::loop(void)
     if (shown)
 	delay(1000);
     shown = 1;
-    Serial.print(F("imgnr: "));
-    Serial.println(imgnr);
+    //Serial.print(F("imgnr: "));
+    //Serial.println(imgnr);
 
-    FREEMEMORY(F("freememory before display: "));
-    delay(50);
+    //FREEMEMORY(F("freememory before display: "));
+    //delay(50);
     display(&images[imgnr]);
-    FREEMEMORY(F("freememory after display: "));
+    //FREEMEMORY(F("freememory after display: "));
     imgnr++;
     imgnr %= imgnrs;
 }
@@ -118,10 +118,9 @@ LED_Slideshow::display(struct SlideshowImage *img)
     uint16_t imglen;
     StringEncodeMulti *enc;
 
-    FREERAM(F("LED_Slideshow::display"));
-
-//    FREEMEMORY(F("freememory in display()"));
-    delay(50);
+    //FREERAM(F("LED_Slideshow::display"));
+    //FREEMEMORY(F("freememory in display()"));
+    //delay(50);
    
     if (img->bits == 0) {
 	// Simple bitmap image 16x16
@@ -142,7 +141,7 @@ LED_Slideshow::display(struct SlideshowImage *img)
 	len += img->bits / 8 + (img->bits % 8 == 0 ? 0 : 1);
 
         in = (char *)malloc(len * sizeof(char));
-//FREEMEMORY(F("malloc done for in"));
+	//FREEMEMORY(F("malloc done for in"));
         if (in == NULL) {
             Serial.print(F("in = NULL for "));
             Serial.print(len);
@@ -155,29 +154,31 @@ LED_Slideshow::display(struct SlideshowImage *img)
 
 	memcpy_P(in, img->image, len);
 
-        FREERAM(F("LED_Slideshow::display:before new"));
+        //FREERAM(F("LED_Slideshow::display:before new"));
 
         enc = new StringEncodeMulti();
         if (enc == NULL) {
             Serial.println(F("enc = NULL"));
+            FREERAM(F("in = NULL"));
+            FREEMEMORY(F("in = NULL"));
             free(in);
             delay(100);
             return;
         }
         memset(ps, '\0', sizeof(ps));
-//FREEMEMORY(F("new done"));
-        FREERAM(F("LED_Slideshow::display:before decode"));
+	//FREEMEMORY(F("new done"));
+        //FREERAM(F("LED_Slideshow::display:before decode"));
         enc->decode(in, ps, img->bits, &imglen, sizeof(ps) - 1);
-        FREERAM(F("LED_Slideshow::display:after decode"));
+        //FREERAM(F("LED_Slideshow::display:after decode"));
 
-//FREEMEMORY(F("decode done"));
-//Serial.print("imglen: ");
-//Serial.println(imglen);
+	//FREEMEMORY(F("decode done"));
+	//Serial.print("imglen: ");
+	//Serial.println(imglen);
         delete(enc);
-//FREEMEMORY(F("delete done"));
+	//FREEMEMORY(F("delete done"));
 	free(in);
-//FREEMEMORY(F("free"));
-//delay(50);
+	//FREEMEMORY(F("free"));
+	//delay(50);
 
 	W = img->width;
 	H = imglen / W;

@@ -161,7 +161,7 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
     uint8_t bits_left, bits_right, i;
     uint16_t bit_offset = 0;
 
-    FREERAM(F("StringEncodeMulti::decode"));
+    //FREERAM(F("StringEncodeMulti::decode"));
     
     //printf("DecodeMulti:\n");
     //printf("bits_in: %d\n", bits_in);
@@ -226,7 +226,7 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
         *out = alphabet[i];
 	out++;
 	(*bytes_out)++;
-        if (*bytes_out == max_bytes_out) {
+        if (*bytes_out == max_bytes_out && bit_offset != bits_in - bits) {
             Serial.println(F("Reached max_bytes_out"));
             goto bye;
         }
