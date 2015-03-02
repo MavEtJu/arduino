@@ -54,6 +54,10 @@ class LED_Strip : public Adafruit_NeoPixel {
     // Colour the LEDs in the matrix in a line from (x1, y1) to (x2, y2)
     void line(int16_t x1, int16_t y1, int16_t x2, int16_t y2);
     void line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, LED colour);
+    void horline(int16_t y, int16_t x1, int16_t x2);
+    void horline(int16_t y, int16_t x1, int16_t x2, LED colour);
+    void verline(int16_t x, int16_t y1, int16_t y2);
+    void verline(int16_t x, int16_t y1, int16_t y2, LED colour);
     
     // Copy the blob into the matrix
     void blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, LED *colour);

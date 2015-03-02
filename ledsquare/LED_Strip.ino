@@ -260,6 +260,37 @@ LED_Strip::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, LED colour)
     line(x1, y1, x2, y2);
 }
 
+void
+LED_Strip::horline(int16_t y, int16_t x1, int16_t x2)
+{
+    for (int16_t x = x1; x <= x2; x++) {
+	dot(x, y);
+    }
+}
+
+void
+LED_Strip::horline(int16_t y, int16_t x1, int16_t x2, LED colour)
+{
+    _colourlast = colour;
+    this->horline(y, x1, x2);
+}
+
+void
+LED_Strip::verline(int16_t x, int16_t y1, int16_t y2)
+{
+    for (int16_t y = y1; y <= y2; y++) {
+	dot(x, y);
+    }
+}
+
+void
+LED_Strip::verline(int16_t x, int16_t y1, int16_t y2, LED colour)
+{
+    _colourlast = colour;
+    this->verline(x, y1, y2);
+}
+
+
 // Copy the blob into the matrix
 void
 LED_Strip::blob(int16_t xo, int16_t yo, int16_t dx, int16_t dy, LED *colour)
