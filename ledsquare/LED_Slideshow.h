@@ -1,6 +1,8 @@
 #ifndef LED_Slideshow__h
 #define LED_Slideshow__h
 
+#include "LED_Strip.h"
+
 struct SlideshowImage {
     uint16_t width;
     uint16_t bits;

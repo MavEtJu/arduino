@@ -1,9 +1,9 @@
 #include <Arduino.h>
+#include <MemoryFree.h>
 #include "LED_Strip.h"
 #include "LED_Slideshow.h"
 #include "StringEncode.h"
 #include "A_Tools.h"
-#include <MemoryFree.h>
 
 
 LED_Slideshow::LED_Slideshow(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT)

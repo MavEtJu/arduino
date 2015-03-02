@@ -226,7 +226,7 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
         *out = alphabet[i];
 	out++;
 	(*bytes_out)++;
-        if (*bytes_out == max_bytes_out && bit_offset != bits_in - bits) {
+        if (*bytes_out == max_bytes_out) {
             Serial.println(F("Reached max_bytes_out"));
             goto bye;
         }
