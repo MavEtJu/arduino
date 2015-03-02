@@ -1,7 +1,7 @@
 //
 //
 
-#if !defined LED_Strip__h
+#ifndef LED_Strip__h
 #define LED_Strip__h
 
 #include <Adafruit_NeoPixel.h>

@@ -2,7 +2,7 @@
 //
 //
 
-#if !defined A_Tools__h
+#ifndef A_Tools__h
 #define A_Tools__h
 
 /* https://learn.adafruit.com/memories-of-an-arduino/measuring-free-memory */
