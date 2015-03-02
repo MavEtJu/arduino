@@ -702,7 +702,6 @@ LED_galaga1::LED_galaga1(void) : LED_Slideshow(&led, VIEW_WIDTH, VIEW_HEIGHT)
      *
      */
     set_imgs(3);
-    Serial.println("1");
     add_image(15, 480, PSTR(
 	/*
         "       W        "
@@ -1170,7 +1169,7 @@ loop(void)
     loop_blink();
     led.clear();
 
-    static uint16_t phasenr = 11;
+    static uint16_t phasenr = 0;
     static unsigned long started = 0;
 
     /* testing */
