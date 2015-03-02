@@ -36,23 +36,17 @@ unsigned long
 millis(void)
 {
 	struct timeval tv;
-	static long l0;
-	bool first = 1;
+	static time_t sec0;
+	static bool first = 1;
+	unsigned long l;
 
 	if (first) {
 		gettimeofday(&tv, NULL);
-		if (tv.tv_usec < 1000) {
-			tv.tv_usec += 1000000;
-			tv.tv_sec--;
-		}
-		tv.tv_usec -= 1000;
-		l0 = tv.tv_sec * 1000000 + tv.tv_usec;
-		l0 /= 1000;
+		sec0 = tv.tv_sec;
 		first = 0;
 	}
 
 	gettimeofday(&tv, NULL);
-	long l = tv.tv_sec * 1000000 + tv.tv_usec;
-	l /= 1000;
-	return (l - l0);
+	l = (tv.tv_sec - sec0) * 1000 + (tv.tv_usec / 1000);
+	return l;
 }
