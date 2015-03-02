@@ -19,6 +19,19 @@ LED_led00_blink1::animation(void)
 
 // ==============================
 
+LED_cross1::LED_cross1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+{
+}
+
+void
+LED_cross1::animation(void)
+{
+    _led->line(0, 0, _VIEW_WIDTH, _VIEW_HEIGHT, _led->colour_red);
+    _led->line(0, _VIEW_HEIGHT, _VIEW_WIDTH, 0, _led->colour_red);
+}
+
+// ==============================
+
 LED_quickbrowfox1::LED_quickbrowfox1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
 {
     text = new LED_Text(led);
@@ -229,16 +242,6 @@ LED_squares1::animation(void)
 }
 
 // ====================
-
-void
-LED_cross1::animation(void)
-{
-    _led->line(0, 0, _VIEW_WIDTH - 1, _VIEW_HEIGHT - 1, _led->colour_red);
-    _led->line(_VIEW_WIDTH - 1, 0, 0, _VIEW_HEIGHT - 1, _led->colour_red);
-}
-
-
-// ===================
 
 LED_sinus1::LED_sinus1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
 {
