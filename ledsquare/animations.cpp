@@ -7,10 +7,6 @@
 
 // ==============================
 
-LED_led00_blink1::LED_led00_blink1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
-{
-}
-
 void
 LED_led00_blink1::animation(void)
 {
@@ -18,10 +14,6 @@ LED_led00_blink1::animation(void)
 }
 
 // ==============================
-
-LED_cross1::LED_cross1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
-{
-}
 
 void
 LED_cross1::animation(void)
@@ -52,10 +44,6 @@ LED_quickbrowfox1::animation(void)
 }
 
 // ==============================
-
-LED_lineshorver1::LED_lineshorver1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
-{
-}
 
 void
 LED_lineshorver1::animation(void)

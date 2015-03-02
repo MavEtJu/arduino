@@ -1,9 +1,11 @@
 #ifndef animations__h
 #define animations__h
 
+#define SIMPLECONSTRUCTOR(__t__) __t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT) {};
+
 class LED_led00_blink1 : public LED_Animation {
     public:
-    LED_led00_blink1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    SIMPLECONSTRUCTOR(LED_led00_blink1);
     void animation(void);
 };
 
@@ -17,7 +19,7 @@ class LED_quickbrowfox1 : public LED_Animation {
 
 class LED_lineshorver1 : public LED_Animation {
     public:
-    LED_lineshorver1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    SIMPLECONSTRUCTOR(LED_lineshorver1);
     void animation(void);
 };
 
@@ -45,7 +47,7 @@ public:
 
 class LED_cross1 : public LED_Animation {
     public:
-    LED_cross1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    SIMPLECONSTRUCTOR(LED_cross1);
     void animation(void);
 };
 
