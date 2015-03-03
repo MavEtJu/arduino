@@ -78,7 +78,7 @@ loop(void)
     loop_blink();
     led.clear();
 
-    static uint16_t phasenr = 0;
+    static int16_t phasenr = 0;
     static unsigned long started = 0;
 
     /* testing */
@@ -132,28 +132,49 @@ loop(void)
 # endif
 #endif
 
-        switch (++phasenr % 13) {
-            slideshow[0] = NULL;
-            animation[0] = NULL;
+	int phase = 0;
+	slideshow[0] = NULL;
+	animation[0] = NULL;
+	#define NEW_ANIMATION(__t)  \
+		if (phase++ == phasenr) { \
+		    __t *p = new __t(&led, VIEW_WIDTH, VIEW_HEIGHT); \
+		    animation[0] = p; \
+		} else
+	#define NEW_SLIDESHOW(__t)  \
+		if (phase++ == phasenr) { \
+		    __t *p = new __t(&led, VIEW_WIDTH, VIEW_HEIGHT); \
+		    slideshow[0] = p; \
+		} else
 
-            #define NEW_ANIMATION(t)  { t *p = new t(&led, VIEW_WIDTH, VIEW_HEIGHT); animation[0] = p; break; }
-            #define NEW_SLIDESHOW(t)    { t *p = new t(&led, VIEW_WIDTH, VIEW_HEIGHT); slideshow[0] = p; break; }
-            case  0: NEW_ANIMATION(LED_led00_blink1)
-            case  1: NEW_ANIMATION(LED_quickbrowfox1)
-            case  2: NEW_ANIMATION(LED_spaceinvaders1)
-            case  3: NEW_ANIMATION(LED_sinus1);
-            case  4: NEW_ANIMATION(LED_lines1);
-            case  5: NEW_ANIMATION(LED_sinus2);
-            case  6: NEW_ANIMATION(LED_lineshorver1)
-            case  7: NEW_ANIMATION(LED_squares1)
-            case  8: NEW_ANIMATION(LED_torch1)
-            case  9: NEW_SLIDESHOW(LED_mario1)
-            case 10: NEW_SLIDESHOW(LED_galaga1)
-            case 11: NEW_ANIMATION(LED_torch2)
-            case 12: NEW_SLIDESHOW(LED_minecraft1)
-            default: NEW_ANIMATION(LED_cross1);
+#ifdef SERIAL
+	Serial.print(F("phasenr: "));
+	Serial.println(phasenr);
+#endif
+	NEW_ANIMATION(LED_led00_blink1)
+	NEW_ANIMATION(LED_quickbrowfox1)
+	NEW_ANIMATION(LED_spaceinvaders1)
+	NEW_ANIMATION(LED_sinus1)
+	NEW_ANIMATION(LED_lines1)
+	NEW_ANIMATION(LED_sinus2)
+	NEW_ANIMATION(LED_lineshorver1)
+	NEW_ANIMATION(LED_squares1)
+	NEW_ANIMATION(LED_torch1)
+	NEW_SLIDESHOW(LED_mario1)
+	NEW_SLIDESHOW(LED_galaga1)
+	NEW_ANIMATION(LED_torch2)
+	NEW_SLIDESHOW(LED_minecraft1)
+	NEW_ANIMATION(LED_cross1)
+	{ 
+	    LED_led00_blink1 *p = new LED_led00_blink1(&led, VIEW_WIDTH, VIEW_HEIGHT);
+	    animation[0] = p;
+	    phasenr = -1;
+	    started = 0;
+#ifdef SERIAL
+	    Serial.println(F("Reset"));
+#endif
+	}
+	phasenr++;
 
-        }
 #ifdef SERIAL
 # ifdef MEMORY
 #  ifndef SIMULATOR
