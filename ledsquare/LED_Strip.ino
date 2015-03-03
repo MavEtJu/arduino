@@ -261,6 +261,18 @@ LED_Strip::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, LED colour)
 }
 
 void
+LED_Strip::line(struct coordinates c1, struct coordinates c2)
+{
+    line(c1.x, c1.y, c2.x, c2.y);
+}
+
+void
+LED_Strip::line(struct coordinates c1, struct coordinates c2, LED colour)
+{
+    line(c1.x, c1.y, c2.x, c2.y, colour);
+}
+
+void
 LED_Strip::horline(int16_t y, int16_t x1, int16_t x2)
 {
     for (int16_t x = x1; x <= x2; x++) {
