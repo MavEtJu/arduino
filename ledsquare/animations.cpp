@@ -15,11 +15,51 @@ LED_led00_blink1::animation(void)
 
 // ==============================
 
+LED_cross1::LED_cross1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+{
+    memset(c1, 0, sizeof(struct coordinates) * LED_cross1_history);
+    memset(c2, 0, sizeof(struct coordinates) * LED_cross1_history);
+    c[0] = _led->Color(16, 0, 0);
+    c[1] = _led->Color(8, 0, 0);
+    c[2] = _led->Color(4, 0, 0);
+    c[3] = _led->Color(2, 0, 0);
+    c[4] = _led->Color(1, 0, 0);
+}
+
 void
 LED_cross1::animation(void)
 {
-    _led->line(0, 0, _VIEW_WIDTH, _VIEW_HEIGHT, _led->colour_red);
-    _led->line(0, _VIEW_HEIGHT, _VIEW_WIDTH, 0, _led->colour_red);
+    uint16_t x1, y1, x2, y2;
+    uint8_t around = (_VIEW_HEIGHT + _VIEW_WIDTH - 2);
+    
+    if (step % around < _VIEW_HEIGHT) {
+        x1 = 0;
+        y1 = step % around;
+        x2 = _VIEW_WIDTH - 1;
+        y2 = _VIEW_HEIGHT - y1 - 1;
+    } else {
+        x1 = step % around - _VIEW_HEIGHT + 1;
+        y1 = _VIEW_HEIGHT - 1;
+        x2 = _VIEW_WIDTH - x1 - 1;
+        y2 = 0;
+    }
+    
+    for (int i = LED_cross1_history - 1; i > 0; i--) {
+        c1[i] = c1[i - 1];
+        c2[i] = c2[i - 1];
+    }
+    c1[0].x = x1;
+    c1[0].y = y1;
+    c2[0].x = x2;
+    c2[0].y = y2;
+    for (int i = LED_cross1_history - 1; i >= 0; i--) {
+        if (delayms / 20 > LED_cross1_history - i - 1) {
+            continue;
+        }
+        _led->line(c1[i], c2[i], c[i]);
+    }
+    
+    delayms = 50 + 45 * sin(step / 180.0 * PI);
 }
 
 // ==============================

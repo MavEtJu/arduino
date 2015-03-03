@@ -47,8 +47,12 @@ public:
 
 class LED_cross1 : public LED_Animation {
     public:
-    SIMPLECONSTRUCTOR(LED_cross1);
+    LED_cross1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
     void animation(void);
+    
+    #define LED_cross1_history  5
+    LED c[LED_cross1_history];
+    struct coordinates c1[LED_cross1_history], c2[LED_cross1_history];
 };
 
 class LED_sinus1 : public LED_Animation {
