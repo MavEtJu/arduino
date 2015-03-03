@@ -45,6 +45,16 @@ public:
     LED c;
 };
 
+#define LED_squares2_history 10
+class LED_squares2 : public LED_Animation {
+public:
+    LED_squares2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    void animation(void);
+    struct area a[LED_squares2_history];
+    LED c[LED_squares2_history];
+    void shift_history(struct area a, LED c);
+};
+
 class LED_cross1 : public LED_Animation {
     public:
     LED_cross1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);

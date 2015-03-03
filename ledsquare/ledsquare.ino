@@ -90,9 +90,10 @@ loop(void)
 # endif
 #endif
 
-//#define TESTING
+#define TESTING
 #ifdef TESTING
-    static LED_cross1 *p = new LED_cross1(&led, VIEW_WIDTH, VIEW_HEIGHT);
+    static LED_squares2 *p = new LED_squares2(&led, VIEW_WIDTH, VIEW_HEIGHT);
+    //static LED_cross1 *p = new LED_cross1(&led, VIEW_WIDTH, VIEW_HEIGHT);
     //static LED_quickbrowfox1 *p = new LED_quickbrowfox1(&led, VIEW_WIDTH, VIEW_HEIGHT);
     p->loop();
     led.display();
@@ -162,6 +163,7 @@ loop(void)
 	NEW_SLIDESHOW(LED_mario1)
 	NEW_SLIDESHOW(LED_galaga1)
 	NEW_ANIMATION(LED_torch2)
+	NEW_ANIMATION(LED_squares2)
 	NEW_SLIDESHOW(LED_minecraft1)
 	NEW_ANIMATION(LED_cross1)
 	{ 
