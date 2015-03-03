@@ -59,7 +59,7 @@ LED_cross1::animation(void)
         _led->line(c1[i], c2[i], c[i]);
     }
     
-    delayms = 50 + 45 * sin(step / 180.0 * PI);
+    delayms = 50 + 45 * sin(step / 180.0 * M_PI);
 }
 
 // ==============================
