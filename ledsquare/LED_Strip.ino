@@ -35,7 +35,7 @@ LED_Strip::LED_Strip(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, p
 LED
 LED_Strip::Color(uint8_t r, uint8_t g, uint8_t b)
 {
-    LED l;
+    static LED l;
     l.red = r;
     l.green = g;
     l.blue = b;
@@ -114,6 +114,12 @@ LED
 LED_Strip::colour_get(void)
 {
     return _colourlast;
+}
+
+LED
+LED_Strip::colour_fade(LED c, int fade)
+{
+    return Color(c.red >> fade, c.green >> fade, c.blue >> fade);
 }
 
 LED
@@ -202,6 +208,32 @@ LED_Strip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy, LED colour)
 {
     _colourlast = colour;
     square(xo, yo, dx, dy);
+}
+
+void
+LED_Strip::square(struct coordinates c, struct distance d, LED colour)
+{
+    _colourlast = colour;
+    square(c.x, c.y, d.dx, d.dy);
+}
+
+void
+LED_Strip::square(struct coordinates c, struct distance d)
+{
+    square(c.x, c.y, d.dx, d.dy);
+}
+
+void
+LED_Strip::square(struct area a, LED colour)
+{
+    _colourlast = colour;
+    square(a.c1.x, a.c1.y, a.c2.x, a.c2.y);
+}
+
+void
+LED_Strip::square(struct area a)
+{
+    square(a.c1.x, a.c1.y, a.c2.x, a.c2.y);
 }
 
 // Draw a line
