@@ -92,13 +92,13 @@ loop(void)
 
 //#define TESTING
 #ifdef TESTING
-    static LED_mario1 *p = new LED_mario1(&led, VIEW_WIDTH, VIEW_HEIGHT);
+    static LED_cross1 *p = new LED_cross1(&led, VIEW_WIDTH, VIEW_HEIGHT);
     //static LED_quickbrowfox1 *p = new LED_quickbrowfox1(&led, VIEW_WIDTH, VIEW_HEIGHT);
     p->loop();
     led.display();
     started++;
 # ifdef SERIAL
-    Serial.println(started);
+//    Serial.println(started);
 # endif
     return;
 #endif
