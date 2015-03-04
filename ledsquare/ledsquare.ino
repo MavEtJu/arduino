@@ -90,9 +90,9 @@ loop(void)
 # endif
 #endif
 
-#define TESTING
+//#define TESTING
 #ifdef TESTING
-    static LED_movingsquares1 *p = new LED_movingsquares1(&led, VIEW_WIDTH, VIEW_HEIGHT);
+    static LED_torch2 *p = new LED_torch2(&led, VIEW_WIDTH, VIEW_HEIGHT);
     //static LED_squares2 *p = new LED_squares2(&led, VIEW_WIDTH, VIEW_HEIGHT);
     //static LED_cross1 *p = new LED_cross1(&led, VIEW_WIDTH, VIEW_HEIGHT);
     //static LED_quickbrowfox1 *p = new LED_quickbrowfox1(&led, VIEW_WIDTH, VIEW_HEIGHT);
@@ -105,7 +105,7 @@ loop(void)
     return;
 #endif
 
-    if (started == 0 || started + 5l * 1000l < millis()) {
+    if (started == 0 || started + 30l * 1000l < millis()) {
 #ifdef SERIAL
 # ifdef MEMORY
 #  ifndef SIMULATOR
@@ -152,20 +152,21 @@ loop(void)
 	Serial.print(F("phasenr: "));
 	Serial.println(phasenr);
 #endif
-	NEW_ANIMATION(LED_led00_blink1)
+   	// NEW_ANIMATION(LED_led00_blink1)
 	NEW_ANIMATION(LED_quickbrowfox1)
 	NEW_ANIMATION(LED_spaceinvaders1)
+	NEW_ANIMATION(LED_movingsquares1)
 	NEW_ANIMATION(LED_sinus1)
 	NEW_ANIMATION(LED_lines1)
 	NEW_ANIMATION(LED_sinus2)
-	NEW_ANIMATION(LED_lineshorver1)
+	//NEW_ANIMATION(LED_lineshorver1)
 	NEW_ANIMATION(LED_squares1)
 	NEW_ANIMATION(LED_torch1)
-	NEW_SLIDESHOW(LED_mario1)
+	//NEW_SLIDESHOW(LED_mario1)
 	NEW_SLIDESHOW(LED_galaga1)
 	NEW_ANIMATION(LED_torch2)
 	NEW_ANIMATION(LED_squares2)
-	NEW_SLIDESHOW(LED_minecraft1)
+	//NEW_SLIDESHOW(LED_minecraft1)
 	NEW_ANIMATION(LED_cross1)
 	{ 
 	    LED_led00_blink1 *p = new LED_led00_blink1(&led, VIEW_WIDTH, VIEW_HEIGHT);
