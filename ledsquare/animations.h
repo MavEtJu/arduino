@@ -55,12 +55,15 @@ public:
     void shift_history(struct area a, LED c);
 };
 
+#define LED_movingsquares1_squares 4
 class LED_movingsquares1 : public LED_Animation {
 public:
     LED_movingsquares1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
     void animation(void);
-    LED c[2];
-    int16_t x0[2], y0[2], x1[2], y1[2], dx[2], dy[2], size[2], x[2], y[2];
+    LED c[LED_movingsquares1_squares];
+    int16_t x0[LED_movingsquares1_squares], y0[LED_movingsquares1_squares], x1[LED_movingsquares1_squares],
+        y1[LED_movingsquares1_squares], dx[LED_movingsquares1_squares], dy[LED_movingsquares1_squares],
+        size[LED_movingsquares1_squares], x[LED_movingsquares1_squares], y[LED_movingsquares1_squares];
 };
 
 class LED_cross1 : public LED_Animation {

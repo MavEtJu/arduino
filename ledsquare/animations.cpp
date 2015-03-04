@@ -723,25 +723,31 @@ LED_torch2::animation(void)
 
 LED_movingsquares1::LED_movingsquares1(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(l, VIEW_WIDTH, VIEW_HEIGHT)
 {
+    delayms = 50;
+    
     c[0] = _led->colour_magenta; //_led->colour_random();
-    c[1] = _led->colour_red; //_led->colour_random();
+    c[3] = _led->colour_red; //_led->colour_random();
+    c[2] = _led->colour_green;
+    c[1] = _led->colour_yellow;
 
     size[0] = 5;
-    size[1] = 3;
-    x0[0] = 1;
-    y0[0] = 1;
-    x0[1] = 4;
-    y0[1] = 4;
-    for (int i = 0; i < 2; i++) {
+    size[3] = 3;
+    size[2] = 2;
+    size[1] = 4;
+    x0[0] = 0;
+    y0[0] = 0;
+    x0[3] = 4;
+    y0[3] = 4;
+    x0[2] = 1;
+    y0[2] = 1;
+    x0[1] = 3;
+    y0[1] = 3;
+    for (int i = 0; i < LED_movingsquares1_squares; i++) {
 	x1[i] = _VIEW_WIDTH - size[i] - y0[i];
 	y1[i] = _VIEW_HEIGHT - size[i] - x0[i];
 	x[i] = x0[i];
 	y[i] = y0[i];
     }
-    dx[0] = 1;
-    dy[0] = 0;
-    dx[1] = 0;
-    dy[1] = 1;
 }
 
 void
@@ -768,22 +774,22 @@ LED_movingsquares1::animation(void)
      *
      */
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < LED_movingsquares1_squares; i++) {
 	if (x[i] == x0[i] && y[i] == y0[i]) {
-	    dx[i] = i == 0 ? 1 : 0;
-	    dy[i] = i == 0 ? 0 : 1;
+	    dx[i] = i % 2 == 0 ? 1 : 0;
+	    dy[i] = i % 2 == 0 ? 0 : 1;
 	}
 	if (x[i] == x1[i] && y[i] == y0[i]) {
-	    dx[i] = i == 0 ? 0 : -1;
-	    dy[i] = i == 0 ? 1 : 0;
+	    dx[i] = i % 2 == 0 ? 0 : -1;
+	    dy[i] = i % 2 == 0 ? 1 : 0;
 	}
 	if (x[i] == x0[i] && y[i] == y1[i]) {
-	    dx[i] = i == 0 ? 0 : 1;
-	    dy[i] = i == 0 ? -1 : 0;
+	    dx[i] = i % 2 == 0 ? 0 : 1;
+	    dy[i] = i % 2 == 0 ? -1 : 0;
 	}
 	if (x[i] == x1[i] && y[i] == y1[i]) {
-	    dx[i] = i == 0 ? -1 : 0;
-	    dy[i] = i == 0 ? 0 : -1;
+	    dx[i] = i % 2 == 0 ? -1 : 0;
+	    dy[i] = i % 2 == 0 ? 0 : -1;
 	}
 
 	Serial.print("dx,dy: ");
