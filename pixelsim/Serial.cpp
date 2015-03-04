@@ -70,6 +70,66 @@ Serial::print(char *s)
 }
 
 void
+Serial::println(unsigned short us)
+{
+	plog += sprintf(plog, "%ud", us);
+	lognr_increase_written();
+}
+void
+Serial::print(unsigned short us)
+{
+	plog += sprintf(plog, "%ud", us);
+}
+
+void
+Serial::println(signed short ss)
+{
+	plog += sprintf(plog, "%d", ss);
+	lognr_increase_written();
+}
+void
+Serial::print(signed short ss)
+{
+	plog += sprintf(plog, "%d", ss);
+}
+
+void
+Serial::println(unsigned int si)
+{
+	plog += sprintf(plog, "%ud", si);
+	lognr_increase_written();
+}
+void
+Serial::print(unsigned int si)
+{
+	plog += sprintf(plog, "%ud", si);
+}
+
+void
+Serial::println(signed int si)
+{
+	plog += sprintf(plog, "%d", si);
+	lognr_increase_written();
+}
+void
+Serial::print(signed int si)
+{
+	plog += sprintf(plog, "%d", si);
+}
+
+void
+Serial::println(signed long sl)
+{
+	plog += sprintf(plog, "%ld", sl);
+	lognr_increase_written();
+}
+void
+Serial::print(signed long sl)
+{
+	plog += sprintf(plog, "%ld", sl);
+}
+
+void
 Serial::println(unsigned long ul)
 {
 	plog += sprintf(plog, "%lu", ul);

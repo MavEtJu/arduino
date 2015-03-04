@@ -14,6 +14,16 @@ public:
     void print(const char *s);
     void println(unsigned long ul);
     void print(unsigned long ul);
+    void println(signed long sl);
+    void print(signed long sl);
+    void println(signed short ss);
+    void print(signed short ss);
+    void println(unsigned short us);
+    void print(unsigned short us);
+    void println(unsigned int ui);
+    void print(unsigned int ui);
+    void println(signed int si);
+    void print(signed int si);
 
     int lines(void);
     char *get(void);
