@@ -800,11 +800,13 @@ LED_movingsquares1::animation(void)
 	    dy[i] = i % 2 == 0 ? 0 : -1;
 	}
 
+	/*
 	Serial.print("dx,dy: ");
 	Serial.print(dx[i]);
 	Serial.print(",");
 	Serial.print(dy[i]);
 	Serial.println("");
+	*/
 
 	x[i] += dx[i];
 	y[i] += dy[i];
