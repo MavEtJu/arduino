@@ -701,3 +701,83 @@ LED_torch2::animation(void)
 
     _led->line(0, 0, _VIEW_WIDTH, 0, colour_floor);
 }
+
+// ============================
+
+LED_movingsquares1::LED_movingsquares1(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(l, VIEW_WIDTH, VIEW_HEIGHT)
+{
+    c[0] = _led->colour_magenta; //_led->colour_random();
+    c[1] = _led->colour_red; //_led->colour_random();
+
+    size[0] = 5;
+    size[1] = 3;
+    x0[0] = 1;
+    y0[0] = 1;
+    x0[1] = 4;
+    y0[1] = 4;
+    for (int i = 0; i < 2; i++) {
+	x1[i] = _VIEW_WIDTH - size[i] - y0[i];
+	y1[i] = _VIEW_HEIGHT - size[i] - x0[i];
+	x[i] = x0[i];
+	y[i] = y0[i];
+    }
+    dx[0] = 1;
+    dy[0] = 0;
+    dx[1] = 0;
+    dy[1] = 1;
+}
+
+void
+LED_movingsquares1::animation(void)
+{
+    /*
+     * ................
+     * ................
+     * ................
+     * ................
+     * ................
+     * ................
+     * ................
+     * ................
+     * ....****........
+     * ....****........
+     * .XXX****........
+     * .XXX****........
+     * .XXXXX..........
+     * .XXXXX..........
+     * .XXXXX..........
+     * ................
+     *
+     *
+     */
+
+    for (int i = 0; i < 2; i++) {
+	if (x[i] == x0[i] && y[i] == y0[i]) {
+	    dx[i] = i == 0 ? 1 : 0;
+	    dy[i] = i == 0 ? 0 : 1;
+	}
+	if (x[i] == x1[i] && y[i] == y0[i]) {
+	    dx[i] = i == 0 ? 0 : -1;
+	    dy[i] = i == 0 ? 1 : 0;
+	}
+	if (x[i] == x0[i] && y[i] == y1[i]) {
+	    dx[i] = i == 0 ? 0 : 1;
+	    dy[i] = i == 0 ? -1 : 0;
+	}
+	if (x[i] == x1[i] && y[i] == y1[i]) {
+	    dx[i] = i == 0 ? -1 : 0;
+	    dy[i] = i == 0 ? 0 : -1;
+	}
+
+	Serial.print("dx,dy: ");
+	Serial.print(dx[i]);
+	Serial.print(",");
+	Serial.print(dy[i]);
+	Serial.println("");
+
+	x[i] += dx[i];
+	y[i] += dy[i];
+
+	_led->square(x[i], y[i], size[i], size[i], c[i]);
+    }
+}

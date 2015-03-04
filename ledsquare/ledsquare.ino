@@ -92,7 +92,8 @@ loop(void)
 
 #define TESTING
 #ifdef TESTING
-    static LED_squares2 *p = new LED_squares2(&led, VIEW_WIDTH, VIEW_HEIGHT);
+    static LED_movingsquares1 *p = new LED_movingsquares1(&led, VIEW_WIDTH, VIEW_HEIGHT);
+    //static LED_squares2 *p = new LED_squares2(&led, VIEW_WIDTH, VIEW_HEIGHT);
     //static LED_cross1 *p = new LED_cross1(&led, VIEW_WIDTH, VIEW_HEIGHT);
     //static LED_quickbrowfox1 *p = new LED_quickbrowfox1(&led, VIEW_WIDTH, VIEW_HEIGHT);
     p->loop();
