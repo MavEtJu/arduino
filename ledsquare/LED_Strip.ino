@@ -135,6 +135,7 @@ LED_Strip::colour_random(void)
         case 6: return colour_magenta;
         case 7: return colour_yellow;
     }
+    return colour_white;
 }
 
 LED
@@ -149,6 +150,7 @@ LED_Strip::colour_random_notblack(void)
         case 5: return colour_magenta;
         case 6: return colour_yellow;
     }
+    return colour_white;
 }
 
 
