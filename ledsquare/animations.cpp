@@ -8,6 +8,69 @@
 // ==============================
 
 void
+LED_test::animation(void)
+{
+    // Three line red banner
+    if (step < _VIEW_HEIGHT + 2) {
+	int16_t line = step % (_VIEW_HEIGHT + 2);
+	for (int i = 0; i < 3; i++) {
+	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->colour_red);
+	}
+	return;
+    }
+
+    // Three line green banner
+    if (step < 2 * (_VIEW_HEIGHT + 2)) {
+	int16_t line = step % (_VIEW_HEIGHT + 2);
+	for (int i = 0; i < 3; i++) {
+	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->colour_green);
+	}
+	return;
+    }
+
+    // Three line blue banner
+    if (step < 3 * (_VIEW_HEIGHT + 2)) {
+	int16_t line = step % (_VIEW_HEIGHT + 2);
+	for (int i = 0; i < 3; i++) {
+	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->colour_blue);
+	}
+	return;
+    }
+
+    // Three line redish banner
+    if (step < 4 * (_VIEW_HEIGHT + 2)) {
+	int16_t line = step % (_VIEW_HEIGHT + 2);
+	for (int i = 0; i < 3; i++) {
+	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->Color(line + i, 0, 0));
+	}
+	return;
+    }
+
+    // Three line greenish banner
+    if (step < 5 * (_VIEW_HEIGHT + 2)) {
+	int16_t line = step % (_VIEW_HEIGHT + 2);
+	for (int i = 0; i < 3; i++) {
+	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->Color(0, line + i, 0));
+	}
+	return;
+    }
+
+    // Three line blueish banner
+    if (step < 6 * (_VIEW_HEIGHT + 2)) {
+	int16_t line = step % (_VIEW_HEIGHT + 2);
+	for (int i = 0; i < 3; i++) {
+	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->Color(0, 0, line + i));
+	}
+	return;
+    }
+
+    step = 0;
+
+}
+
+// ==============================
+
+void
 LED_led00_blink1::animation(void)
 {
     _led->dot(0, 0, _led->colour_random());

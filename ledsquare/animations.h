@@ -4,6 +4,12 @@
 #define PARENTCONSTRUCTOR(__t__) __t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT) {}
 #define MYCONSTRUCTOR(__t__) __t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT)
 
+class LED_test : public LED_Animation {
+    public:
+    PARENTCONSTRUCTOR(LED_test);
+    void animation(void);
+};
+
 class LED_led00_blink1 : public LED_Animation {
     public:
     PARENTCONSTRUCTOR(LED_led00_blink1);
