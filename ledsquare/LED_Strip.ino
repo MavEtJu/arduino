@@ -134,8 +134,20 @@ LED_Strip::colour_random(void)
         case 5: return colour_cyan;
         case 6: return colour_magenta;
         case 7: return colour_yellow;
-        default:
-            return colour_white;
+    }
+}
+
+LED
+LED_Strip::colour_random_notblack(void)
+{
+       switch (rand() % 7) {
+        case 0: return colour_white;
+        case 1: return colour_red;
+        case 2: return colour_green;
+        case 3: return colour_blue;
+        case 4: return colour_cyan;
+        case 5: return colour_magenta;
+        case 6: return colour_yellow;
     }
 }
 
@@ -227,13 +239,13 @@ void
 LED_Strip::square(struct area a, LED colour)
 {
     _colourlast = colour;
-    square(a.c1.x, a.c1.y, a.c2.x, a.c2.y);
+    square(a.c1.x, a.c1.y, a.c2.x - a.c1.x + 1, a.c2.y - a.c1.y + 1);
 }
 
 void
 LED_Strip::square(struct area a)
 {
-    square(a.c1.x, a.c1.y, a.c2.x, a.c2.y);
+    square(a.c1.x, a.c1.y, a.c2.x - a.c1.x + 1, a.c2.y - a.c1.y + 1);
 }
 
 // Draw a line

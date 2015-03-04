@@ -85,6 +85,7 @@ class LED_Strip : public Adafruit_NeoPixel {
     LED colour_magenta, colour_cyan, colour_yellow;
     LED colour_white, colour_black;
     LED colour_random(void);
+    LED colour_random_notblack(void);
 
     private:
     LED **_matrix;
