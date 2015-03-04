@@ -32,7 +32,7 @@ links: ${LINKFILES}
 	make depends
 
 clean:
-	rm -f *.o test *.core .depend
+	rm -f *.o *.core .depend test StringEncodeMain
 	find . -type l -exec rm {} \;
 
 depends:
