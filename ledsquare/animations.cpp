@@ -277,6 +277,7 @@ LED_squares2::LED_squares2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HE
 	a[i].c1.y = 0;
 	a[i].c2.x = 0;
 	a[i].c2.y = 0;
+        c[i] = _led->colour_black;
     }
     delayms = 250;
 }
@@ -287,19 +288,35 @@ LED_squares2::animation(void)
     struct area a_new;
     LED c_new;
     int i;
+    int16_t x1, x2, y1, y2;
 
-    c_new = _led->colour_random();
-    a_new.c1.x = random() % _VIEW_WIDTH;
-    a_new.c1.y = random() % _VIEW_HEIGHT;
-    a_new.c2.x = random() % _VIEW_WIDTH;
-    a_new.c2.y = random() % _VIEW_HEIGHT;
-
-    Serial.print(step);
+    do {
+        c_new = _led->colour_random_notblack();
+    } while (c_new.red == c_last.red && c_new.green == c_last.green && c_new.blue == c_last.blue);
+    x1 = random() % _VIEW_WIDTH;
+    x2 = random() % _VIEW_WIDTH;
+    y1 = random() % _VIEW_HEIGHT;
+    y2 = random() % _VIEW_HEIGHT;
+    if (x1 > x2) {
+        int16_t x = x1;
+        x1 = x2;
+        x2 = x;
+    }
+    if (y1 > y2) {
+        int16_t y = y1;
+        y1 = y2;
+        y2 = y;
+    }
+    a_new.c1.x = x1;
+    a_new.c1.y = y1;
+    a_new.c2.x = x2;
+    a_new.c2.y = y2;
 
     shift_history(a_new, c_new);
+    c_last = c_new;
 
     for (i = LED_squares2_history - 1; i >= 0; i--) {
-	_led->square(a[i], _led->colour_fade(c[i], i));
+	_led->square(a[i], _led->colour_fade(c[i], i / 5));
     }
 }
 
