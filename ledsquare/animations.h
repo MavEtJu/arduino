@@ -112,6 +112,7 @@ class LED_spaceinvaders1 : public LED_Animation {
 struct coal {
 	int16_t x, y;
         int16_t intensity;
+        int decay;
 };
 
 class LED_torch1 : public LED_Animation {
@@ -130,6 +131,7 @@ public:
     LED_torch2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
     ~LED_torch2(void);
     
+    struct coal new_coal(uint8_t intensity, int randomy);
     void animation(void);
     int numcoals;
     struct coal *coals;

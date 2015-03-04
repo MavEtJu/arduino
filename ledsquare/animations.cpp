@@ -662,14 +662,23 @@ LED_torch1::animation(void)
 
 LED_torch2::LED_torch2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
 {    
-    numcoals = 20;
+    numcoals = 30;
     coals = (struct coal *)malloc(numcoals * sizeof(struct coal));
     
     for (uint8_t c = 0; c < numcoals; c++) {
-	coals[c].x = random() % _VIEW_WIDTH;
-	coals[c].y = - (random() % _VIEW_HEIGHT);
-        coals[c].intensity = _VIEW_HEIGHT << 1;
+        coals[c] = new_coal(_VIEW_HEIGHT, 1);
     }
+}
+
+struct coal
+LED_torch2::new_coal(uint8_t intensity, int randomy)
+{
+    struct coal c;
+    c.x = random() % _VIEW_WIDTH;
+    c.y = randomy ? random() % _VIEW_HEIGHT : 0;
+    c.intensity = intensity + 2 - (random() % 5);;
+    c.decay = random() % 4 + 2;
+    return c;
 }
 
 LED_torch2::~LED_torch2(void)
@@ -690,11 +699,9 @@ LED_torch2::animation(void)
        
     for (uint8_t c = 0; c < numcoals; c++) {
         coals[c].y++;
-        coals[c].intensity -= (random() % 2) + 1;
+        coals[c].intensity -= coals[c].decay;
         if (coals[c].y == _VIEW_HEIGHT || coals[c].intensity <= 0) {
-            coals[c].y = 0;
-            coals[c].x = random() % _VIEW_WIDTH;
-            coals[c].intensity = floor_intensity + 2 - (random() % 5);
+            coals[c] = new_coal(floor_intensity, 0);
         }
 
         int16_t x = coals[c].x;
@@ -742,6 +749,7 @@ LED_movingsquares1::LED_movingsquares1(LED_Strip *l, uint16_t VIEW_WIDTH, uint16
     y0[2] = 1;
     x0[1] = 3;
     y0[1] = 3;
+    
     for (int i = 0; i < LED_movingsquares1_squares; i++) {
 	x1[i] = _VIEW_WIDTH - size[i] - y0[i];
 	y1[i] = _VIEW_HEIGHT - size[i] - x0[i];
