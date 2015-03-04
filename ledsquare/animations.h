@@ -1,17 +1,18 @@
 #ifndef animations__h
 #define animations__h
 
-#define SIMPLECONSTRUCTOR(__t__) __t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT) {};
+#define PARENTCONSTRUCTOR(__t__) __t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT) {}
+#define MYCONSTRUCTOR(__t__) __t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT)
 
 class LED_led00_blink1 : public LED_Animation {
     public:
-    SIMPLECONSTRUCTOR(LED_led00_blink1);
+    PARENTCONSTRUCTOR(LED_led00_blink1);
     void animation(void);
 };
 
 class LED_quickbrowfox1 : public LED_Animation {
     public:
-    LED_quickbrowfox1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    MYCONSTRUCTOR(LED_quickbrowfox1);
     ~LED_quickbrowfox1(void);
     void animation(void);
     LED_Text *text;
@@ -19,14 +20,14 @@ class LED_quickbrowfox1 : public LED_Animation {
 
 class LED_lineshorver1 : public LED_Animation {
     public:
-    SIMPLECONSTRUCTOR(LED_lineshorver1);
+    PARENTCONSTRUCTOR(LED_lineshorver1);
     void animation(void);
 };
 
 #define LED_lines1_history  5
 class LED_lines1 : public LED_Animation {
     public:
-    LED_lines1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    MYCONSTRUCTOR(LED_lines1);
     void animation(void);
     void shift_history(void);
     LED c[LED_lines1_history];
@@ -40,7 +41,7 @@ class LED_lines1 : public LED_Animation {
 
 class LED_squares1 : public LED_Animation {
 public:
-    LED_squares1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    MYCONSTRUCTOR(LED_squares1);
     void animation(void);
     LED c;
 };
@@ -48,7 +49,7 @@ public:
 #define LED_squares2_history 20
 class LED_squares2 : public LED_Animation {
 public:
-    LED_squares2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    MYCONSTRUCTOR(LED_squares2);
     void animation(void);
     struct area a[LED_squares2_history];
     LED c[LED_squares2_history], c_last;
@@ -58,7 +59,7 @@ public:
 #define LED_movingsquares1_squares 4
 class LED_movingsquares1 : public LED_Animation {
 public:
-    LED_movingsquares1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    MYCONSTRUCTOR(LED_movingsquares1);
     void animation(void);
     LED c[LED_movingsquares1_squares];
     int16_t x0[LED_movingsquares1_squares], y0[LED_movingsquares1_squares], x1[LED_movingsquares1_squares],
@@ -68,7 +69,7 @@ public:
 
 class LED_cross1 : public LED_Animation {
     public:
-    LED_cross1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    MYCONSTRUCTOR(LED_cross1);
     void animation(void);
     
     #define LED_cross1_history  5
@@ -78,13 +79,13 @@ class LED_cross1 : public LED_Animation {
 
 class LED_sinus1 : public LED_Animation {
     public:
-    LED_sinus1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    MYCONSTRUCTOR(LED_sinus1);
     void animation(void);
 };
 
 class LED_sinus2 : public LED_Animation {
     public:
-    LED_sinus2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    MYCONSTRUCTOR(LED_sinus2);
     void animation(void);
 
     int8_t height;
@@ -94,7 +95,7 @@ class LED_sinus2 : public LED_Animation {
 #define LED_spaceinvaders_IMGS 11
 class LED_spaceinvaders1 : public LED_Animation {
     public:
-    LED_spaceinvaders1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    MYCONSTRUCTOR(LED_spaceinvaders1);
     void destroy(void);
     void animation(void);
 
@@ -117,7 +118,7 @@ struct coal {
 
 class LED_torch1 : public LED_Animation {
     public:
-    LED_torch1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    MYCONSTRUCTOR(LED_torch1);
     ~LED_torch1(void);
     void animation(void);
     
@@ -128,13 +129,22 @@ class LED_torch1 : public LED_Animation {
 
 class LED_torch2 : public LED_Animation {
 public:
-    LED_torch2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+    MYCONSTRUCTOR(LED_torch2);
     ~LED_torch2(void);
     
     struct coal new_coal(uint8_t intensity, int randomy);
     void animation(void);
     int numcoals;
     struct coal *coals;
+};
+
+class LED_plasma1 : public LED_Animation {
+public:
+    MYCONSTRUCTOR(LED_plasma1);
+    ~LED_plasma1(void);
+    void animation(void);
+    int numcolours;
+    LED *colourmap;
 };
 
 #endif

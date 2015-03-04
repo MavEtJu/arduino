@@ -814,3 +814,40 @@ LED_movingsquares1::animation(void)
 	_led->square(x[i], y[i], size[i], size[i], c[i]);
     }
 }
+
+// =====================================
+
+LED_plasma1::LED_plasma1(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(l, VIEW_WIDTH, VIEW_HEIGHT)
+{
+    delayms = 20;
+    numcolours = 16;
+    colourmap = (LED *)malloc(sizeof(LED) * numcolours);
+    for (int i = 0; i < numcolours; i++) {
+	colourmap[i] = _led->Color(i, i, 0);
+    }
+}
+
+LED_plasma1::~LED_plasma1(void)
+{
+    if (colourmap != NULL)
+	free(colourmap);
+}
+
+void
+LED_plasma1::animation(void)
+{
+    for (int x = 0; x < _VIEW_WIDTH; x++) {
+	for (int y = 0; y < _VIEW_HEIGHT; y++) {
+	    /*
+	     * This formula was given during a 31C3 lighting day 2 talk
+	     * about demoing on old 8 bit hardware.
+	     */
+	    // -1.5 ... 1.5 /
+	    double d = sin(step - 3 * x) + sin(step + y) / 2;
+	    d += 1.5;
+	    d *= numcolours / 3.0;
+	    _led->dot(x, y, colourmap[int(d)]);
+
+	}
+    }
+}
