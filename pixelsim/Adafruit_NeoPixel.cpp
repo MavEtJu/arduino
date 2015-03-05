@@ -60,6 +60,8 @@ Adafruit_NeoPixel::show2(void)
 	int input;
 	static byte curses_init = 0;
 	int c = COLOR_BLACK;
+	int intensity = 0;
+	char ch;
 
 	if (!curses_init) {
 		initcurses();
@@ -123,12 +125,22 @@ Adafruit_NeoPixel::show2(void)
 					}
 				}
 			}
+			intensity = r + g + b;
 
 			wattrset(screenLED, colour[c]);
+			ch = ' ';
+
 			if (c == COLOR_BLACK)
-				mvwprintw(screenLED, VIEW_HEIGHT - y, 1 + x, " ");
-			else
-				mvwprintw(screenLED, VIEW_HEIGHT - y, 1 + x, "X");
+				ch = ' ';
+			else if (intensity < 4)
+				ch = '.';
+			else if (intensity < 8)
+				ch = 'x';
+			else 
+				ch = 'X';
+
+
+			mvwprintw(screenLED, VIEW_HEIGHT - y, 1 + x, "%c", ch);
 		}
 	}
 	wrefresh(screenLED);
