@@ -1,11 +1,8 @@
-//#define MEMORY
-//#define SERIAL
-
 #include <Arduino.h>
 #ifdef SIMULATOR
 #include <time.h>
 #endif
-#ifdef MEMORY
+#ifdef DEBUG_MEMORY
 #include <MemoryFree.h>
 #endif
 #include "LED_Strip.h"
@@ -45,7 +42,7 @@ setup(void)
 #ifdef SERIAL
     Serial.begin(9600);
     Serial.println(F("Hello, world!"));
-# ifdef MEMORY
+# ifdef DEBUG_MEMORY
 #  ifndef SIMULATOR
     Serial.print(F("free1: "));
     Serial.println(freeMemory());
@@ -60,7 +57,7 @@ setup(void)
 #endif
     led.start();
 #ifdef SERIAL
-# ifdef MEMORY
+# ifdef DEBUG_MEMORY
 #  ifndef SIMULATOR
     Serial.print(F("free2: "));
     Serial.println(freeMemory());
@@ -83,9 +80,9 @@ loop(void)
 
     /* testing */
 #ifdef SERIAL
-# ifdef MEMORY
+# ifdef DEBUG_MEMORY
 #  ifndef SIMULATOR
-    FREEMEMORY(F("loop"));
+    //FREEMEMORY(F("loop"));
 #  endif
 # endif
 #endif
@@ -109,7 +106,7 @@ loop(void)
 
     if ((animation[0] == NULL && slideshow[0] == NULL) || (started == 0) || (started + 30l * 1000l < millis())) {
 #ifdef SERIAL
-# ifdef MEMORY
+# ifdef DEBUG_MEMORY
 #  ifndef SIMULATOR
         Serial.print(F("Free Memory before free: "));
         Serial.println(freeMemory());
@@ -128,7 +125,7 @@ loop(void)
         }
 
 #ifdef SERIAL
-# ifdef MEMORY
+# ifdef DEBUG_MEMORY
 #  ifndef SIMULATOR
         Serial.print(F("Free Memory after free: "));
         Serial.println(freeMemory());
@@ -156,6 +153,8 @@ loop(void)
 #endif
    	// NEW_ANIMATION(LED_led00_blink1)
 	NEW_ANIMATION(LED_quickbrowfox1)
+	NEW_ANIMATION(LED_torch2)
+	NEW_ANIMATION(LED_torch1)
 	NEW_SLIDESHOW(LED_galaga1)
 	NEW_ANIMATION(LED_spaceinvaders1)
 	NEW_ANIMATION(LED_plasma1)
@@ -165,9 +164,7 @@ loop(void)
 	NEW_ANIMATION(LED_sinus2)
 	//NEW_ANIMATION(LED_lineshorver1)
 	NEW_ANIMATION(LED_squares1)
-	NEW_ANIMATION(LED_torch1)
 	//NEW_SLIDESHOW(LED_mario1)
-	NEW_ANIMATION(LED_torch2)
 	NEW_ANIMATION(LED_squares2)
 	//NEW_SLIDESHOW(LED_minecraft1)
 	NEW_ANIMATION(LED_cross1)
@@ -182,8 +179,20 @@ loop(void)
 	}
 	phasenr++;
 
+	if (animation[0] != NULL && animation[0]->broken) {
+	    Serial.println(F("Animation broken before loop()"));
+	    delete(animation[0]);
+	    animation[0] = NULL;
+	}
+	if (slideshow[0] != NULL && slideshow[0]->broken) {
+	    Serial.println(F("Slideshow broken before loop()"));
+	    delete(slideshow[0]);
+	    slideshow[0] = NULL;
+	}
+
+
 #ifdef SERIAL
-# ifdef MEMORY
+# ifdef DEBUG_MEMORY
 #  ifndef SIMULATOR
         Serial.print(F("Free Memory after new: "));
         Serial.println(freeMemory());
@@ -195,6 +204,7 @@ loop(void)
     if (animation[0] != NULL) {
         animation[0]->loop();
 	if (animation[0]->broken) {
+	    Serial.println(F("Animation broken after loop()"));
 	    delete(animation[0]);
 	    animation[0] = NULL;
 	}
@@ -202,13 +212,11 @@ loop(void)
     if (slideshow[0] != NULL) {
         slideshow[0]->loop();
 	if (slideshow[0]->broken) {
+	    Serial.println(F("Slideshow broken after loop()"));
 	    delete(slideshow[0]);
 	    slideshow[0] = NULL;
 	}
     }
-
-
-
 
     led.display();
 }
