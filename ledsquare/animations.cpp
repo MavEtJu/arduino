@@ -4,6 +4,10 @@
 #include "LED_Text.h"
 #include "StringEncode.h"
 #include "animations.h"
+#include "A_Tools.h"
+#ifdef DEBUG_MEMORY
+# include <MemoryFree.h>
+#endif
 
 // ==============================
 
@@ -471,9 +475,27 @@ LED_spaceinvaders1::LED_spaceinvaders1(LED_Strip *led, uint16_t VIEW_WIDTH, uint
     colours[8] = _led->colour_magenta;
     colours[9] = _led->colour_green;
     colours[10] = _led->colour_white;
+
     enc = new StringEncodePlain();
+    if (enc == NULL) {
+	Serial.print(F("enc=NULL in LED_spaceinvaders1"));
+	broken = 1;
+	return;
+    }
 
     imgs = (const char **)malloc(sizeof(char *) * LED_spaceinvaders_IMGS);
+    if (imgs == NULL) {
+	Serial.print(F("imgs=NULL for "));
+	Serial.print(LED_spaceinvaders_IMGS);
+	Serial.println(F("bytes"));
+#ifdef DEBUG_MEMORY
+	FREERAM(F("LED_spaceinvaders1: img"));
+	FREEMEMORY(F("LED_spaceinvaders1: img"));
+#endif
+	broken = 1;
+	delete(enc);
+	return;
+    }
 
     // From https://0.s3.envato.com/files/69626951/space-invaders-icons-set-colour-prev.jpg
 
@@ -691,6 +713,17 @@ LED_torch1::LED_torch1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT
 
     numcoals = 32;
     coals = (struct coal *)malloc(numcoals * sizeof(coals));
+    if (coals == NULL) {
+	Serial.print(F("coals=NULL in LED_torch1 for "));
+	Serial.print(numcoals * sizeof(coals));
+	Serial.println(F(" bytes"));
+#ifdef DEBUG_MEMORY
+	FREERAM(F("LED_torch1"));
+	FREEMEMORY(F("LED_torch1"));
+#endif
+	broken = 1;
+	return;
+    }
 
     for (uint8_t c = 0; c < numcoals; c++) {
         coals[c].x = 0;
@@ -725,10 +758,23 @@ LED_torch1::animation(void)
 
 LED_torch2::LED_torch2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
 {    
+    FREERAM(F("LED_torch2: init"));
+    FREEMEMORY(F("LED_torch2: init"));
     numcoals = 30;
     coals = (struct coal *)malloc(numcoals * sizeof(struct coal));
+    if (coals == NULL) {
+	Serial.print(F("coals=NULL in LED_torch2 for "));
+	Serial.print(numcoals * sizeof(coals));
+	Serial.println(F(" bytes"));
+#ifdef DEBUG_MEMORY
+	FREERAM(F("LED_torch2"));
+	FREEMEMORY(F("LED_torch2"));
+#endif
+	broken = 1;
+	return;
+    }
     
-    for (uint8_t c = 0; c < numcoals; c++) {
+    for (int c = 0; c < numcoals; c++) {
         coals[c] = new_coal(_VIEW_HEIGHT, 1);
     }
 }
@@ -760,7 +806,7 @@ LED_torch2::animation(void)
     uint8_t floor_intensity = (_VIEW_HEIGHT << 1) + (int)s;
     LED colour_floor = _led->Color(floor_intensity, floor_intensity, 0);
        
-    for (uint8_t c = 0; c < numcoals; c++) {
+    for (int c = 0; c < numcoals; c++) {
         coals[c].y++;
         coals[c].intensity -= coals[c].decay;
         if (coals[c].y == _sVIEW_HEIGHT || coals[c].intensity <= 0) {
@@ -885,6 +931,17 @@ LED_plasma1::LED_plasma1(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT
     delayms = 20;
     numcolours = 16;
     colourmap = (LED *)malloc(sizeof(LED) * numcolours);
+    if (colourmap == NULL) {
+	Serial.print(F("colourmap=NULL in LED_plasma1 for "));
+	Serial.print(numcolours * sizeof(LED));
+	Serial.println(F(" bytes"));
+#ifdef DEBUG_MEMORY
+	FREERAM(F("LED_plasma"));
+	FREEMEMORY(F("LED_plasma"));
+#endif
+	broken = 1;
+	return;
+    }
     for (int i = 0; i < numcolours; i++) {
 	colourmap[i] = _led->Color(i, i, 0);
     }
