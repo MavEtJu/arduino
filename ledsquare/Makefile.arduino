@@ -42,9 +42,12 @@ O_FILES=				\
 CC=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-gcc
 CXX=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-g++
 AR=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-ar
+CC=avr-gcc-4.8.3
+CXX=avr-g++
+AR=avr-gcc-ar
 
 CFLAGS= \
-	-c -g -Os -Wall -Wno-char-subscripts \
+	-c -Os -Wall -Wno-char-subscripts \
 	-fno-exceptions -ffunction-sections -fdata-sections \
 	-mmcu=atmega328p -DF_CPU=16000000L -MMD \
 	-DUSB_VID=null -DUSB_PID=null -DARDUINO=106 \
