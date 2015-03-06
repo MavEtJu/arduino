@@ -1,0 +1,114 @@
+.SUFFIXES:	.ino .hex .eep .elf .a
+
+ARDUINO_DIR=/usr/local/arduino
+
+COMPORT=	/dev/cuaU0
+COMSPEED=	115200
+
+AVRLIBC_FILES=			\
+	malloc.c		\
+	realloc.c
+
+BASE_C_FILES=			\
+	WInterrupts.c		\
+	wiring.c		\
+	wiring_analog.c		\
+	wiring_digital.c	\
+	wiring_pulse.c		\
+	wiring_shift.c
+
+BASE_CXX_FILES=			\
+	CDC.cpp			\
+	HID.cpp			\
+	HardwareSerial.cpp	\
+	IPAddress.cpp		\
+	Print.cpp		\
+	Stream.cpp		\
+	Tone.cpp		\
+	USBCore.cpp		\
+	new.cpp			\
+	WMath.cpp		\
+	WString.cpp		\
+	main.cpp
+
+O_FILES=				\
+	${SRC_FILES:S/.cpp$/.o/}	\
+	${INO_FILES:S/.ino/.o/}		\
+	${MODULES:S/$/.o/}		\
+	${AVRLIBC_FILES:S/.c$/.o/}	\
+	${BASE_C_FILES:S/.c$/.o/}	\
+	${BASE_CXX_FILES:S/.cpp$/.o/}
+
+CC=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-gcc
+CXX=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-g++
+AR=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-ar
+
+CFLAGS= \
+	-c -g -Os -Wall -Wno-char-subscripts \
+	-fno-exceptions -ffunction-sections -fdata-sections \
+	-mmcu=atmega328p -DF_CPU=16000000L -MMD \
+	-DUSB_VID=null -DUSB_PID=null -DARDUINO=106 \
+	-I${ARDUINO_DIR}/hardware/arduino/cores/arduino \
+	-I${ARDUINO_DIR}/hardware/arduino/variants/standard
+.for module in ${MODULES}
+CFLAGS+= -I${SKETCHBOOK_DIR}/libraries/${module}
+.endfor
+
+CXXFLAGS=	${CFLAGS}
+
+all: ${PROJECT}.hex ${PROJECT}.eep
+
+.c.o:
+	${CC} ${CFLAGS} -Werror -o ${.TARGET} -c ${.ALLSRC}
+.cpp.o:
+	${CXX} ${CXXFLAGS} -Werror -x c++ -o ${.TARGET} -c ${.ALLSRC}
+.ino.o:
+	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+
+.for M in ${AVRLIBC_FILES}
+${M:S/.c$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/avr-libc/${M}
+	${CC} ${CFLAGS} -o ${.TARGET} -c ${.ALLSRC}
+.endfor
+.for M in ${BASE_C_FILES}
+${M:S/.c$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/${M}
+	${CC} ${CFLAGS} -o ${.TARGET} -c ${.ALLSRC}
+.endfor
+.for M in ${BASE_CXX_FILES}
+${M:S/.cpp$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/${M}
+	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+.endfor
+
+.for M in ${MODULES}
+${M}.o: ${SKETCHBOOK_DIR}/libraries/${M}/${M}.cpp
+	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+.endfor
+
+
+core.a: ${O_FILES}
+	${AR} rcs ${.TARGET} ${.ALLSRC} ${O_FILES}
+
+${PROJECT}.elf: core.a
+	${CC} -Os -Wl,--gc-sections -mmcu=atmega328p -o ${.TARGET} ${.ALLSRC} -lm
+
+.elf.eep:
+	${ARDUINO_DIR}/hardware/tools/avr/bin/avr-objcopy \
+	    -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load \
+	    --no-change-warnings --change-section-lma .eeprom=0 \
+	    ${.ALLSRC} ${.TARGET}
+
+.elf.hex:
+	${ARDUINO_DIR}/hardware/tools/avr/bin/avr-objcopy \
+	    -O ihex -R .eeprom ${.ALLSRC} ${.TARGET}
+
+clean:
+	rm -rf *.o *.d *.core ${PROJECT} core.a *.hex *.elf *.eep
+
+depends:
+	${CC} ${CXXFLAGS} -x c++ -M *.ino *.cpp > .depend
+
+upload:
+	avrdude \
+	    -D -F -V -v -p atmega328p -c arduino \
+	    -P ${COMPORT} -b ${COMSPEED} -Uflash:w:${PROJECT}.hex:i
+	sleep 2
+	cu -l ${COMPORT} -s 9600
