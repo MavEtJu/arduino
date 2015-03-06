@@ -319,7 +319,7 @@ LED_squares1::animation(void)
     uint16_t m = step % (2 * _VIEW_HEIGHT);
 
     if (m == 0)
-	c = _led->colour_random();
+	c = _led->colour_random_notblack();
     _led->colour_set(c);
 
     if (m < _VIEW_HEIGHT) {
