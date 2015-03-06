@@ -7,6 +7,8 @@ LED_Animation::LED_Animation(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_
     delayms = 100;
     _VIEW_WIDTH = VIEW_WIDTH;
     _VIEW_HEIGHT = VIEW_HEIGHT;
+    _sVIEW_WIDTH = (int16_t)VIEW_WIDTH;
+    _sVIEW_HEIGHT = (int16_t)VIEW_HEIGHT;
     _led = led;
 }
 
