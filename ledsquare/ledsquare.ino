@@ -90,10 +90,11 @@ loop(void)
 # endif
 #endif
 
-#define TESTING
+//#define TESTING
 #ifdef TESTING
-    static LED_test *p = new LED_test(&led, VIEW_WIDTH, VIEW_HEIGHT);
-    //static LED_plasma1 *p = new LED_plasma1(&led, VIEW_WIDTH, VIEW_HEIGHT);
+    //static LED_torch1 *p = new LED_torch1(&led, VIEW_WIDTH, VIEW_HEIGHT);
+    //static LED_test *p = new LED_test(&led, VIEW_WIDTH, VIEW_HEIGHT);
+    static LED_plasma1 *p = new LED_plasma1(&led, VIEW_WIDTH, VIEW_HEIGHT);
     //static LED_squares2 *p = new LED_squares2(&led, VIEW_WIDTH, VIEW_HEIGHT);
     //static LED_cross1 *p = new LED_cross1(&led, VIEW_WIDTH, VIEW_HEIGHT);
     //static LED_quickbrowfox1 *p = new LED_quickbrowfox1(&led, VIEW_WIDTH, VIEW_HEIGHT);
@@ -106,7 +107,7 @@ loop(void)
     return;
 #endif
 
-    if (started == 0 || started + 30l * 1000l < millis()) {
+    if ((animation[0] == NULL && slideshow[0] == NULL) || (started == 0) || (started + 30l * 1000l < millis())) {
 #ifdef SERIAL
 # ifdef MEMORY
 #  ifndef SIMULATOR
@@ -155,6 +156,7 @@ loop(void)
 #endif
    	// NEW_ANIMATION(LED_led00_blink1)
 	NEW_ANIMATION(LED_quickbrowfox1)
+	NEW_SLIDESHOW(LED_galaga1)
 	NEW_ANIMATION(LED_spaceinvaders1)
 	NEW_ANIMATION(LED_plasma1)
 	NEW_ANIMATION(LED_movingsquares1)
@@ -165,7 +167,6 @@ loop(void)
 	NEW_ANIMATION(LED_squares1)
 	NEW_ANIMATION(LED_torch1)
 	//NEW_SLIDESHOW(LED_mario1)
-	NEW_SLIDESHOW(LED_galaga1)
 	NEW_ANIMATION(LED_torch2)
 	NEW_ANIMATION(LED_squares2)
 	//NEW_SLIDESHOW(LED_minecraft1)
@@ -191,10 +192,23 @@ loop(void)
 #endif
         started = millis();
     }
-    if (animation[0] != NULL)
+    if (animation[0] != NULL) {
         animation[0]->loop();
-    if (slideshow[0] != NULL)
+	if (animation[0]->broken) {
+	    delete(animation[0]);
+	    animation[0] = NULL;
+	}
+    }
+    if (slideshow[0] != NULL) {
         slideshow[0]->loop();
+	if (slideshow[0]->broken) {
+	    delete(slideshow[0]);
+	    slideshow[0] = NULL;
+	}
+    }
+
+
+
 
     led.display();
 }

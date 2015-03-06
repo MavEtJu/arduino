@@ -38,6 +38,7 @@ class LED_Slideshow {
     LED_Strip *_led;
     uint16_t _VIEW_HEIGHT;
     uint16_t _VIEW_WIDTH;
+    uint8_t broken;
 };
 
 #endif

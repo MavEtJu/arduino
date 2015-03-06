@@ -15,6 +15,7 @@ LED_Slideshow::LED_Slideshow(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_
     _led = led;
     _VIEW_HEIGHT = VIEW_HEIGHT;
     _VIEW_WIDTH = VIEW_WIDTH;
+    broken = 0;
 }
 
 void
@@ -96,8 +97,6 @@ void LED_Slideshow::destroy(void)
 {
 }
 
-#define DEBUG_MEMORY
-
 void
 LED_Slideshow::loop(void)
 {
@@ -164,6 +163,7 @@ LED_Slideshow::display(struct SlideshowImage *img)
             FREEMEMORY(F("in = NULL"));
             delay(100);
 #endif
+	    broken = 1;
             return;
         }
 
@@ -182,6 +182,7 @@ LED_Slideshow::display(struct SlideshowImage *img)
 #endif
             free(in);
             delay(100);
+	    broken = 1;
             return;
         }
         memset(ps, '\0', sizeof(ps));
@@ -190,6 +191,11 @@ LED_Slideshow::display(struct SlideshowImage *img)
         FREERAM(F("LED_Slideshow::display:before decode"));
 #endif
         enc->decode(in, ps, img->bits, &imglen, sizeof(ps) - 1);
+	if (imglen == 0) {
+	    free(in);
+	    delete(enc);
+	    broken = 1;
+	}
 #ifdef DEBUG_MEMORY
         FREERAM(F("LED_Slideshow::display:after decode"));
 

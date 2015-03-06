@@ -17,6 +17,7 @@ public:
     uint16_t _VIEW_HEIGHT, _VIEW_WIDTH;
     int16_t _sVIEW_HEIGHT, _sVIEW_WIDTH;
     LED_Strip *_led;
+    uint8_t broken;
 };
 
 #endif

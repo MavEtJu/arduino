@@ -10,6 +10,7 @@ LED_Animation::LED_Animation(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_
     _sVIEW_WIDTH = (int16_t)VIEW_WIDTH;
     _sVIEW_HEIGHT = (int16_t)VIEW_HEIGHT;
     _led = led;
+    broken = 0;
 }
 
 LED_Animation::~LED_Animation(void)
