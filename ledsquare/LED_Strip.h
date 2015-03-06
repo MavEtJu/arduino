@@ -59,8 +59,8 @@ class LED_Strip : public Adafruit_NeoPixel {
     void dot(int16_t x, int16_t y, LED colour);
     
     // Colour the LEDs in the matrix in the square from (x, y) x (x + dx, y + dy)
-    void square(int16_t x, int16_t y, uint16_t dx, uint16_t dy);
-    void square(int16_t x, int16_t y, uint16_t dx, uint16_t dy, LED colour);
+    void square(int16_t x, int16_t y, int16_t dx, int16_t dy);
+    void square(int16_t x, int16_t y, int16_t dx, int16_t dy, LED colour);
     void square(struct coordinates c, struct distance d);
     void square(struct coordinates c, struct distance d, LED colour);
     void square(struct area a);
@@ -91,7 +91,7 @@ class LED_Strip : public Adafruit_NeoPixel {
     LED **_matrix;
     LED *_strip;
     LED _colourlast;
-    uint16_t _xmax, _ymax;
+    int16_t _xmax, _ymax;
     uint8_t _options;
 };
 

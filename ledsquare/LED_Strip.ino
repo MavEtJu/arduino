@@ -56,7 +56,7 @@ LED_Strip::view(uint16_t xmax, uint16_t ymax, uint8_t options)
     _xmax = xmax;
     _ymax = ymax;
     _matrix = (LED **)malloc(sizeof(LED *) * ymax);
-    for (uint16_t y = 0; y < _ymax; y++) {
+    for (int16_t y = 0; y < _ymax; y++) {
         _matrix[y] = _strip + y * _xmax;
     }
     _options = options;
@@ -97,7 +97,7 @@ LED_Strip::clear(void)
 void
 LED_Strip::clear(LED colour)
 {
-    for (uint16_t x = 0; x < _xmax * _ymax; x++) {
+    for (int16_t x = 0; x < _xmax * _ymax; x++) {
         _strip[x] = colour_black;
     }
 }
@@ -204,7 +204,7 @@ LED_Strip::dot(int16_t x, int16_t y, LED colour)
 
 // Colour the LEDs in the matrix from (x1, y1) x (x2, y2)
 void
-LED_Strip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy)
+LED_Strip::square(int16_t xo, int16_t yo, int16_t dx, int16_t dy)
 {
     for (int16_t x = 0; x < dx; x++) {
         if (xo + x < 0 || xo + x >= _xmax)
@@ -218,7 +218,7 @@ LED_Strip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy)
 }
 
 void
-LED_Strip::square(int16_t xo, int16_t yo, uint16_t dx, uint16_t dy, LED colour)
+LED_Strip::square(int16_t xo, int16_t yo, int16_t dx, int16_t dy, LED colour)
 {
     _colourlast = colour;
     square(xo, yo, dx, dy);
