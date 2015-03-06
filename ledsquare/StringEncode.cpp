@@ -150,6 +150,8 @@ StringEncodeMulti::encode(const char *in, char *out, uint16_t plainLen,
 }
 #endif
 
+//#define DEBUG_MEMORY
+
 void
 StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
 	    uint16_t *bytes_out, uint16_t max_bytes_out)
@@ -157,20 +159,18 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
     uint8_t letters, bits;
     uint8_t *alphabet;
     const char *pin = in;
-    uint8_t left, right, c, bitmask;
+    uint8_t left, right, bitmask;
     uint8_t bits_left, bits_right, i;
     uint16_t bit_offset = 0;
 
-    //FREERAM(F("StringEncodeMulti::decode"));
+#ifdef DEBUG_MEMORY
+    FREERAM(F("StringEncodeMulti::decode"));
+#endif
     
-    //printf("DecodeMulti:\n");
-    //printf("bits_in: %d\n", bits_in);
-
     *bytes_out = 0;
     
     letters = in[0];
     pin++;
-    //printf("Letters: %d\n", letters);
 
     bits = 5;
     if (letters <=  32) bits = 5;
@@ -185,15 +185,13 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
 	bitmask = 1 + (bitmask << 1);
     }
 
-    //printf("Alphabet: \"");
     alphabet = (uint8_t *)malloc(letters * sizeof(char));
     memset(alphabet, '\0', letters * sizeof(uint8_t));
     for (uint8_t c = 0; c < letters; c++) {
 	alphabet[c] = in[1 + c];
-	//printf("%c", in[1 + c]);
+	printf("%c", in[1 + c]);
 	pin++;
     }
-    //printf("\"\n");
 
     for (bit_offset = 0; bit_offset < bits_in; bit_offset += bits) {
 	left = pin[bit_offset / 8];
@@ -219,10 +217,7 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
 	    r &= 0xff;
 	    i += r;
 	}
-	c = alphabet[i];
 
-	//printf("%2d: %d:%d %s:%s %x\n",
-	//    bit_offset, bits_left, bits_right, _bits(left), _bits(right), i);
         *out = alphabet[i];
 	out++;
 	(*bytes_out)++;
