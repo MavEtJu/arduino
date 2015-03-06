@@ -27,7 +27,7 @@ class LED_Slideshow {
     void loop(void);
 
     struct SlideshowImage *images;
-    uint8_t imgnr, imgnrs;
+    uint8_t imgnr, imgnrs, nrs;
 
     LED colours[LED_Slideshow_MAX];
     uint8_t colourmap[LED_Slideshow_MAX];
