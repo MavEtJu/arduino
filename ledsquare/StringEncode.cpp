@@ -7,6 +7,9 @@
 # include <stdio.h>
 # include <assert.h>
 #endif
+#ifdef DEBUG_MEMORY
+# include <MemoryFree.h>
+#endif
 
 #ifdef SIMULATOR
 void
@@ -185,7 +188,22 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
 	bitmask = 1 + (bitmask << 1);
     }
 
+#ifdef DEBUG_MEMORY
+    Serial.print(F("Allocating an alphabet of "));
+    Serial.print(letters);
+    Serial.println(F(" bytes"));
+#endif
     alphabet = (uint8_t *)malloc(letters * sizeof(char));
+    if (alphabet == NULL) {
+	Serial.print(F("alphabet==NULL: Failed to allocate "));
+	Serial.print(letters);
+	Serial.println(F(" bytes"));
+#ifdef DEBUG_MEMORY
+	FREEMEMORY(F("alphabet==NULL"));
+	FREERAM(F("alphabet==NULL"));
+#endif
+	return;
+    }
     memset(alphabet, '\0', letters * sizeof(uint8_t));
     for (uint8_t c = 0; c < letters; c++) {
 	alphabet[c] = in[1 + c];
