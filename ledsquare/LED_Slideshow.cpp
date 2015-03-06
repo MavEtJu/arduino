@@ -192,9 +192,11 @@ LED_Slideshow::display(struct SlideshowImage *img)
 #endif
         enc->decode(in, ps, img->bits, &imglen, sizeof(ps) - 1);
 	if (imglen == 0) {
+	    Serial.println(F("enc->decode returned 0, broken!"));
 	    free(in);
 	    delete(enc);
 	    broken = 1;
+	    return;
 	}
 #ifdef DEBUG_MEMORY
         FREERAM(F("LED_Slideshow::display:after decode"));
