@@ -109,7 +109,7 @@ clean:
 depends:
 	${CC} ${CXXFLAGS} -x c++ -M *.ino *.cpp > .depend
 
-upload:
+upload: ${PROJECT}.hex
 	avrdude \
 	    -D -F -V -v -p atmega328p -c arduino \
 	    -P ${COMPORT} -b ${COMSPEED} -Uflash:w:${PROJECT}.hex:i
