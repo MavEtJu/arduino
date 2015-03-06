@@ -151,7 +151,7 @@ LED_quickbrowfox1::animation(void)
 void
 LED_lineshorver1::animation(void)
 {
-    int m = step % (2 * _VIEW_HEIGHT);
+    uint16_t m = step % (2 * _VIEW_HEIGHT);
 
     _led->colour_set(_led->colour_magenta);
     if (m < _VIEW_HEIGHT)
@@ -312,7 +312,7 @@ LED_squares1::LED_squares1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HE
 void
 LED_squares1::animation(void)
 {
-    int m = step % (2 * _VIEW_HEIGHT);
+    uint16_t m = step % (2 * _VIEW_HEIGHT);
 
     if (m == 0)
 	c = _led->colour_random();
@@ -432,7 +432,7 @@ LED_sinus2::animation(void)
     uint32_t piece = 360 / _VIEW_WIDTH;
     if (step % 20 == 0) {
         height += direction;
-        if (height == _VIEW_HEIGHT / 5 || height == _VIEW_HEIGHT / 2)
+        if (height == _sVIEW_HEIGHT / 5 || height == _sVIEW_HEIGHT / 2)
             direction *= -1;
     }
 
@@ -763,7 +763,7 @@ LED_torch2::animation(void)
     for (uint8_t c = 0; c < numcoals; c++) {
         coals[c].y++;
         coals[c].intensity -= coals[c].decay;
-        if (coals[c].y == _VIEW_HEIGHT || coals[c].intensity <= 0) {
+        if (coals[c].y == _sVIEW_HEIGHT || coals[c].intensity <= 0) {
             coals[c] = new_coal(floor_intensity, 0);
         }
 
@@ -899,8 +899,8 @@ LED_plasma1::~LED_plasma1(void)
 void
 LED_plasma1::animation(void)
 {
-    for (int x = 0; x < _VIEW_WIDTH; x++) {
-	for (int y = 0; y < _VIEW_HEIGHT; y++) {
+    for (uint16_t x = 0; x < _VIEW_WIDTH; x++) {
+	for (uint16_t y = 0; y < _VIEW_HEIGHT; y++) {
 	    /*
 	     * This formula was given during a 31C3 lighting day 2 talk
 	     * about demoing on old 8 bit hardware.
