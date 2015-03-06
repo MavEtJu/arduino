@@ -758,8 +758,10 @@ LED_torch1::animation(void)
 
 LED_torch2::LED_torch2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
 {    
+#ifdef DEBUG_MEMORY
     FREERAM(F("LED_torch2: init"));
     FREEMEMORY(F("LED_torch2: init"));
+#endif
     numcoals = 30;
     coals = (struct coal *)malloc(numcoals * sizeof(struct coal));
     if (coals == NULL) {
