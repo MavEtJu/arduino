@@ -56,10 +56,14 @@ CFLAGS= \
 .for module in ${MODULES}
 CFLAGS+= -I${SKETCHBOOK_DIR}/libraries/${module}
 .endfor
+.for option in ${OPTIONS}
+CFLAGS+= -D${option}
+.endfor
 
 CXXFLAGS=	${CFLAGS}
 
 all: ${PROJECT}.hex ${PROJECT}.eep
+	avr-size ${PROJECT}.elf
 
 .c.o:
 	${CC} ${CFLAGS} -Werror -o ${.TARGET} -c ${.ALLSRC}
