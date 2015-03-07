@@ -108,7 +108,7 @@ ${PROJECT}.elf: core.a
 	    -O ihex -R .eeprom ${.ALLSRC} ${.TARGET}
 
 clean:
-	rm -rf *.o *.d *.core ${PROJECT} core.a *.hex *.elf *.eep .depend
+	rm -rf *.o *.d *.core core.a *.hex *.elf *.eep .depend
 
 depends:
 	${CC} ${CXXFLAGS} -x c++ -M *.ino *.cpp > .depend
