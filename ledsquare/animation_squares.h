@@ -34,4 +34,19 @@ public:
     int16_t x[LED_movingsquares1_squares], y[LED_movingsquares1_squares];
 };
 
+#define LED_square_splitting_horver	0
+#define LED_square_splitting_diagonal	1
+class LED_square_splitting : public LED_Animation {
+public:
+    MYCONSTRUCTOR(LED_square_splitting);
+    void init(void);
+    void animation(void);
+
+    char type, origin;
+    int8_t steps;
+    LED c_now, c_previous;
+    struct coordinates c0, c;
+    struct distance d;
+};
+
 #endif

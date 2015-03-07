@@ -185,3 +185,160 @@ LED_movingsquares1::animation(void)
 	_led->square(x[i], y[i], size[i], size[i], c[i]);
     }
 }
+
+// ==============================
+
+LED_square_splitting::LED_square_splitting(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(l, VIEW_WIDTH, VIEW_HEIGHT)
+{
+    c_previous = _led->colour_black;
+    c_now = _led->colour_black;
+    init();
+}
+
+void
+LED_square_splitting::init(void)
+{
+    c_previous = c_now;
+    c_now = _led->colour_random_notblack();
+    if (_led->colour_same(c_previous, c_now))
+	c_now = _led->colour_black;
+
+    origin = random() % 8;
+    switch (origin) {
+    case 0: // bottom left
+	c0.x = c0.y = -1;
+	d.dx = d.dy = 1;
+	type = LED_square_splitting_diagonal;
+	break;
+    case 1: // bottom right
+	c0.x = _VIEW_WIDTH;
+	c0.y = -1;
+	d.dx = -1;
+	d.dy = 1;
+	type = LED_square_splitting_diagonal;
+	break;
+    case 2: // top left
+	c0.x = -1;
+	c0.y = _VIEW_HEIGHT;
+	d.dx = 1;
+	d.dy = -1;
+	type = LED_square_splitting_diagonal;
+	break;
+    case 3: // top right
+	c0.x = _VIEW_WIDTH;
+	c0.y = _VIEW_HEIGHT;
+	d.dx = -1;
+	d.dy = -1;
+	type = LED_square_splitting_diagonal;
+	break;
+    case 4: // bottom middle
+	c0.x = _VIEW_WIDTH / 2;
+	c0.y = -1;
+	d.dx = 0;
+	d.dy = 1;
+	type = LED_square_splitting_horver;
+	break;
+    case 5: // left middle
+	c0.x = -1;
+	c0.y = _VIEW_HEIGHT / 2;
+	d.dx = 1;
+	d.dy = 0;
+	type = LED_square_splitting_horver;
+	break;
+    case 6: // right middle
+	c0.x = _VIEW_WIDTH;
+	c0.y = _VIEW_HEIGHT / 2;
+	d.dx = -1;
+	d.dy = 0;
+	type = LED_square_splitting_horver;
+	break;
+    case 7: // top middle
+	c0.x = _VIEW_WIDTH / 2;
+	c0.y = _VIEW_HEIGHT;
+	d.dx = 0;
+	d.dy = -1;
+	type = LED_square_splitting_horver;
+	break;
+    }
+
+    c = c0;
+    steps = 0;
+}
+
+void
+LED_square_splitting::animation(void)
+{
+    if (type == LED_square_splitting_diagonal) {
+
+	if (steps == 2 * _sVIEW_WIDTH + 2)
+	    init();
+
+	/* Draw diagonal line */
+	_led->square(0, 0, _VIEW_WIDTH, _VIEW_HEIGHT, c_previous);
+	_led->line(c0, c, c_now);
+
+	if (steps <  _sVIEW_WIDTH + 1)  {
+	    c0.x += d.dx;
+	    c0.y += d.dy;
+	    steps++;
+	    return;
+	}
+
+	/* Expand diagonal line */
+	if (steps < 2 * _sVIEW_WIDTH + 2) {
+	    for (int16_t i = 1; i < steps - _sVIEW_WIDTH - 1; i++) {
+		if (origin == 0 || origin == 3) {
+		    _led->line(c0.x + i, c0.y, c.x + i, c.y);
+		    _led->line(c0.x, c0.y + i, c.x, c.y + i);
+		} else if (origin == 1 || origin == 2) {
+		    _led->line(c0.x + i, c0.y, c.x + i, c.y);
+		    _led->line(c0.x - i, c0.y, c.x - i, c.y);
+		}
+	    }
+	    steps++;
+	    return;
+	}
+
+    }
+
+    if (type  == LED_square_splitting_horver) {
+
+	if (steps == _sVIEW_WIDTH + 1 + _sVIEW_WIDTH / 2)
+	    init();
+
+	_led->square(0, 0, _VIEW_WIDTH, _VIEW_HEIGHT, c_previous);
+	_led->line(c0, c, c_now);
+	_led->line(c0.x == 0 ? _VIEW_WIDTH : _VIEW_WIDTH - c0.x - 1,
+		   c0.y == 0 ? _VIEW_HEIGHT : _VIEW_HEIGHT - c0.y - 1,
+		   c.x == 0 ? _VIEW_WIDTH : _VIEW_WIDTH - c.x - 1,
+		   c.y == 0 ? _VIEW_HEIGHT : _VIEW_HEIGHT - c.y - 1,
+		   c_now);
+
+	/* Draw horizontal or vertical lines */
+	if (steps <  _sVIEW_WIDTH + 1)  {
+	    c0.x += d.dx;
+	    c0.y += d.dy;
+	    steps++;
+	    return;
+	}
+
+	/* Expand horizontal or vertical line */
+	if (steps < _sVIEW_WIDTH + 2 + _sVIEW_WIDTH / 2) {
+	    for (int16_t i = 1; i < steps - _sVIEW_WIDTH - 1; i++) {
+		if (origin == 4 || origin == 7) {
+		    _led->verline(c0.x - i - 1, 0, _VIEW_HEIGHT);
+		    _led->verline(_sVIEW_WIDTH - c0.x + i, 0, _VIEW_HEIGHT);
+		} else if (origin == 5 || origin == 6) {
+		    _led->horline(c0.y - i - 1, 0, _VIEW_WIDTH);
+		    _led->horline(_sVIEW_HEIGHT - c0.y + i, 0, _VIEW_WIDTH);
+		}
+	    }
+	    steps++;
+	    return;
+	}
+
+	return;
+
+    }
+
+}
