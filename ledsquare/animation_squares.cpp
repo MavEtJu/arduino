@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "LED_Animation.h"
-#include "animations_squares.h"
 #include "A_Tools.h"
+#include "animation_squares.h"
 #ifdef DEBUG_MEMORY
 # include <MemoryFree.h>
 #endif
