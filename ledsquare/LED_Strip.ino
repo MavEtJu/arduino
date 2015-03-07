@@ -122,6 +122,12 @@ LED_Strip::colour_fade(LED c, int fade)
     return Color(c.red >> fade, c.green >> fade, c.blue >> fade);
 }
 
+int
+LED_Strip::colour_same(LED c1, LED c2)
+{
+    return (c1.red == c2.red && c1.green == c2.green && c1.blue == c2.blue);
+}
+
 LED
 LED_Strip::colour_random(void)
 {
