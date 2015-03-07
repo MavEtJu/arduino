@@ -22,4 +22,10 @@ int freeRam(void);
     Serial.print(F(": freeMemory(): ")); \
     Serial.println(freeMemory());
 
+#define PARENTCONSTRUCTOR(__t__) \
+	__t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : \
+	    LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT) {}
+#define MYCONSTRUCTOR(__t__) \
+	__t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT)
+
 #endif
