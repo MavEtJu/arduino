@@ -13,12 +13,12 @@
 int freeRam(void);
 
 #define FREERAM(f) \
-    Serial.print(f); \
+    Serial.print(F(f)); \
     Serial.print(F(": FreeRam(): ")); \
     Serial.println(freeRam()); 
 
 #define FREEMEMORY(T) \
-    Serial.print(T); \
+    Serial.print(F(T)); \
     Serial.print(F(": freeMemory(): ")); \
     Serial.println(freeMemory());
 

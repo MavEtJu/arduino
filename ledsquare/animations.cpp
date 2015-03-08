@@ -398,8 +398,8 @@ LED_spaceinvaders1::LED_spaceinvaders1(LED_Strip *led, uint16_t VIEW_WIDTH, uint
 	Serial.print(LED_spaceinvaders_IMGS);
 	Serial.println(F("bytes"));
 #ifdef DEBUG_MEMORY
-	FREERAM(F("LED_spaceinvaders1: img"));
-	FREEMEMORY(F("LED_spaceinvaders1: img"));
+	FREERAM("LED_spaceinvaders1: img");
+	FREEMEMORY("LED_spaceinvaders1: img");
 #endif
 	broken = 1;
 	delete(enc);
@@ -627,8 +627,8 @@ LED_torch1::LED_torch1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT
 	Serial.print(numcoals * sizeof(coals));
 	Serial.println(F(" bytes"));
 #ifdef DEBUG_MEMORY
-	FREERAM(F("LED_torch1"));
-	FREEMEMORY(F("LED_torch1"));
+	FREERAM("LED_torch1");
+	FREEMEMORY("LED_torch1");
 #endif
 	broken = 1;
 	return;
@@ -668,8 +668,8 @@ LED_torch1::animation(void)
 LED_torch2::LED_torch2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
 {    
 #ifdef DEBUG_MEMORY
-    FREERAM(F("LED_torch2: init"));
-    FREEMEMORY(F("LED_torch2: init"));
+    FREERAM("LED_torch2: init");
+    FREEMEMORY("LED_torch2: init");
 #endif
     numcoals = 30;
     coals = (struct coal *)malloc(numcoals * sizeof(struct coal));
@@ -678,8 +678,8 @@ LED_torch2::LED_torch2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT
 	Serial.print(numcoals * sizeof(coals));
 	Serial.println(F(" bytes"));
 #ifdef DEBUG_MEMORY
-	FREERAM(F("LED_torch2"));
-	FREEMEMORY(F("LED_torch2"));
+	FREERAM("LED_torch2");
+	FREEMEMORY("LED_torch2");
 #endif
 	broken = 1;
 	return;
@@ -758,8 +758,8 @@ LED_plasma1::LED_plasma1(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT
 	Serial.print(numcolours * sizeof(LED));
 	Serial.println(F(" bytes"));
 #ifdef DEBUG_MEMORY
-	FREERAM(F("LED_plasma"));
-	FREEMEMORY(F("LED_plasma"));
+	FREERAM("LED_plasma");
+	FREEMEMORY("LED_plasma");
 #endif
 	broken = 1;
 	return;

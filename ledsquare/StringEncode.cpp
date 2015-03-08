@@ -167,7 +167,7 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
     uint16_t bit_offset = 0;
 
 #ifdef DEBUG_MEMORY
-    FREERAM(F("StringEncodeMulti::decode"));
+    FREERAM("StringEncodeMulti::decode");
 #endif
     
     *bytes_out = 0;
@@ -199,8 +199,8 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
 	Serial.print(letters);
 	Serial.println(F(" bytes"));
 #ifdef DEBUG_MEMORY
-	FREEMEMORY(F("alphabet==NULL"));
-	FREERAM(F("alphabet==NULL"));
+	FREEMEMORY("alphabet==NULL");
+	FREERAM("alphabet==NULL");
 #endif
 	return;
     }
