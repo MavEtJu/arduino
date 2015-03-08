@@ -120,7 +120,7 @@ LED_cross1::animation(void)
     c2[0].x = x2;
     c2[0].y = y2;
     for (int i = LED_cross1_history - 1; i >= 0; i--) {
-        if (delayms / 20 > LED_cross1_history - i - 1) {
+        if ((int16_t)delayms / 20 > LED_cross1_history - i - 1) {
             continue;
         }
         _led->line(c1[i], c2[i], c[i]);
