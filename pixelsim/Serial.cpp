@@ -72,13 +72,13 @@ Serial::print(char *s)
 void
 Serial::println(unsigned short us)
 {
-	plog += sprintf(plog, "%ud", us);
+	plog += sprintf(plog, "%u", us);
 	lognr_increase_written();
 }
 void
 Serial::print(unsigned short us)
 {
-	plog += sprintf(plog, "%ud", us);
+	plog += sprintf(plog, "%u", us);
 }
 
 void
@@ -96,13 +96,13 @@ Serial::print(signed short ss)
 void
 Serial::println(unsigned int si)
 {
-	plog += sprintf(plog, "%ud", si);
+	plog += sprintf(plog, "%u", si);
 	lognr_increase_written();
 }
 void
 Serial::print(unsigned int si)
 {
-	plog += sprintf(plog, "%ud", si);
+	plog += sprintf(plog, "%u", si);
 }
 
 void
