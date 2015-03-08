@@ -89,13 +89,17 @@ loop(void)
 
 //#define TESTING
 #ifdef TESTING
-    static LED_square_splitting *p = new LED_square_splitting(&led, VIEW_WIDTH, VIEW_HEIGHT);
-    //static LED_torch1 *p = new LED_torch1(&led, VIEW_WIDTH, VIEW_HEIGHT);
-    //static LED_test *p = new LED_test(&led, VIEW_WIDTH, VIEW_HEIGHT);
-    //static LED_plasma1 *p = new LED_plasma1(&led, VIEW_WIDTH, VIEW_HEIGHT);
-    //static LED_squares2 *p = new LED_squares2(&led, VIEW_WIDTH, VIEW_HEIGHT);
-    //static LED_cross1 *p = new LED_cross1(&led, VIEW_WIDTH, VIEW_HEIGHT);
-    //static LED_quickbrowfox1 *p = new LED_quickbrowfox1(&led, VIEW_WIDTH, VIEW_HEIGHT);
+    #define TEST(__t__) \
+	static __t__ *p = new __t__(&led, VIEW_WIDTH, VIEW_HEIGHT)
+	
+    TEST(LED_square_splitting);
+    //TEST(LED_torch1);
+    //TEST(ED_test);
+    //TEST(LED_plasma1);
+    //TEST(LED_squares2);
+    //TEST(LED_cross1);
+    //TEST(LED_quickbrowfox1);
+
     p->loop();
     led.display();
     started++;
