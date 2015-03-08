@@ -92,8 +92,9 @@ loop(void)
     #define TEST(__t__) \
 	static __t__ *p = new __t__(&led, VIEW_WIDTH, VIEW_HEIGHT)
 	
+    TEST(LED_lines2);
     //TEST(LED_minecraft1);
-    TEST(LED_movingsquares2);
+    //TEST(LED_movingsquares2);
     //TEST(LED_square_splitting);
     //TEST(LED_torch1);
     //TEST(ED_test);
@@ -173,6 +174,7 @@ loop(void)
 	NEW_ANIMATION(LED_sinus2)
 	//NEW_ANIMATION(LED_lineshorver1)
 	NEW_ANIMATION(LED_squares1)
+	NEW_ANIMATION(LED_lines2)
 	//NEW_SLIDESHOW(LED_mario1)
 	NEW_ANIMATION(LED_squares2)
 	//NEW_SLIDESHOW(LED_minecraft1)

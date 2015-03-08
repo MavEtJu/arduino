@@ -210,3 +210,96 @@ LED_lines1::animation(void)
         _led->line(x1s[i], y1s[i], x2s[i], y2s[i], c[i]);
     }
 }
+
+// ==================
+
+LED_lines2::LED_lines2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+{
+    x0 = 0;
+    y0 = 0;
+    length = 5;
+    angle = 0;
+    delayms = 25;
+
+    coor = 0;
+
+    // Bottom left
+    c[0].c.x = 0;
+    c[0].c.y = 0;
+    c[0].a0 = 0;
+    c[0].a1 = 90;
+
+    c[1].c.x = 0;
+    c[1].c.y = 5;
+    c[1].a0 = 270;
+    c[1].a1 = 90;
+
+    c[2].c.x = 0;
+    c[2].c.y = 10;
+    c[2].a0 = 270;
+    c[2].a1 = 90;
+
+    c[3].c.x = 0;
+    c[3].c.y = 15;
+    c[3].a0 = 270;
+    c[3].a1 = 0;
+
+    c[4].c.x = 5;
+    c[4].c.y = 15;
+    c[4].a0 = 180;
+    c[4].a1 = 0;
+
+    c[5].c.x = 10;
+    c[5].c.y = 15;
+    c[5].a0 = 180;
+    c[5].a1 = 0;
+
+    c[6].c.x = 15;
+    c[6].c.y = 15;
+    c[6].a0 = 180;
+    c[6].a1 = 270;
+
+    c[7].c.x = 15;
+    c[7].c.y = 10;
+    c[7].a0 = 90;
+    c[7].a1 = 270;
+
+    c[8].c.x = 15;
+    c[8].c.y = 5;
+    c[8].a0 = 90;
+    c[8].a1 = 270;
+
+    c[9].c.x = 15;
+    c[9].c.y = 0;
+    c[9].a0 = 90;
+    c[9].a1 = 180;
+
+    c[10].c.x = 10;
+    c[10].c.y = 0;
+    c[10].a0 = 0;
+    c[10].a1 = 180;
+
+    c[11].c.x = 5;
+    c[11].c.y = 0;
+    c[11].a0 = 0;
+    c[11].a1 = 180;
+}
+
+void
+LED_lines2::animation(void)
+{
+
+    double si = sin(M_PI * angle / 180);
+    double co = cos(M_PI * angle / 180);
+
+    _led->line(c[coor].c.x, c[coor].c.y, c[coor].c.x + co * length, c[coor].c.y + si * length, _led->colour_random());
+
+    angle += 5;
+    angle %= 360;
+
+    if (c[coor].a1 == angle) {
+	coor++;
+	coor %= 12;
+	angle = c[coor].a0;
+    }
+}
