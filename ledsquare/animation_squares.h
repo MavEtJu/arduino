@@ -34,6 +34,20 @@ public:
     int16_t x[LED_movingsquares1_squares], y[LED_movingsquares1_squares];
 };
 
+#define LED_movingsquares2_squares 2
+class LED_movingsquares2 : public LED_Animation {
+public:
+    MYCONSTRUCTOR(LED_movingsquares2);
+    void animation(void);
+    void init (int num);
+
+    int numsquares;
+    uint16_t steps;
+    LED c[2];
+    int16_t x0[2], y0[2], x1[2], y1[2], dx[2], dy[2], x[2], y[2];
+    int16_t size;
+};
+
 #define LED_square_splitting_horver	0
 #define LED_square_splitting_diagonal	1
 class LED_square_splitting : public LED_Animation {

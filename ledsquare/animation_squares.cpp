@@ -188,6 +188,124 @@ LED_movingsquares1::animation(void)
 
 // ==============================
 
+LED_movingsquares2::LED_movingsquares2(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(l, VIEW_WIDTH, VIEW_HEIGHT)
+{
+    c[0] = _led->colour_random_notblack();
+    c[1] = _led->colour_random_notblack();
+    steps = 0;
+    numsquares = 16;
+}
+
+void
+LED_movingsquares2::init(int num)
+{
+    numsquares = num;
+    delayms = 25 * numsquares;
+
+    size = _VIEW_WIDTH / numsquares;
+    x0[0] = 0;
+    y0[0] = 0;
+    x1[0] = size;
+    y1[0] = size;
+    x[0] = x0[0];
+    y[0] = y0[0];
+    x0[1] = 0;
+    y0[1] = 0;
+    x1[1] = size;
+    y1[1] = size;
+    x[1] = x1[1];
+    y[1] = y1[1];
+}
+
+void
+LED_movingsquares2::animation(void)
+{
+    /*
+     * ....xxxx....xxxx
+     * ....xxxx....xxxx
+     * ....xxxx....xxxx
+     * ....xxxx....xxxx
+     * xxxx....xxxx....
+     * xxxx....xxxx....
+     * xxxx....xxxx....
+     * xxxx....xxxx....
+     * ....xxxx....xxxx
+     * ....xxxx....xxxx
+     * ....xxxx....xxxx
+     * ....xxxx....xxxx
+     * xxxx....xxxx....
+     * xxxx....xxxx....
+     * xxxx....xxxx....
+     * xxxx....xxxx....
+     *
+     */
+    if (steps % 16 == 0) {
+	if (numsquares == 2 && steps % 128 == 0) {
+	    init(4);
+	} else if (numsquares == 4 && steps % 64 == 0) {
+	    init(8);
+	} else if (numsquares == 8 && steps % 32 == 0) {
+	    init(16);
+	} else if (numsquares == 16 && steps % 16 == 0) {
+	    init(2);
+	    c[0] = _led->colour_random_notblack();
+	    c[1] = _led->colour_random_notblack();
+	    steps = 0;
+	}
+    }
+
+    for (int i = 0; i < 2; i++) {
+	if (x[i] == x0[i] && y[i] == y0[i]) {
+	    dx[i] = 1;
+	    dy[i] = 0;
+	}
+	if (x[i] == x1[i] && y[i] == y0[i]) {
+	    dx[i] = 0;
+	    dy[i] = 1;
+	}
+	if (x[i] == x0[i] && y[i] == y1[i]) {
+	    dx[i] = 0;
+	    dy[i] = -1;
+	}
+	if (x[i] == x1[i] && y[i] == y1[i]) {
+	    dx[i] = -1;
+	    dy[i] = 0;
+	}
+    }
+
+    /*
+    SERIAL4("x,y: ", x, ",", y);
+    SERIAL4("dx,dy: ", dx, ",", dy);
+    SERIAL4("x0,y0: ", x0, ",", y0);
+    SERIAL4("x1,y1: ", x1, ",", y1);
+    SERIAL1("=====");
+    */
+
+    for (int i = 0; i < 2; i++) {
+	x[i] += dx[i];
+	y[i] += dy[i];
+    }
+
+    for (int yy = 0; yy < numsquares; yy += 2) {
+	for (int xx = 0; xx < numsquares; xx += 2) {
+	    for (int i = 0; i < 2; i++) {
+		for (int f = 0; f < _sVIEW_WIDTH / (numsquares); f++) {
+		    _led->square(
+			f + x[i] + (xx + yy % 2) * (_VIEW_WIDTH / numsquares),
+			f + y[i] + (xx % 2 + yy) * (_VIEW_HEIGHT / numsquares),
+			_VIEW_WIDTH / numsquares - f * 2,
+			_VIEW_HEIGHT / numsquares - f * 2,
+			_led->colour_fade(c[i], f));
+		}
+	    }
+	}
+    }
+
+    steps++;
+}
+
+// ==============================
+
 LED_square_splitting::LED_square_splitting(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(l, VIEW_WIDTH, VIEW_HEIGHT)
 {
     c_previous = _led->colour_black;
