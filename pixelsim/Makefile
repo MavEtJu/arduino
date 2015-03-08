@@ -11,6 +11,9 @@ CFLAGS+= -D${o}
 
 all:	.depend test StringEncodeMain
 
+upload: all
+	./test
+
 .ino.o:
 	${CXX} ${CXXFLAGS} -x c++ -o $@ -c $<
 
