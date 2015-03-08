@@ -17,7 +17,7 @@ upload: all
 .ino.o:
 	${CXX} ${CXXFLAGS} -x c++ -o $@ -c $<
 
-test: LED_Strip.o Arduino.o ArduinoMain.o Adafruit_NeoPixel.o ledsquare.o MemoryFree.o Serial.o StringEncode.o LED_Slideshow.o LED_Animation.o LED_Text.o A_Tools.o slides.o animations.o animation_squares.o
+test: LED_Strip.o Arduino.o ArduinoMain.o Adafruit_NeoPixel.o ledsquare.o MemoryFree.o Serial.o StringEncode.o LED_Slideshow.o LED_Animation.o LED_Text.o A_Tools.o slides.o animations.o animation_squares.o animation_lines.o
 	${CXX} ${CXXFLAGS} -o $@ $> -lcurses
 
 StringEncodeMain: StringEncode.o StringEncodeMain.o Arduino.o Serial.o A_Tools.o
@@ -28,7 +28,9 @@ LINKFILES= \
 	LED_Slideshow.h LED_Text.cpp LED_Text.h A_Tools.cpp A_Tools.h \
 	LED_Strip.ino LED_Strip.h StringEncode.h StringEncode.cpp \
 	slides.h slides.cpp \
-	animations.cpp animations.h animation_squares.cpp animation_squares.h
+	animations.cpp animations.h \
+	animation_squares.cpp animation_squares.h \
+	animation_lines.cpp animation_lines.h
 .for f in ${LINKFILES}
 ${f}:
 	ln -fs ../ledsquare/${f} ${f}

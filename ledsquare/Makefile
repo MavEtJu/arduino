@@ -16,6 +16,7 @@ SRC_FILES= \
 	StringEncode.cpp	\
 	animations.cpp		\
 	animation_squares.cpp	\
+	animation_lines.cpp	\
 	slides.cpp
 
 .include "Makefile.arduino"
