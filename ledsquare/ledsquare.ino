@@ -19,6 +19,9 @@
 #define VIEW_WIDTH  16
 #define VIEW_HEIGHT 16
 
+#ifndef DELAY
+#define DELAY	30l
+#endif
 
 LED_Strip led = LED_Strip(VIEW_WIDTH * VIEW_HEIGHT, PIN_STRIP);
 
@@ -113,7 +116,7 @@ loop(void)
     return;
 #endif
 
-    if ((animation[0] == NULL && slideshow[0] == NULL) || (started == 0) || (started + 30l * 1000l < millis())) {
+    if ((animation[0] == NULL && slideshow[0] == NULL) || (started == 0) || (started + DELAY * 1000l < millis())) {
 #ifdef SERIAL
 # ifdef DEBUG_MEMORY
 #  ifndef SIMULATOR
@@ -166,7 +169,7 @@ loop(void)
 	NEW_ANIMATION(LED_torch2)
 	NEW_ANIMATION(LED_torch1)
 	NEW_ANIMATION(LED_spinningsquares1)
-	NEW_SLIDESHOW(LED_galaga1)
+	//NEW_SLIDESHOW(LED_galaga1)
 	NEW_ANIMATION(LED_spaceinvaders1)
 	NEW_ANIMATION(LED_plasma1)
 	NEW_ANIMATION(LED_movingsquares1)
