@@ -1,0 +1,7 @@
+*.d
+*.o
+*.eep
+*.a
+*.hex
+*.elf
+main.d
