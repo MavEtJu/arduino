@@ -7,7 +7,7 @@
 
 // ==============================
 
-LED_sinus1::LED_sinus1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_sinus1)
 {
     delayms = 50;
 }
@@ -30,7 +30,7 @@ LED_sinus1::animation(void)
 
 // ==============================
 
-LED_sinus2::LED_sinus2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_sinus2)
 {
     delayms = 25;
     height = VIEW_HEIGHT / 2;
@@ -54,4 +54,15 @@ LED_sinus2::animation(void)
 
         _led->dot(m, (int)s + _VIEW_HEIGHT / 2, _led->colour_yellow);
     }
+}
+
+// ===========================
+
+MYCONSTRUCTOR_ANIMATION(LED_sinus3)
+{
+}
+
+void
+LED_sinus3::animation(void)
+{
 }

@@ -10,7 +10,7 @@ struct coal {
 };
 
 class LED_torch1 : public LED_Animation {
-    public:
+public:
     MYOWNCONSTRUCTOR(LED_torch1);
     ~LED_torch1(void);
     void animation(void);

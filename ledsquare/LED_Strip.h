@@ -26,7 +26,7 @@ struct area {
 };
 
 class LED_Strip : public Adafruit_NeoPixel {
-    public:
+public:
     LED_Strip(uint16_t amount, uint8_t pin);
     void start(void);
     

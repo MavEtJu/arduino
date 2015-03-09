@@ -84,7 +84,7 @@ LED_led00_blink1::animation(void)
 
 // ==============================
 
-LED_quickbrowfox1::LED_quickbrowfox1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_quickbrowfox1)
 {
     text = new LED_Text(led);
 }
@@ -112,7 +112,7 @@ LED_spaceinvaders1::destroy(void)
     delete(enc);
 }
 
-LED_spaceinvaders1::LED_spaceinvaders1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_spaceinvaders1)
 {
     delayms = 150;
 
@@ -356,7 +356,7 @@ LED_spaceinvaders1::animation(void)
 
 // =====================================
 
-LED_plasma1::LED_plasma1(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(l, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_plasma1)
 {
     delayms = 20;
     numcolours = 16;

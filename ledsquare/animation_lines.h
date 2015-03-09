@@ -4,14 +4,14 @@
 #include "animation_lines.h"
 
 class LED_lineshorver1 : public LED_Animation {
-    public:
+public:
     PARENTCONSTRUCTOR(LED_lineshorver1);
     void animation(void);
 };
 
 #define LED_lines1_history  5
 class LED_lines1 : public LED_Animation {
-    public:
+public:
     MYOWNCONSTRUCTOR(LED_lines1);
     void animation(void);
     void shift_history(void);
@@ -25,7 +25,7 @@ class LED_lines1 : public LED_Animation {
 };
 
 class LED_cross1 : public LED_Animation {
-    public:
+public:
     MYOWNCONSTRUCTOR(LED_cross1);
     void animation(void);
     

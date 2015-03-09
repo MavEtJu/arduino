@@ -15,7 +15,7 @@ public:
 };
 
 class LED_minecraft1 : public LED_Slideshow {
-    public:
+public:
     LED_minecraft1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
     void create_colourmap(void);
 };

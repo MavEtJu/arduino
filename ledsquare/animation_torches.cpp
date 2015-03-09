@@ -8,7 +8,7 @@
 
 // ==============================
 
-LED_torch1::LED_torch1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_torch1)
 {
     colour_floor = _led->Color(9 << 2, 4, 0);
 
@@ -55,7 +55,7 @@ LED_torch1::animation(void)
 
 // ===============
 
-LED_torch2::LED_torch2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_torch2)
 {    
 #ifdef DEBUG_MEMORY
     FREERAM("LED_torch2: init");

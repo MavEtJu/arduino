@@ -16,7 +16,7 @@ enum {
     COLOUR_MAX
 };
 class LED_Slideshow {
-    public:
+public:
     LED_Slideshow(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
     virtual ~LED_Slideshow(void);
     virtual void display(struct SlideshowImage *img);

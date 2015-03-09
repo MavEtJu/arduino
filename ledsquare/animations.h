@@ -7,19 +7,19 @@
 #include "animation_sinus.h"
 
 class LED_test : public LED_Animation {
-    public:
+public:
     PARENTCONSTRUCTOR(LED_test);
     void animation(void);
 };
 
 class LED_led00_blink1 : public LED_Animation {
-    public:
+public:
     PARENTCONSTRUCTOR(LED_led00_blink1);
     void animation(void);
 };
 
 class LED_quickbrowfox1 : public LED_Animation {
-    public:
+public:
     MYOWNCONSTRUCTOR(LED_quickbrowfox1);
     ~LED_quickbrowfox1(void);
     void animation(void);
@@ -28,7 +28,7 @@ class LED_quickbrowfox1 : public LED_Animation {
 
 #define LED_spaceinvaders_IMGS 11
 class LED_spaceinvaders1 : public LED_Animation {
-    public:
+public:
     MYOWNCONSTRUCTOR(LED_spaceinvaders1);
     void destroy(void);
     void animation(void);
