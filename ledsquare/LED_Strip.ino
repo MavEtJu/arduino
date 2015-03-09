@@ -6,6 +6,7 @@
 #ifdef SIMULATOR
 #include <time.h>
 #endif
+#include "A_Tools.h"
 #include "LED_Strip.h"
 
 LED_Strip::LED_Strip(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin, NEO_GRB + NEO_KHZ800)
@@ -122,6 +123,15 @@ LED_Strip::colour_fade(LED c, int fade)
     return Color(c.red >> fade, c.green >> fade, c.blue >> fade);
 }
 
+LED
+LED_Strip::colour_fade_seq(LED c, int fade)
+{
+    c.red = MAX(0, c.red - fade);
+    c.green = MAX(0, c.green - fade);
+    c.blue = MAX(0, c.blue - fade);
+    return Color(c.red, c.green, c.blue);
+}
+
 int
 LED_Strip::colour_same(LED c1, LED c2)
 {
@@ -230,6 +240,19 @@ LED_Strip::dot(int16_t x, int16_t y, LED colour)
 {
     _colourlast = colour;
     dot(x, y);
+}
+
+void
+LED_Strip::dot(struct coordinates c)
+{
+    dot(c.x, c.y);
+}
+
+void
+LED_Strip::dot(struct coordinates c, LED colour)
+{
+    _colourlast = colour;
+    dot(c.x, c.y);
 }
 
 // Colour the LEDs in the matrix from (x1, y1) x (x2, y2)

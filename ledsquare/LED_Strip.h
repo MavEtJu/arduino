@@ -45,6 +45,7 @@ class LED_Strip : public Adafruit_NeoPixel {
     void colour_set(LED colour);
     LED colour_get(void);
     LED colour_fade(LED colour, int fade);
+    LED colour_fade_seq(LED colour, int fade);
     int colour_same(LED c1, LED c2);
     LED colour_transform(LED c1, LED c2, int steps, int step);
     LED colour_transform(int step);
@@ -60,6 +61,8 @@ class LED_Strip : public Adafruit_NeoPixel {
     // Colour the LED in the matrix in the dot of (x, y)
     void dot(int16_t x, int16_t y);
     void dot(int16_t x, int16_t y, LED colour);
+    void dot(struct coordinates c);
+    void dot(struct coordinates c, LED colour);
     
     // Colour the LEDs in the matrix in the square from (x, y) x (x + dx, y + dy)
     void square(int16_t x, int16_t y, int16_t dx, int16_t dy);
