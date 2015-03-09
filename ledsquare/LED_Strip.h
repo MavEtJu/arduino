@@ -46,6 +46,8 @@ class LED_Strip : public Adafruit_NeoPixel {
     LED colour_get(void);
     LED colour_fade(LED colour, int fade);
     int colour_same(LED c1, LED c2);
+    LED colour_transform(LED c1, LED c2, int steps, int step);
+    LED colour_transform(int step);
     
     // Colour the LEDs in the strip from offset 1 to offset 2
     void strip_o1_o2(uint16_t o1, uint16_t o2);

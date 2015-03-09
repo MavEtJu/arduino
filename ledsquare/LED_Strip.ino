@@ -159,6 +159,30 @@ LED_Strip::colour_random_notblack(void)
     return colour_white;
 }
 
+LED
+LED_Strip::colour_transform(LED c1, LED c2, int steps, int step)
+{
+    LED c;
+    c.red = c1.red + step * (c2.red - c1.red) / steps;
+    c.green = c1.green + step * (c2.green - c1.green) / steps;
+    c.blue = c1.blue + step * (c2.blue - c1.blue) / steps;
+    return c;
+}
+
+LED
+LED_Strip::colour_transform(int step)
+{
+    LED ls[] = {
+            colour_red,
+            colour_green,
+            colour_blue,
+        };
+
+    LED c1 = ls[(step / 8) % 3];
+    LED c2 = ls[(1 + step / 8 ) % 3];
+    return colour_transform(c1, c2, 24, step % 24);
+}
+
 
 // Colour the LEDs in the strip from offset 1 to offset 2
 void
