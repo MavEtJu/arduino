@@ -49,7 +49,7 @@ LED_cross1::animation(void)
         if ((int16_t)delayms / 20 > LED_cross1_history - i - 1) {
             continue;
         }
-        _led->line(c1[i], c2[i], c[i]);
+        _led->line(c1[i], c2[i], _led->colour_fade(_led->colour_transform(step), i / 2));
     }
     
     delayms = 50 + 45 * sin(step / 180.0 * M_PI);
@@ -314,22 +314,22 @@ LED_lines2::animation(void)
 	_led->line(
 	    history[i].c1.x, history[i].c1.y,
 	    history[i].c2.x, history[i].c2.y,
-	    _led->colour_fade(colour, i));
+	    _led->colour_fade(_led->colour_transform(step), i));
 
 	_led->line(
 	    _VIEW_WIDTH - 1 - history[i].c1.x, _VIEW_HEIGHT - 1 - history[i].c1.y,
 	    _VIEW_WIDTH - 1 - history[i].c2.x, _VIEW_HEIGHT - 1 - history[i].c2.y,
-	    _led->colour_fade(colour, i));
+	    _led->colour_fade(_led->colour_transform(step), i));
 
 	_led->line(
 	    _VIEW_WIDTH - history[i].c1.y, history[i].c1.x,
 	    _VIEW_WIDTH - history[i].c2.y, history[i].c2.x,
-	    _led->colour_fade(colour, i));
+	    _led->colour_fade(_led->colour_transform(step + 12), i));
 
 	_led->line(
 	    history[i].c1.y, _VIEW_HEIGHT - 1 - history[i].c1.x,
 	    history[i].c2.y, _VIEW_HEIGHT - 1 - history[i].c2.x,
-	    _led->colour_fade(colour, i));
+	    _led->colour_fade(_led->colour_transform(step + 12), i));
 
     }
 
