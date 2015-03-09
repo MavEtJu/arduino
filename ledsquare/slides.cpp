@@ -3,10 +3,11 @@
 
 #include <Arduino.h>
 #include "LED_Strip.h"
+#include "A_Tools.h"
 #include "slides.h"
 
 
-LED_mario1::LED_mario1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Slideshow(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_SLIDESHOW(LED_mario1)
 {
     /*
      * . black
@@ -76,7 +77,7 @@ LED_mario1::LED_mario1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT
 
 // =======================
 
-LED_galaga1::LED_galaga1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Slideshow(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_SLIDESHOW(LED_galaga1)
 {
     /*
      * R red
@@ -200,7 +201,7 @@ LED_minecraft1::create_colourmap(void)
     add_colourmap('s', 29, 255 >> 4, 210 >> 4,   4 >> 4);
 }
 
-LED_minecraft1::LED_minecraft1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Slideshow(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_SLIDESHOW(LED_minecraft1)
 {
     create_colourmap();
     set_imgs(6);

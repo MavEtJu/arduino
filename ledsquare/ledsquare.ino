@@ -91,13 +91,14 @@ loop(void)
 #ifdef TESTING
     #define TEST(__t__) \
 	static __t__ *p = new __t__(&led, VIEW_WIDTH, VIEW_HEIGHT)
-	
-    TEST(LED_lines2);
+
+    TEST(LED_spinningsquares1);
+    //TEST(LED_test);
+    //TEST(LED_lines2);
     //TEST(LED_minecraft1);
     //TEST(LED_movingsquares2);
     //TEST(LED_square_splitting);
     //TEST(LED_torch1);
-    //TEST(ED_test);
     //TEST(LED_plasma1);
     //TEST(LED_squares2);
     //TEST(LED_cross1);
@@ -160,7 +161,8 @@ loop(void)
 	Serial.println(phasenr);
 #endif
    	// NEW_ANIMATION(LED_led00_blink1)
-	NEW_ANIMATION(LED_quickbrowfox1)
+	NEW_ANIMATION(LED_test)
+	// NEW_ANIMATION(LED_quickbrowfox1)
 	NEW_ANIMATION(LED_torch2)
 	NEW_ANIMATION(LED_torch1)
 	NEW_SLIDESHOW(LED_galaga1)
@@ -231,4 +233,3 @@ loop(void)
 
     led.display();
 }
-

@@ -189,15 +189,11 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
     }
 
 #ifdef DEBUG_MEMORY
-    Serial.print(F("Allocating an alphabet of "));
-    Serial.print(letters);
-    Serial.println(F(" bytes"));
+    SERIAL3(F("Allocating an alphabet of "), letters, F(" bytes"));
 #endif
     alphabet = (uint8_t *)malloc(letters * sizeof(char));
     if (alphabet == NULL) {
-	Serial.print(F("alphabet==NULL: Failed to allocate "));
-	Serial.print(letters);
-	Serial.println(F(" bytes"));
+	SERIAL3(F("alphabet==NULL: Failed to allocate "), letters, F(" bytes"));
 #ifdef DEBUG_MEMORY
 	FREEMEMORY("alphabet==NULL");
 	FREERAM("alphabet==NULL");
@@ -240,7 +236,7 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
 	out++;
 	(*bytes_out)++;
         if (*bytes_out == max_bytes_out) {
-            Serial.println(F("Reached max_bytes_out"));
+            SERIAL1(F("Reached max_bytes_out"));
             goto bye;
         }
     }

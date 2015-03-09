@@ -12,7 +12,7 @@ class LED_lineshorver1 : public LED_Animation {
 #define LED_lines1_history  5
 class LED_lines1 : public LED_Animation {
     public:
-    MYCONSTRUCTOR(LED_lines1);
+    MYOWNCONSTRUCTOR(LED_lines1);
     void animation(void);
     void shift_history(void);
     LED c[LED_lines1_history];
@@ -26,7 +26,7 @@ class LED_lines1 : public LED_Animation {
 
 class LED_cross1 : public LED_Animation {
     public:
-    MYCONSTRUCTOR(LED_cross1);
+    MYOWNCONSTRUCTOR(LED_cross1);
     void animation(void);
     
     #define LED_cross1_history  5
@@ -41,7 +41,7 @@ struct LED_lines2_coordinates {
 };
 class LED_lines2 : public LED_Animation {
 public:
-    MYCONSTRUCTOR(LED_lines2);
+    MYOWNCONSTRUCTOR(LED_lines2);
     void animation(void);
     void shift_history(int16_t c1x, int16_t c1y, int16_t c2x, int16_t c2y);
 

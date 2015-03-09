@@ -8,7 +8,8 @@
 
 // ============================
 
-LED_squares1::LED_squares1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT) {
+MYCONSTRUCTOR_ANIMATION(LED_squares1)
+{
     c = _led->colour_random();
 }
 
@@ -37,7 +38,8 @@ LED_squares1::animation(void)
 
 // ============================
 
-LED_squares2::LED_squares2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT) {
+MYCONSTRUCTOR_ANIMATION(LED_squares2)
+{
     for (int i = LED_squares2_history - 1; i >= 0; i--) {
 	a[i].c1.x = 0;
 	a[i].c1.y = 0;
@@ -99,7 +101,7 @@ LED_squares2::shift_history(struct area a_new, LED c_new)
 
 // ============================
 
-LED_movingsquares1::LED_movingsquares1(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(l, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_movingsquares1)
 {
     delayms = 50;
     
@@ -172,11 +174,7 @@ LED_movingsquares1::animation(void)
 	}
 
 	/*
-	Serial.print("dx,dy: ");
-	Serial.print(dx[i]);
-	Serial.print(",");
-	Serial.print(dy[i]);
-	Serial.println("");
+	SERIAL4(F("dx,dy: "), dx[i], F(","), dy[i]);
 	*/
 
 	x[i] += dx[i];
@@ -188,7 +186,7 @@ LED_movingsquares1::animation(void)
 
 // ==============================
 
-LED_movingsquares2::LED_movingsquares2(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(l, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_movingsquares2)
 {
     c[0] = _led->colour_random_notblack();
     c[1] = _led->colour_random_notblack();
@@ -306,7 +304,7 @@ LED_movingsquares2::animation(void)
 
 // ==============================
 
-LED_square_splitting::LED_square_splitting(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(l, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_square_splitting)
 {
     c_previous = _led->colour_black;
     c_now = _led->colour_black;
@@ -459,4 +457,15 @@ LED_square_splitting::animation(void)
 
     }
 
+}
+
+// ================================
+
+MYCONSTRUCTOR_ANIMATION(LED_spinningsquares1)
+{
+}
+
+void
+LED_spinningsquares1::animation(void)
+{
 }

@@ -82,8 +82,7 @@ LED_Slideshow::set_imgs(uint8_t _nrs)
 void
 LED_Slideshow::add_image(uint16_t width, uint16_t bits, const char *img)
 {
-    //Serial.print(F("Loading image "));
-    //Serial.println(imgnrs);
+    //SERIAL2(F("Loading image "), imgnrs);
     if (imgnrs >= nrs)
 	return;
     images[imgnrs].width = width;
@@ -103,8 +102,7 @@ LED_Slideshow::loop(void)
     if (shown)
 	delay(1000);
     shown = 1;
-    Serial.print(F("imgnr: "));
-    Serial.println(imgnr);
+    SERIAL2(F("imgnr: "), imgnr);
 
 #ifdef DEBUG_MEMORY
     FREEMEMORY("freememory before display: ");
@@ -155,9 +153,7 @@ LED_Slideshow::display(struct SlideshowImage *img)
 	FREEMEMORY("malloc done for in");
 #endif
         if (in == NULL) {
-            Serial.print(F("in = NULL for "));
-            Serial.print(len);
-            Serial.println(F(" bytes"));
+            SERIAL3(F("in = NULL for "), len, F(" bytes"));
 #ifdef DEBUG_MEMORY
             FREERAM("in = NULL");
             FREEMEMORY("in = NULL");
@@ -175,7 +171,7 @@ LED_Slideshow::display(struct SlideshowImage *img)
 
         enc = new StringEncodeMulti();
         if (enc == NULL) {
-            Serial.println(F("enc = NULL"));
+            SERIAL1(F("enc = NULL"));
 #ifdef DEBUG_MEMORY
             FREERAM("in = NULL");
             FREEMEMORY("in = NULL");
@@ -192,7 +188,7 @@ LED_Slideshow::display(struct SlideshowImage *img)
 #endif
         enc->decode(in, ps, img->bits, &imglen, sizeof(ps) - 1);
 	if (imglen == 0) {
-	    Serial.println(F("enc->decode returned 0, broken!"));
+	    SERIAL1(F("enc->decode returned 0, broken!"));
 	    free(in);
 	    delete(enc);
 	    broken = 1;
@@ -202,8 +198,7 @@ LED_Slideshow::display(struct SlideshowImage *img)
         FREERAM("LED_Slideshow::display:after decode");
 
 	FREEMEMORY("decode done");
-	Serial.print("imglen: ");
-	Serial.println(imglen);
+	SERIAL2(F("imglen: "), imglen);
 #endif
         delete(enc);
 #ifdef DEBUG_MEMORY

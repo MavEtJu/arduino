@@ -183,16 +183,14 @@ LED_spaceinvaders1::LED_spaceinvaders1(LED_Strip *led, uint16_t VIEW_WIDTH, uint
 
     enc = new StringEncodePlain();
     if (enc == NULL) {
-	Serial.print(F("enc=NULL in LED_spaceinvaders1"));
+	SERIAL1(F("enc=NULL in LED_spaceinvaders1"));
 	broken = 1;
 	return;
     }
 
     imgs = (const char **)malloc(sizeof(char *) * LED_spaceinvaders_IMGS);
     if (imgs == NULL) {
-	Serial.print(F("imgs=NULL for "));
-	Serial.print(LED_spaceinvaders_IMGS);
-	Serial.println(F("bytes"));
+	SERIAL3(F("imgs=NULL for "), LED_spaceinvaders_IMGS, F("bytes"));
 #ifdef DEBUG_MEMORY
 	FREERAM("LED_spaceinvaders1: img");
 	FREEMEMORY("LED_spaceinvaders1: img");
@@ -396,12 +394,9 @@ LED_spaceinvaders1::animation(void)
 	x = -width[imgnr];
 
 #ifdef SERIAL
-	Serial.print("imgnr:");
-	Serial.print(imgnr);
-	Serial.print(" - width:");
-	Serial.print(width[imgnr]);
-	Serial.print(" - imglen:");
-	Serial.println(imglen);
+	SERIAL6(F("imgnr:"), imgnr, \
+		F(" - width:"), width[imgnr], \
+		F(" - imglen:"), imglen);
 #endif
     }
 
@@ -419,9 +414,7 @@ LED_torch1::LED_torch1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT
     numcoals = 32;
     coals = (struct coal *)malloc(numcoals * sizeof(coals));
     if (coals == NULL) {
-	Serial.print(F("coals=NULL in LED_torch1 for "));
-	Serial.print(numcoals * sizeof(coals));
-	Serial.println(F(" bytes"));
+	SERIAL3(F("coals=NULL in LED_torch1 for "), numcoals * sizeof(coals), F("BYTES"));
 #ifdef DEBUG_MEMORY
 	FREERAM("LED_torch1");
 	FREEMEMORY("LED_torch1");
@@ -470,9 +463,7 @@ LED_torch2::LED_torch2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT
     numcoals = 30;
     coals = (struct coal *)malloc(numcoals * sizeof(struct coal));
     if (coals == NULL) {
-	Serial.print(F("coals=NULL in LED_torch2 for "));
-	Serial.print(numcoals * sizeof(coals));
-	Serial.println(F(" bytes"));
+	SERIAL3(F("coals=NULL in LED_torch2 for "), numcoals * sizeof(coals), F(" bytes"));
 #ifdef DEBUG_MEMORY
 	FREERAM("LED_torch2");
 	FREEMEMORY("LED_torch2");
@@ -550,9 +541,7 @@ LED_plasma1::LED_plasma1(LED_Strip *l, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT
     numcolours = 16;
     colourmap = (LED *)malloc(sizeof(LED) * numcolours);
     if (colourmap == NULL) {
-	Serial.print(F("colourmap=NULL in LED_plasma1 for "));
-	Serial.print(numcolours * sizeof(LED));
-	Serial.println(F(" bytes"));
+	SERIAL3(F("colourmap=NULL in LED_plasma1 for "), numcolours * sizeof(LED), F(" bytes"));
 #ifdef DEBUG_MEMORY
 	FREERAM("LED_plasma");
 	FREEMEMORY("LED_plasma");

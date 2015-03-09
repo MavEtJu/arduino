@@ -8,7 +8,7 @@
 
 // ==============================
 
-LED_cross1::LED_cross1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_cross1)
 {
     memset(c1, 0, sizeof(struct coordinates) * LED_cross1_history);
     memset(c2, 0, sizeof(struct coordinates) * LED_cross1_history);
@@ -71,7 +71,7 @@ LED_lineshorver1::animation(void)
 
 // ============================
 
-LED_lines1::LED_lines1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_lines1)
 {
     x1 = y1 = 0;
     x2 = _VIEW_WIDTH - 1;
@@ -213,7 +213,7 @@ LED_lines1::animation(void)
 
 // ==================
 
-LED_lines2::LED_lines2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT)
+MYCONSTRUCTOR_ANIMATION(LED_lines2)
 {
     x0 = 0;
     y0 = 0;
