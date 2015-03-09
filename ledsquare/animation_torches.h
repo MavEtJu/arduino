@@ -1,5 +1,5 @@
-#ifndef animations__h
-#define animations__h
+#ifndef animation_torches__h
+#define animation_torches__h
 
 #include "A_Tools.h"
 

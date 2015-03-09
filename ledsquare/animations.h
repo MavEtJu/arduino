@@ -3,6 +3,7 @@
 
 #include "animation_squares.h"
 #include "animation_lines.h"
+#include "animation_torches.h"
 
 class LED_test : public LED_Animation {
     public:
@@ -55,34 +56,6 @@ class LED_spaceinvaders1 : public LED_Animation {
     LED colours[LED_spaceinvaders_IMGS];
     uint8_t width[LED_spaceinvaders_IMGS];
     uint8_t encbits[LED_spaceinvaders_IMGS];
-};
-
-struct coal {
-	int16_t x, y;
-        int16_t intensity;
-        int decay;
-};
-
-class LED_torch1 : public LED_Animation {
-    public:
-    MYOWNCONSTRUCTOR(LED_torch1);
-    ~LED_torch1(void);
-    void animation(void);
-    
-    LED colour_floor;
-    int numcoals;
-    struct coal *coals;
-};
-
-class LED_torch2 : public LED_Animation {
-public:
-    MYOWNCONSTRUCTOR(LED_torch2);
-    ~LED_torch2(void);
-    
-    struct coal new_coal(uint8_t intensity, int randomy);
-    void animation(void);
-    int numcoals;
-    struct coal *coals;
 };
 
 class LED_plasma1 : public LED_Animation {
