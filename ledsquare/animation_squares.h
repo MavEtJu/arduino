@@ -6,7 +6,7 @@
 
 class LED_squares1 : public LED_Animation {
 public:
-    MYCONSTRUCTOR(LED_squares1);
+    MYOWNCONSTRUCTOR(LED_squares1);
     void animation(void);
     LED c;
 };
@@ -14,7 +14,7 @@ public:
 #define LED_squares2_history 20
 class LED_squares2 : public LED_Animation {
 public:
-    MYCONSTRUCTOR(LED_squares2);
+    MYOWNCONSTRUCTOR(LED_squares2);
     void animation(void);
     struct area a[LED_squares2_history];
     LED c[LED_squares2_history], c_last;
@@ -24,7 +24,7 @@ public:
 #define LED_movingsquares1_squares 4
 class LED_movingsquares1 : public LED_Animation {
 public:
-    MYCONSTRUCTOR(LED_movingsquares1);
+    MYOWNCONSTRUCTOR(LED_movingsquares1);
     void animation(void);
     LED c[LED_movingsquares1_squares];
     int16_t x0[LED_movingsquares1_squares], y0[LED_movingsquares1_squares];
@@ -37,7 +37,7 @@ public:
 #define LED_movingsquares2_squares 2
 class LED_movingsquares2 : public LED_Animation {
 public:
-    MYCONSTRUCTOR(LED_movingsquares2);
+    MYOWNCONSTRUCTOR(LED_movingsquares2);
     void animation(void);
     void init (int num);
 
@@ -52,7 +52,7 @@ public:
 #define LED_square_splitting_diagonal	1
 class LED_square_splitting : public LED_Animation {
 public:
-    MYCONSTRUCTOR(LED_square_splitting);
+    MYOWNCONSTRUCTOR(LED_square_splitting);
     void init(void);
     void animation(void);
 
@@ -61,6 +61,19 @@ public:
     LED c_now, c_previous;
     struct coordinates c0, c;
     struct distance d;
+};
+
+#define LED_spinningsquares1_squares	8
+struct LED_spinningsquares1_data {
+    struct coordinates c1, c2, c;
+    int dx, dy;
+    struct colour;
+};
+class LED_spinningsquares1 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_spinningsquares1);
+    struct LED_spinningsquares1_data data[LED_spinningsquares1_squares];
+    void animation(void);
 };
 
 #endif

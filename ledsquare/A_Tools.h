@@ -25,7 +25,7 @@ int freeRam(void);
 #define PARENTCONSTRUCTOR(__t__) \
 	__t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : \
 	    LED_Animation(led, VIEW_WIDTH, VIEW_HEIGHT) {}
-#define MYCONSTRUCTOR(__t__) \
+#define MYOWNCONSTRUCTOR(__t__) \
 	__t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT)
 
 
