@@ -64,16 +64,19 @@ public:
 };
 
 #define LED_spinningsquares1_squares	8
+#define LED_spinningsquares1_history	8
 struct LED_spinningsquares1_data {
     struct coordinates c1, c2, c;
     int dx, dy;
-    struct colour;
+    LED colour;
 };
 class LED_spinningsquares1 : public LED_Animation {
 public:
     MYOWNCONSTRUCTOR(LED_spinningsquares1);
     struct LED_spinningsquares1_data data[LED_spinningsquares1_squares];
+    struct coordinates history[LED_spinningsquares1_squares][LED_spinningsquares1_history];
     void animation(void);
+    void history_shift(int i, struct coordinates c);
 };
 
 #endif

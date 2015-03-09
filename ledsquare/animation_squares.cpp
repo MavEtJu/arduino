@@ -463,9 +463,70 @@ LED_square_splitting::animation(void)
 
 MYCONSTRUCTOR_ANIMATION(LED_spinningsquares1)
 {
+    delayms = 25;
+    for (int i = 0; i < LED_spinningsquares1_squares; i++) {
+	data[i].c.x = i;
+	data[i].c.y = i;
+	data[i].c1.x = i;
+	data[i].c1.y = i;
+	data[i].c2.x = _VIEW_WIDTH - i - 1;
+	data[i].c2.y = _VIEW_HEIGHT - i - 1;
+	data[i].dx = 1;
+	data[i].dy = 0;
+	data[i].colour = _led->colour_random_notblack();
+
+	for (int h = 0; h < LED_spinningsquares1_history; h++) {
+	    history[i][h].x = i;
+	    history[i][h].y = i;
+	}
+    }
+}
+
+void
+LED_spinningsquares1::history_shift(int i, struct coordinates c)
+{
+    for (int h = LED_spinningsquares1_history - 1; h > 0; h--) {
+ 	history[i][h] = history[i][h - 1];
+    }
+    history[i][0].x = c.x;
+    history[i][0].y = c.y;
 }
 
 void
 LED_spinningsquares1::animation(void)
 {
+    for (int i = 0; i < LED_spinningsquares1_squares; i++) {
+
+	if (data[i].dx == 1 && data[i].dy == 0) {
+	    if (data[i].c.x == data[i].c2.x) {
+		data[i].dx = 0;
+		data[i].dy = 1;
+	    }
+	} else if (data[i].dx == 0 && data[i].dy == 1) {
+	    if (data[i].c.y == data[i].c2.y) {
+		data[i].dx = -1;
+		data[i].dy = 0;
+	    }
+	} else if (data[i].dx == -1 && data[i].dy == 0) {
+	    if (data[i].c.x == data[i].c1.x) {
+		data[i].dx = 0;
+		data[i].dy = -1;
+	    }
+	} else if (data[i].dx == 0 && data[i].dy == -1) {
+	    if (data[i].c.y == data[i].c1.y) {
+		data[i].dx = 1;
+		data[i].dy = 0;
+	    }
+	}
+
+	data[i].c.x += data[i].dx;
+	data[i].c.y += data[i].dy;
+	history_shift(i, data[i].c);
+
+	//SERIAL4("x,y: ", history[i][0].x, ",", history[i][0].y);
+
+	for (int h = LED_spinningsquares1_history - 1; h > 0; h--) {
+	    _led->dot(history[i][h], _led->colour_fade_seq(data[i].colour, h));
+	}
+    }
 }

@@ -62,5 +62,7 @@ int freeRam(void);
 	Serial.print(__a1__); \
 	Serial.println(__a0__)
 
+#define        MAX(a,b) (((a)>(b))?(a):(b))
+#define        MIN(a,b) (((a)<(b))?(a):(b))
 
 #endif
