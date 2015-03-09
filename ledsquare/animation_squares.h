@@ -21,6 +21,16 @@ public:
     void shift_history(struct area a, LED c);
 };
 
+#define LED_squares3_history 20
+class LED_squares3 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_squares3);
+    void animation(void);
+    struct coordinates c[LED_squares3_history];
+    LED colours[LED_squares3_history], c_last;
+    void shift_history(struct coordinates a, LED c);
+};
+
 #define LED_movingsquares1_squares 4
 class LED_movingsquares1 : public LED_Animation {
 public:
@@ -78,5 +88,13 @@ public:
     void animation(void);
     void history_shift(int i, struct coordinates c);
 };
+
+class LED_squares4 : public LED_Animation {
+public:
+    PARENTCONSTRUCTOR(LED_squares4);
+    void animation(void);
+    int16_t y;
+};
+
 
 #endif

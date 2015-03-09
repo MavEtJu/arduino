@@ -61,7 +61,7 @@ LED_sinus2::animation(void)
     }
 
     for (uint16_t m = 0; m < _VIEW_WIDTH; m++) {
-        uint16_t o = m + step;
+        uint16_t o = (m + step) % 7200;
         float f = piece * M_PI / 180 * o;
         float s = sin(f) * height;
 
@@ -88,7 +88,7 @@ LED_sinus3::animation(void)
     for (int i = 1; i >= 0; i--) {
 	int first = 1;
 	for (int16_t m = -1; m < _sVIEW_WIDTH; m++) {
-	    int16_t o = m + step;
+	    int16_t o = (m + step) % 7200;
 	    float f = ((o * piece) * M_PI / 180 ) / (3 * i + 2);
 	    float s = sin(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
 
