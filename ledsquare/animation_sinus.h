@@ -7,6 +7,7 @@ class LED_sinus1 : public LED_Animation {
 public:
     MYOWNCONSTRUCTOR(LED_sinus1);
     void animation(void);
+    LED c[3];
 };
 
 class LED_sinus2 : public LED_Animation {
@@ -22,6 +23,7 @@ class LED_sinus3 : public LED_Animation {
 public:
     MYOWNCONSTRUCTOR(LED_sinus3);
     void animation(void);
+    LED c[2];
 };
 
 #endif

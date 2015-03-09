@@ -10,6 +10,9 @@
 MYCONSTRUCTOR_ANIMATION(LED_sinus1)
 {
     delayms = 50;
+    c[0] = _led->colour_green;
+    c[1] = _led->colour_yellow;
+    c[2] = _led->colour_blue;
 }
 
 void
@@ -17,14 +20,24 @@ LED_sinus1::animation(void)
 {
     uint32_t piece = 360 / _VIEW_WIDTH;
 
-    for (uint16_t m = 0; m < _VIEW_WIDTH; m++) {
-        uint16_t o = m + step;
-        float f = piece * M_PI / 180 * o;
-        float s = sin(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
+    struct coordinates prev, now;
 
-        _led->dot(m, (int)s, _led->colour_yellow);
-        _led->dot((m + _VIEW_WIDTH / 3) % _VIEW_WIDTH, (int)s, _led->colour_blue);
-        _led->dot((m + 2 * _VIEW_WIDTH / 3) % _VIEW_WIDTH, (int)s, _led->colour_green);
+    for (int i = 0; i < 3; i++) {
+	int first = 1;
+	for (int16_t m = -1; m < _sVIEW_WIDTH; m++) {
+	    int16_t o = m + step;
+	    float f = (i * 120 + o * piece) * M_PI / 180;
+	    float s = sin(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
+
+	    //SERIAL4("x,y: ", m, ",", (int)s);
+
+	    now.x = m;
+	    now.y = (int)s;
+	    if (!first)
+		_led->line(prev, now, c[i]);
+	    prev = now;
+	    first = 0;
+	}
     }
 }
 
@@ -60,9 +73,33 @@ LED_sinus2::animation(void)
 
 MYCONSTRUCTOR_ANIMATION(LED_sinus3)
 {
+    delayms = 15;
+    c[0] = _led->colour_green;
+    c[1] = _led->colour_yellow;
 }
 
 void
 LED_sinus3::animation(void)
 {
+    uint32_t piece = 360 / _VIEW_WIDTH;
+
+    struct coordinates prev, now;
+
+    for (int i = 1; i >= 0; i--) {
+	int first = 1;
+	for (int16_t m = -1; m < _sVIEW_WIDTH; m++) {
+	    int16_t o = m + step;
+	    float f = ((o * piece) * M_PI / 180 ) / (3 * i + 2);
+	    float s = sin(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
+
+	    //SERIAL4("x,y: ", m, ",", (int)s);
+
+	    now.x = m;
+	    now.y = (int)s;
+	    if (!first)
+		_led->line(prev, now, c[i]);
+	    prev = now;
+	    first = 0;
+	}
+    }
 }
