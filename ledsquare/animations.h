@@ -4,6 +4,7 @@
 #include "animation_squares.h"
 #include "animation_lines.h"
 #include "animation_torches.h"
+#include "animation_sinus.h"
 
 class LED_test : public LED_Animation {
     public:
@@ -23,21 +24,6 @@ class LED_quickbrowfox1 : public LED_Animation {
     ~LED_quickbrowfox1(void);
     void animation(void);
     LED_Text *text;
-};
-
-class LED_sinus1 : public LED_Animation {
-    public:
-    MYOWNCONSTRUCTOR(LED_sinus1);
-    void animation(void);
-};
-
-class LED_sinus2 : public LED_Animation {
-    public:
-    MYOWNCONSTRUCTOR(LED_sinus2);
-    void animation(void);
-
-    int8_t height;
-    int8_t direction;
 };
 
 #define LED_spaceinvaders_IMGS 11
