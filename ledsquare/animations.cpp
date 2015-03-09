@@ -13,6 +13,9 @@
 void
 LED_test::animation(void)
 {
+    LED c = _led->colour_transform(step);
+    _led->square(0, 0, _VIEW_WIDTH, _VIEW_HEIGHT, c);
+
     // Three line red banner
     if (step < _VIEW_HEIGHT + 2) {
 	int16_t line = step % (_VIEW_HEIGHT + 2);
@@ -44,7 +47,7 @@ LED_test::animation(void)
     if (step < 4 * (_VIEW_HEIGHT + 2)) {
 	int16_t line = step % (_VIEW_HEIGHT + 2);
 	for (int i = 0; i < 3; i++) {
-	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->Color(line + i, 0, 0));
+	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->Color(line, 0, 0));
 	}
 	return;
     }
@@ -53,7 +56,7 @@ LED_test::animation(void)
     if (step < 5 * (_VIEW_HEIGHT + 2)) {
 	int16_t line = step % (_VIEW_HEIGHT + 2);
 	for (int i = 0; i < 3; i++) {
-	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->Color(0, line + i, 0));
+	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->Color(0, line, 0));
 	}
 	return;
     }
@@ -62,7 +65,7 @@ LED_test::animation(void)
     if (step < 6 * (_VIEW_HEIGHT + 2)) {
 	int16_t line = step % (_VIEW_HEIGHT + 2);
 	for (int i = 0; i < 3; i++) {
-	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->Color(0, 0, line + i));
+	    _led->horline(line - i, 0, _VIEW_WIDTH, _led->Color(0, 0, line));
 	}
 	return;
     }
