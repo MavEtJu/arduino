@@ -220,6 +220,7 @@ LED_lines2::LED_lines2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT
     length = 5;
     angle = 0;
     delayms = 25;
+    colour = _led->colour_random_notblack();
 
     coor = 0;
 
@@ -283,6 +284,20 @@ LED_lines2::LED_lines2(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT
     c[11].c.y = 0;
     c[11].a0 = 0;
     c[11].a1 = 180;
+
+    memset(history, '\0', sizeof(history[0]) * LED_lines2_history);
+}
+
+void
+LED_lines2::shift_history(int16_t c1x, int16_t c1y, int16_t c2x, int16_t c2y)
+{
+    for (int i = LED_lines2_history - 1; i > 0; i--) {
+	history[i] = history[i - 1];
+    }
+    history[0].c1.x = c1x;
+    history[0].c1.y = c1y;
+    history[0].c2.x = c2x;
+    history[0].c2.y = c2y;
 }
 
 void
@@ -292,9 +307,33 @@ LED_lines2::animation(void)
     double si = sin(M_PI * angle / 180);
     double co = cos(M_PI * angle / 180);
 
-    _led->line(c[coor].c.x, c[coor].c.y, c[coor].c.x + co * length, c[coor].c.y + si * length, _led->colour_random());
+    shift_history(c[coor].c.x, c[coor].c.y,
+	c[coor].c.x + co * length, c[coor].c.y + si * length);
 
-    angle += 5;
+    for (int i = LED_lines2_history - 1; i >= 0; i--) {
+	_led->line(
+	    history[i].c1.x, history[i].c1.y,
+	    history[i].c2.x, history[i].c2.y,
+	    _led->colour_fade(colour, i));
+
+	_led->line(
+	    _VIEW_WIDTH - 1 - history[i].c1.x, _VIEW_HEIGHT - 1 - history[i].c1.y,
+	    _VIEW_WIDTH - 1 - history[i].c2.x, _VIEW_HEIGHT - 1 - history[i].c2.y,
+	    _led->colour_fade(colour, i));
+
+	_led->line(
+	    _VIEW_WIDTH - history[i].c1.y, history[i].c1.x,
+	    _VIEW_WIDTH - history[i].c2.y, history[i].c2.x,
+	    _led->colour_fade(colour, i));
+
+	_led->line(
+	    history[i].c1.y, _VIEW_HEIGHT - 1 - history[i].c1.x,
+	    history[i].c2.y, _VIEW_HEIGHT - 1 - history[i].c2.x,
+	    _led->colour_fade(colour, i));
+
+    }
+
+    angle += 10;
     angle %= 360;
 
     if (c[coor].a1 == angle) {

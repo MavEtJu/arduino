@@ -34,6 +34,7 @@ class LED_cross1 : public LED_Animation {
     struct coordinates c1[LED_cross1_history], c2[LED_cross1_history];
 };
 
+#define LED_lines2_history 4
 struct LED_lines2_coordinates {
      struct coordinates c;
      int16_t a0, a1;
@@ -42,12 +43,15 @@ class LED_lines2 : public LED_Animation {
 public:
     MYCONSTRUCTOR(LED_lines2);
     void animation(void);
+    void shift_history(int16_t c1x, int16_t c1y, int16_t c2x, int16_t c2y);
 
     struct LED_lines2_coordinates c[12];
 
+    struct area history[LED_lines2_history];
+    struct LED colour;
+
     int16_t x0, y0, coor;
     int16_t angle, length;
-
 };
 
 #endif
