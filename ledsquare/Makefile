@@ -17,6 +17,7 @@ SRC_FILES= \
 	animations.cpp		\
 	animation_squares.cpp	\
 	animation_lines.cpp	\
+	animation_torches.cpp	\
 	slides.cpp
 
 .include "Makefile.arduino"
