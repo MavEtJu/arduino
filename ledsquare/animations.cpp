@@ -10,6 +10,26 @@
 
 // ==============================
 
+/* +----------------+
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |................|
+ * |................|
+ * |................|
+ * |XXXXXXXXXXXXXXXX|
+ * +----------------+
+ */
+
 void
 LED_test::animation(void)
 {
@@ -105,12 +125,26 @@ LED_quickbrowfox1::animation(void)
 
 // ==============================
 
-void
-LED_spaceinvaders1::destroy(void)
-{
-    free(imgs);
-    delete(enc);
-}
+/*
+ * +----------------+
+ * |                |
+ * |                |
+ * |                |
+ * |                |
+ * |                |
+ * |     X      X   |
+ * |   X  X    X  X |
+ * |   X XXXXXXXX X |
+ * |   XXX XXXX XXX |
+ * |    XXXXXXXXXX  |
+ * |     XXXXXXXX   |
+ * |     X      X   |
+ * |    XX      XX  |
+ * |                |
+ * |                |
+ * |                |
+ * +----------------+
+ */
 
 MYCONSTRUCTOR_ANIMATION(LED_spaceinvaders1)
 {
@@ -321,7 +355,13 @@ MYCONSTRUCTOR_ANIMATION(LED_spaceinvaders1)
 	*/
 	"\x07\xe0\x1f\xf8\x3f\xfc\x6d\xb6\xff\xff\x39\x9c\x10\x08"
 	);
+}
 
+void
+LED_spaceinvaders1::destroy(void)
+{
+    free(imgs);
+    delete(enc);
 }
 
 void
@@ -355,6 +395,27 @@ LED_spaceinvaders1::animation(void)
 }
 
 // =====================================
+
+/*
+ * +----------------+
+ * |XXXXXXXxXxXxXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXxXxXxX.XxXxXx|
+ * |XxX.X X X X X X.|
+ * |XxXxX.X X X X.Xx|
+ * |XXXXXxXxXxXxXxXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXxXxXxXxXxXX|
+ * |XxXxX.X X X X.Xx|
+ * |XxXxX.X X X X.Xx|
+ * |XXXXXxXxXxXxXxXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXxXxXxXXXX|
+ * +----------------+
+ */
 
 MYCONSTRUCTOR_ANIMATION(LED_plasma1)
 {

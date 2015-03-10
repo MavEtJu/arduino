@@ -7,6 +7,26 @@
 
 // ==============================
 
+/* +----------------+
+ * |   XXX   XX   XX|
+ * |X  X  X X  X X  |
+ * | XX   X X   XX  |
+ * | XX   XX    X   |
+ * | X     X    X   |
+ * | XX   XX    XX  |
+ * |X X   X X  X X  |
+ * |X X  X  X  X X  |
+ * |X  X X  X  X  X |
+ * |   X X   XX   X |
+ * |   XX    XX   X |
+ * |    X    XX    X|
+ * |    X    XX    X|
+ * |   X X   XX   X |
+ * |X  X X  X  X  X |
+ * |XXX   XX   XXX  |
+ * +----------------+
+ */
+
 MYCONSTRUCTOR_ANIMATION(LED_sinus1)
 {
     delayms = 50;
@@ -43,6 +63,27 @@ LED_sinus1::animation(void)
 
 // ==============================
 
+/*
+ * +----------------+
+ * |                |
+ * |                |
+ * |            XXX |
+ * |           X    |
+ * |          X    X|
+ * |                |
+ * |         X      |
+ * |X               |
+ * | X      X       |
+ * |                |
+ * |  X    X        |
+ * |      X         |
+ * |   XXX          |
+ * |                |
+ * |                |
+ * |                |
+ * +----------------+
+ */
+
 MYCONSTRUCTOR_ANIMATION(LED_sinus2)
 {
     delayms = 25;
@@ -70,6 +111,27 @@ LED_sinus2::animation(void)
 }
 
 // ===========================
+
+/*
+ * +----------------+
+ * |                |
+ * |                |
+ * |                |
+ * |X               |
+ * | XX             |
+ * |   XX           |
+ * |     XX         |
+ * |       X        |
+ * |X       XX      |
+ * | X        XX   X|
+ * | X          X X |
+ * |  X          XX |
+ * |   X         X X|
+ * |    X       X   |
+ * |    XX     X    |
+ * |      XXXXX     |
+ * +----------------+
+ */
 
 MYCONSTRUCTOR_ANIMATION(LED_sinus3)
 {

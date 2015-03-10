@@ -8,6 +8,27 @@
 
 // ============================
 
+/*
+ * +----------------+
+ * |        XXXXXXXX|
+ * |        X      X|
+ * |        X      X|
+ * |        X      X|
+ * |        X      X|
+ * |        X      X|
+ * |        X      X|
+ * |        XXXXXXXX|
+ * |                |
+ * |                |
+ * |                |
+ * |                |
+ * |                |
+ * |                |
+ * |                |
+ * |                |
+ * +----------------+
+ */
+
 MYCONSTRUCTOR_ANIMATION(LED_squares1)
 {
     c = _led->colour_random();
@@ -37,6 +58,27 @@ LED_squares1::animation(void)
 }
 
 // ============================
+
+/*
+ * +----------------+
+ * |XXXXXXXXX       |
+ * |      XXX       |
+ * |XXXXXXXXXXX     |
+ * |XXXXXXXXXXX  x  |
+ * |XXXXXXXXXXX  x  |
+ * |XXXXXXXXXXX  x  |
+ * |XXXXXXXXXXX  x  |
+ * |XXXXXXXXXXX  x  |
+ * |XXXXXXXXXXX  x  |
+ * |XXXXXXXXXXX  x  |
+ * |XXXXXXXXXXX  x  |
+ * | XXXX        x  |
+ * | XXXX        x  |
+ * | XXXX        x  |
+ * | X              |
+ * | X              |
+ * +----------------+
+ */
 
 MYCONSTRUCTOR_ANIMATION(LED_squares2)
 {
@@ -116,6 +158,27 @@ LED_squares3::shift_history(struct coordinates a, LED c)
 
 // ============================
 
+/*
+ * +----------------+
+ * |                |
+ * |                |
+ * |                |
+ * |      XXXX      |
+ * |      XXXX      |
+ * |      XXXX      |
+ * |      XXXX      |
+ * |                |
+ * |                |
+ * |       XXX XXXXX|
+ * |       XXX XXXXX|
+ * |       XXX XXXXX|
+ * |           XXXXX|
+ * |          XXXXXX|
+ * |          XX    |
+ * |                |
+ * +----------------+
+ */
+
 MYCONSTRUCTOR_ANIMATION(LED_movingsquares1)
 {
     delayms = 50;
@@ -149,27 +212,6 @@ MYCONSTRUCTOR_ANIMATION(LED_movingsquares1)
 void
 LED_movingsquares1::animation(void)
 {
-    /*
-     * ................
-     * ................
-     * ................
-     * ................
-     * ................
-     * ................
-     * ................
-     * ................
-     * ....****........
-     * ....****........
-     * .XXX****........
-     * .XXX****........
-     * .XXXXX..........
-     * .XXXXX..........
-     * .XXXXX..........
-     * ................
-     *
-     *
-     */
-
     for (int i = 0; i < LED_movingsquares1_squares; i++) {
 	if (x[i] == x0[i] && y[i] == y0[i]) {
 	    dx[i] = i % 2 == 0 ? 1 : 0;
@@ -200,6 +242,27 @@ LED_movingsquares1::animation(void)
 }
 
 // ==============================
+
+/*
+ * +----------------+
+ * | XXXX    XXXX   |
+ * | XxxX    XxxX   |
+ * | XxxX    XxxX   |
+ * | XXXX    XXXX   |
+ * |   XXXX    XXXX |
+ * |   XXXX    XXXX |
+ * |   XXXX    XXXX |
+ * |   XXXX    XXXX |
+ * | XXXX    XXXX   |
+ * | XxxX    XxxX   |
+ * | XxxX    XxxX   |
+ * | XXXX    XXXX   |
+ * |   XXXX    XXXX |
+ * |   XXXX    XXXX |
+ * |   XXXX    XXXX |
+ * |   XXXX    XXXX |
+ * +----------------+
+ */
 
 MYCONSTRUCTOR_ANIMATION(LED_movingsquares2)
 {
@@ -318,6 +381,27 @@ LED_movingsquares2::animation(void)
 }
 
 // ==============================
+
+/*
+ * +----------------+
+ * |XXXXXXXXXXXXX   |
+ * |XXXXXXXXXXXX    |
+ * |XXXXXXXXXXX     |
+ * |XXXXXXXXXX     X|
+ * |XXXXXXXXX     XX|
+ * |XXXXXXXX     XXX|
+ * |XXXXXXX     XXXX|
+ * |XXXXXX     XXXXX|
+ * |XXXXX     XXXXXX|
+ * |XXXX     XXXXXXX|
+ * |XXX     XXXXXXXX|
+ * |XX     XXXXXXXXX|
+ * |X     XXXXXXXXXX|
+ * |     XXXXXXXXXXX|
+ * |    XXXXXXXXXXXX|
+ * |   XXXXXXXXXXXXX|
+ * +----------------+
+ */
 
 MYCONSTRUCTOR_ANIMATION(LED_square_splitting)
 {
@@ -476,6 +560,27 @@ LED_square_splitting::animation(void)
 
 // ================================
 
+/*
+ * +----------------+
+ * |                |
+ * |                |
+ * |                |
+ * |                |
+ * |                |
+ * |         XX     |
+ * |      xx..X     |
+ * |      xXX.Xx    |
+ * |      xXX xx    |
+ * |          xx    |
+ * |          .xX   |
+ * |         ...X   |
+ * |        .xxXX   |
+ * |       ...xxxx  |
+ * |      .xxXXXX   |
+ * |     .xxXXXX    |
+ * +----------------+
+ */
+
 MYCONSTRUCTOR_ANIMATION(LED_spinningsquares1)
 {
     delayms = 25;
@@ -547,6 +652,27 @@ LED_spinningsquares1::animation(void)
 }
 
 // ========================
+
+/*
+ * +----------------+
+ * |          XXXX  |
+ * |    XXXXXX   X  |
+ * |XXXX         X  |
+ * |X             X |
+ * |X             X |
+ * | X            X |
+ * | X            X |
+ * | X            X |
+ * | X            X |
+ * |  X            X|
+ * |  X            X|
+ * |  X            X|
+ * |  X           XX|
+ * |   X      XXXX  |
+ * |   X  XXXX      |
+ * |   XXX          |
+ * +----------------+
+ */
 
 void
 LED_squares4::animation(void)

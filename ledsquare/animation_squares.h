@@ -21,7 +21,7 @@ public:
     void shift_history(struct area a, LED c);
 };
 
-#define LED_squares3_history 20
+#define LED_squares3_history 4
 class LED_squares3 : public LED_Animation {
 public:
     MYOWNCONSTRUCTOR(LED_squares3);

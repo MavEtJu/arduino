@@ -93,23 +93,27 @@ loop(void)
 //#define TESTING
 #ifdef TESTING
     #define TEST(__t__) \
-	static __t__ *p = new __t__(&led, VIEW_WIDTH, VIEW_HEIGHT)
+	static __t__ *p = new __t__(&led, VIEW_WIDTH, VIEW_HEIGHT);
 
-    TEST(LED_torch2);
-    //TEST(LED_squares4);
-    //TEST(LED_sinus3);
-    //TEST(LED_spinningsquares1);
-    //TEST(LED_test);
-    //TEST(LED_lines2);
-    //TEST(LED_minecraft1);
-    //TEST(LED_movingsquares2);
-    //TEST(LED_movingsquares1);
-    //TEST(LED_square_splitting);
-    //TEST(LED_torch1);
-    //TEST(LED_plasma1);
-    //TEST(LED_squares2);
-    //TEST(LED_cross1);
-    //TEST(LED_quickbrowfox1);
+    //TEST(LED_cross1)
+    //TEST(LED_lines1)
+    //TEST(LED_lines2)
+    //TEST(LED_movingsquares1)
+    //TEST(LED_movingsquares2)
+    //TEST(LED_plasma1)
+    //TEST(LED_sinus1)
+    //TEST(LED_sinus2)
+    //TEST(LED_sinus3)
+    //TEST(LED_spaceinvaders1)
+    //TEST(LED_spinningsquares1)
+    //TEST(LED_square_splitting)
+    //TEST(LED_squares1)
+    //TEST(LED_squares2)
+    //TEST(LED_squares3)
+    //TEST(LED_squares4)
+    //TEST(LED_test)
+    //TEST(LED_torch1)
+    //TEST(LED_torch2)
 
     p->loop();
     led.display();

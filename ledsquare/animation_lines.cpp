@@ -8,6 +8,27 @@
 
 // ==============================
 
+/*
+ * +----------------+
+ * |.XX             |
+ * |..XX            |
+ * | ..X            |
+ * |  ..X           |
+ * |   .XX          |
+ * |     XX         |
+ * |      X         |
+ * |       X        |
+ * |        X       |
+ * |         X      |
+ * |         XX     |
+ * |          XX.   |
+ * |           X..  |
+ * |            X.. |
+ * |            XX..|
+ * |             XX.|
+ * +----------------+
+ */
+
 MYCONSTRUCTOR_ANIMATION(LED_cross1)
 {
     memset(c1, 0, sizeof(struct coordinates) * LED_cross1_history);
@@ -70,6 +91,27 @@ LED_lineshorver1::animation(void)
 }
 
 // ============================
+
+/*
+ * +----------------+
+ * |                |
+ * |                |
+ * |X               |
+ * |XX              |
+ * |xXX             |
+ * |.xXXX           |
+ * |...xXX          |
+ * | ...xXX         |
+ * |   ..xXX        |
+ * |     ..XX       |
+ * |      ..xX      |
+ * |        .xX     |
+ * |          .XX   |
+ * |           .XX  |
+ * |             xX |
+ * |               X|
+ * +----------------+
+ */
 
 MYCONSTRUCTOR_ANIMATION(LED_lines1)
 {
@@ -212,6 +254,27 @@ LED_lines1::animation(void)
 }
 
 // ==================
+
+/*
+ * +----------------+
+ * |          X     |
+ * |          .X    |
+ * |     X     .X   |
+ * |   XX..    .X   |
+ * |  X....     .X  |
+ * | X..        .   |
+ * |                |
+ * |                |
+ * |                |
+ * |                |
+ * |   .         ..X|
+ * |  X.      ....X |
+ * |   X.     ..XX  |
+ * |   X.      X    |
+ * |    X.          |
+ * |     X          |
+ * +----------------+
+ */
 
 MYCONSTRUCTOR_ANIMATION(LED_lines2)
 {

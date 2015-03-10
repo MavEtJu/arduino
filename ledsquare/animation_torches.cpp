@@ -8,6 +8,28 @@
 
 // ==============================
 
+/*
+ * +----------------+
+ * |                |
+ * |                |
+ * |                |
+ * | X              |
+ * |                |
+ * |                |
+ * |                |
+ * |X               |
+ * |       X X      |
+ * |        XX      |
+ * |          X X  X|
+ * |        X       |
+ * |     X X X      |
+ * |XXX  X X  X  X  |
+ * |   XX X  X  X XX|
+ * |XXXXXXXXXXXXXXXX|
+ * +----------------+
+ */
+
+
 MYCONSTRUCTOR_ANIMATION(LED_torch1)
 {
     colour_floor = _led->Color(9 << 2, 4, 0);
@@ -54,6 +76,27 @@ LED_torch1::animation(void)
 }
 
 // ===============
+
+/*
+ * +----------------+
+ * |               x|
+ * |     x        xX|
+ * |    xXx      xxx|
+ * |     x   x  xXXx|
+ * | x  xXxxxXxxxXx |
+ * |xXx  x  xXxXxxXx|
+ * | xx     xxXx  x |
+ * | xXx     xXx    |
+ * |  x   x x x     |
+ * |     xXxXxx  x  |
+ * |      xxxxXxxXx |
+ * |x x   xXxXx xx  |
+ * |XxXx x x x xXx  |
+ * |x xxxXxx    x   |
+ * |  xXxxxXx  xXx  |
+ * |XXXXXXXXXXXXXXXX|
+ * +----------------+
+ */
 
 MYCONSTRUCTOR_ANIMATION(LED_torch2)
 {    
