@@ -95,6 +95,9 @@ loop(void)
     #define TEST(__t__) \
 	static __t__ *p = new __t__(&led, VIEW_WIDTH, VIEW_HEIGHT);
 
+# ifdef TESTMODULE
+    TEST(TESTMODULE)
+# else
     //TEST(LED_cross1)
     //TEST(LED_lines1)
     //TEST(LED_lines2)
@@ -114,6 +117,7 @@ loop(void)
     //TEST(LED_test)
     //TEST(LED_torch1)
     //TEST(LED_torch2)
+# endif
 
     p->loop();
     led.display();
