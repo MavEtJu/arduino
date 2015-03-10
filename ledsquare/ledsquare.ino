@@ -95,7 +95,8 @@ loop(void)
     #define TEST(__t__) \
 	static __t__ *p = new __t__(&led, VIEW_WIDTH, VIEW_HEIGHT)
 
-    TEST(LED_squares4);
+    TEST(LED_torch2);
+    //TEST(LED_squares4);
     //TEST(LED_sinus3);
     //TEST(LED_spinningsquares1);
     //TEST(LED_test);

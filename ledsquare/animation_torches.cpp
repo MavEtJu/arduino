@@ -114,8 +114,6 @@ LED_torch2::animation(void)
 
         int16_t x = coals[c].x;
         int16_t y = coals[c].y;
-        _led->dot(x % _VIEW_WIDTH, y,
-            _led->Color(coals[c].intensity, coals[c].intensity, 0));
 
         /* Spark around the flame */
         if (coals[c].intensity > 2) {
@@ -129,6 +127,11 @@ LED_torch2::animation(void)
                 _led->dot(x, y - 1, colour_spark);
             _led->dot(x, y + 1, colour_spark);
         }
+    }
+
+    for (int c = 0; c < numcoals; c++) {
+        _led->dot(coals[c].x % _VIEW_WIDTH, coals[c].y,
+            _led->Color(coals[c].intensity, coals[c].intensity, 0));
     }
 
     _led->line(0, 0, _VIEW_WIDTH, 0, colour_floor);
