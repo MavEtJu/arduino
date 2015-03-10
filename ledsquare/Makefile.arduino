@@ -1,6 +1,8 @@
 .SUFFIXES:	.ino .hex .eep .elf .a
 
 ARDUINO_DIR=/usr/local/arduino
+BUILDDIR=./build/${TARGET}
+EMULATORDIR=../emulator
 
 COMPORT=	/dev/cuaU0
 COMSPEED=	115200
@@ -31,14 +33,27 @@ BASE_CXX_FILES=			\
 	WString.cpp		\
 	main.cpp
 
-O_FILES=				\
-	${SRC_FILES:S/.cpp$/.o/}	\
-	${INO_FILES:S/.ino/.o/}		\
-	${MODULES:S/$/.o/}		\
-	${AVRLIBC_FILES:S/.c$/.o/}	\
-	${BASE_C_FILES:S/.c$/.o/}	\
-	${BASE_CXX_FILES:S/.cpp$/.o/}
+EMULATOR_FILES=			\
+	Adafruit_NeoPixel.cpp	\
+	Arduino.cpp		\
+	ArduinoMain.cpp		\
+	MemoryFree.cpp		\
+	Serial.cpp
 
+O_FILES=				\
+	${SRC_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/}	\
+	${INO_FILES:S/^/${BUILDDIR}\//:S/.ino/.o/}	\
+	${MODULES:S/^/${BUILDDIR}\//:S/$/.o/}		\
+	${AVRLIBC_FILES:S/^/${BUILDDIR}\//:S/.c$/.o/}	\
+	${BASE_C_FILES:S/^/${BUILDDIR}\//:S/.c$/.o/}	\
+	${BASE_CXX_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/}
+
+.if defined(TARGET)
+. if ${TARGET} == "arduino"
+
+#
+# Arduino related targets
+#
 CC=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-gcc
 CXX=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-g++
 AR=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-ar
@@ -53,17 +68,19 @@ CFLAGS= \
 	-DUSB_VID=null -DUSB_PID=null -DARDUINO=106 \
 	-I${ARDUINO_DIR}/hardware/arduino/cores/arduino \
 	-I${ARDUINO_DIR}/hardware/arduino/variants/standard
-.for module in ${MODULES}
-CFLAGS+= -I${SKETCHBOOK_DIR}/libraries/${module}
-.endfor
-.for option in ${OPTIONS}
-CFLAGS+= -D${option}
+.for M in ${MODULES}
+CFLAGS+= -I${SKETCHBOOK_DIR}/libraries/${M}
 .endfor
 
 CXXFLAGS=	${CFLAGS}
 
-all: ${PROJECT}.hex ${PROJECT}.eep
-	avr-size ${PROJECT}.elf
+all_arduino: ${BUILDDIR} ${BUILDDIR}/${PROJECT}.hex ${BUILDDIR}/${PROJECT}.eep 
+	avrdude \
+	    -D -F -V -v -p atmega328p -c arduino \
+	    -P ${COMPORT} -b ${COMSPEED} -Uflash:w:${BUILDDIR}/${PROJECT}.hex:i
+	avr-size ${BUILDDIR}/${PROJECT}.elf
+	sleep 2
+	cu -l ${COMPORT} -s 9600
 
 .c.o:
 	${CC} ${CFLAGS} -Werror -o ${.TARGET} -c ${.ALLSRC}
@@ -73,49 +90,108 @@ all: ${PROJECT}.hex ${PROJECT}.eep
 	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
 
 .for M in ${AVRLIBC_FILES}
-${M:S/.c$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/avr-libc/${M}
+${M:S/^/${BUILDDIR}\//:S/.c$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/avr-libc/${M}
 	${CC} ${CFLAGS} -o ${.TARGET} -c ${.ALLSRC}
 .endfor
 .for M in ${BASE_C_FILES}
-${M:S/.c$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/${M}
+${M:S/^/${BUILDDIR}\//:S/.c$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/${M}
 	${CC} ${CFLAGS} -o ${.TARGET} -c ${.ALLSRC}
 .endfor
 .for M in ${BASE_CXX_FILES}
-${M:S/.cpp$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/${M}
+${M:S/^/${BUILDDIR}\//:S/.cpp$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/${M}
 	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
 .endfor
 
 .for M in ${MODULES}
-${M}.o: ${SKETCHBOOK_DIR}/libraries/${M}/${M}.cpp
+${M:S/^/${BUILDDIR}\//:S/.cpp$//}.o: ${SKETCHBOOK_DIR}/libraries/${M}/${M}.cpp
 	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
 .endfor
 
+.for M in ${SRC_FILES}
+${M:S/^/${BUILDDIR}\//:S/.cpp$//}.o: ${M}
+	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+.endfor
+
+.for M in ${INO_FILES}
+${M:S/^/${BUILDDIR}\//:S/.ino$//}.o: ${M}
+	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+.endfor
 
 core.a: ${O_FILES}
 	${AR} rcs ${.TARGET} ${.ALLSRC} ${O_FILES}
 
-${PROJECT}.elf: core.a
+${BUILDDIR}/${PROJECT}.elf: core.a
 	${CC} -Os -Wl,--gc-sections -mmcu=atmega328p -o ${.TARGET} ${.ALLSRC} -lm
 
-.elf.eep:
+${BUILDDIR}/${PROJECT}.eep: ${BUILDDIR}/${PROJECT}.elf
 	${ARDUINO_DIR}/hardware/tools/avr/bin/avr-objcopy \
 	    -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load \
 	    --no-change-warnings --change-section-lma .eeprom=0 \
 	    ${.ALLSRC} ${.TARGET}
 
-.elf.hex:
+#.elf.hex:
+${BUILDDIR}/${PROJECT}.hex: ${BUILDDIR}/${PROJECT}.elf
 	${ARDUINO_DIR}/hardware/tools/avr/bin/avr-objcopy \
 	    -O ihex -R .eeprom ${.ALLSRC} ${.TARGET}
 
+. endif
+
+#
+# FreeBSD related targets
+#
+. if ${TARGET} == "freebsd"
+
+LDFLAGS= -lcurses
+CFLAGS= \
+	-c -Os -Wall -Wno-char-subscripts \
+	-I${EMULATORDIR}
+.for M in ${MODULES}
+CFLAGS+= -I${SKETCHBOOK_DIR}/libraries/${M}
+.endfor
+
+.for M in ${EMULATOR_FILES}
+${M:S/^/${BUILDDIR}\//:S/.cpp$//}.o: ${EMULATORDIR}/${M}
+	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+.endfor
+
+.for M in ${SRC_FILES}
+${M:S/^/${BUILDDIR}\//:S/.cpp$//}.o: ${M}
+	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+.endfor
+
+.for M in ${INO_FILES}
+${M:S/^/${BUILDDIR}\//:S/.ino$//}.o: ${M}
+	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+.endfor
+
+${BUILDDIR}/${PROJECT}: ${EMULATOR_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/} ${SRC_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/} ${INO_FILES:S/^/${BUILDDIR}\//:S/.ino$/.o/}
+	${CXX} ${LDFLAGS} -o ${.TARGET} ${.ALLSRC}
+
+
+all_freebsd: ${BUILDDIR} ${BUILDDIR}/${PROJECT}
+	${BUILDDIR}/ledsquare
+. endif
+.endif
+
+
+#
+# For every target
+#
+.for option in ${OPTIONS}
+CFLAGS+= -D${option}
+.endfor
+
+${BUILDDIR}:
+	mkdir -p ${BUILDDIR}
+
 clean:
-	rm -rf *.o *.d *.core core.a *.hex *.elf *.eep .depend
+	rm -rf build
 
 depends:
 	${CC} ${CXXFLAGS} -x c++ -M *.ino *.cpp > .depend
 
-upload: ${PROJECT}.hex
-	avrdude \
-	    -D -F -V -v -p atmega328p -c arduino \
-	    -P ${COMPORT} -b ${COMSPEED} -Uflash:w:${PROJECT}.hex:i
-	sleep 2
-	cu -l ${COMPORT} -s 9600
+upload: 
+	OPTIONS="${OPTIONS}" TARGET=arduino make all_arduino
+
+test:
+	OPTIONS="${OPTIONS}" TARGET=freebsd make all_freebsd
