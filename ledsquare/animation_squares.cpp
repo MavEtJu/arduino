@@ -679,9 +679,13 @@ LED_squares4::animation(void)
 {
     y = step % _VIEW_WIDTH;
 
+    _led->colour_set(_led->colour_white);
+    _led->line(0, y, _VIEW_WIDTH - 1, _VIEW_HEIGHT - 1 - y);
+    _led->line(_VIEW_WIDTH - 1 - y, 0, y, _VIEW_HEIGHT - 1);
+
     _led->colour_set(_led->colour_transform(step / 2));
     _led->line(0, y, y, _VIEW_HEIGHT - 1);
-    _led->line(y, _VIEW_HEIGHT - 1, _VIEW_WIDTH -1, _VIEW_HEIGHT - y);
-    _led->line(_VIEW_WIDTH -1, _VIEW_HEIGHT - y, _VIEW_WIDTH - y, 0);
-    _led->line(_VIEW_WIDTH - y, 0, 0, y);
+    _led->line(y, _VIEW_HEIGHT - 1, _VIEW_WIDTH - 1, _VIEW_HEIGHT - 1 - y);
+    _led->line(_VIEW_WIDTH - 1, _VIEW_HEIGHT - 1 - y, _VIEW_WIDTH - 1 - y, 0);
+    _led->line(_VIEW_WIDTH - 1 - y, 0, 0, y);
 }
