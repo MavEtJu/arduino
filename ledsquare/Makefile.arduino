@@ -195,3 +195,6 @@ upload:
 
 test:
 	OPTIONS="${OPTIONS}" TARGET=freebsd make all_freebsd
+
+testing:
+	OPTIONS="TESTING ${OPTIONS}" TARGET=freebsd make all_freebsd
