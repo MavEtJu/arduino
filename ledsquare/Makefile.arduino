@@ -143,7 +143,7 @@ ${BUILDDIR}/${PROJECT}.hex: ${BUILDDIR}/${PROJECT}.elf
 
 LDFLAGS= -lcurses
 CFLAGS= \
-	-c -Os -Wall -Wno-char-subscripts \
+	-c -Os -Wall -Werror -Wno-char-subscripts \
 	-I${EMULATORDIR}
 .for M in ${MODULES}
 CFLAGS+= -I${SKETCHBOOK_DIR}/libraries/${M}
