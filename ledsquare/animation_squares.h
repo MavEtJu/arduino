@@ -22,7 +22,7 @@ public:
 };
 
 #define LED_squares3_history 4
-class LED_squares3 : public LED_Animation {
+class LED_squares3a : public LED_Animation {
 public:
     MYOWNCONSTRUCTOR(LED_squares3a);
     void animation(void);
@@ -33,8 +33,27 @@ public:
     uint16_t steps;
 };
 
-class LED_squares3b : public LED_squares3;
-class LED_squares3c : public LED_squares3;
+class LED_squares3b : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_squares3b);
+    void animation(void);
+    struct coordinates cs[LED_squares3_history], c, max;
+    LED colours[LED_squares3_history], colour;
+    void shift_history(struct coordinates c, LED colour);
+    int dx, dy;
+    uint16_t steps;
+};
+
+class LED_squares3c : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_squares3c);
+    void animation(void);
+    struct coordinates cs[LED_squares3_history], c, max;
+    LED colours[LED_squares3_history], colour;
+    void shift_history(struct coordinates c, LED colour);
+    int dx, dy;
+    uint16_t steps;
+};
 
 #define LED_movingsquares1_squares 4
 class LED_movingsquares1 : public LED_Animation {
