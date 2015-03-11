@@ -22,37 +22,32 @@ public:
 };
 
 #define LED_squares3_history 4
-class LED_squares3a : public LED_Animation {
+class LED_squares3 : public LED_Animation {
 public:
-    MYOWNCONSTRUCTOR(LED_squares3a);
+    MYOWNCONSTRUCTOR(LED_squares3);
     void animation(void);
     struct coordinates cs[LED_squares3_history], c, max;
     LED colours[LED_squares3_history], colour;
     void shift_history(struct coordinates c, LED colour);
     int dx, dy;
     uint16_t steps;
+    virtual void draw(int div);
 };
 
-class LED_squares3b : public LED_Animation {
+class LED_squares3a : public LED_squares3 {
 public:
-    MYOWNCONSTRUCTOR(LED_squares3b);
-    void animation(void);
-    struct coordinates cs[LED_squares3_history], c, max;
-    LED colours[LED_squares3_history], colour;
-    void shift_history(struct coordinates c, LED colour);
-    int dx, dy;
-    uint16_t steps;
+    PARENTCONSTRUCTOR2(LED_squares3a, LED_squares3);
+    void draw(int div);
 };
-
-class LED_squares3c : public LED_Animation {
+class LED_squares3b : public LED_squares3 {
 public:
-    MYOWNCONSTRUCTOR(LED_squares3c);
-    void animation(void);
-    struct coordinates cs[LED_squares3_history], c, max;
-    LED colours[LED_squares3_history], colour;
-    void shift_history(struct coordinates c, LED colour);
-    int dx, dy;
-    uint16_t steps;
+    PARENTCONSTRUCTOR2(LED_squares3b, LED_squares3);
+    void draw(int div);
+};
+class LED_squares3c : public LED_squares3 {
+public:
+    PARENTCONSTRUCTOR2(LED_squares3c, LED_squares3);
+    void draw(int div);
 };
 
 #define LED_movingsquares1_squares 4
