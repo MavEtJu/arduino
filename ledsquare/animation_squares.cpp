@@ -142,18 +142,100 @@ LED_squares2::shift_history(struct area a_new, LED c_new)
 }
 
 // ============================
-MYCONSTRUCTOR_ANIMATION(LED_squares3)
+
+/*
+ * +----------------+
+ * |XXX XXX XXX XXX |
+ * |X   X   X   X   |
+ * |                |
+ * |                |
+ * |XXX XXX XXX XXX |
+ * |X   X   X   X   |
+ * |                |
+ * |                |
+ * |XXX XXX XXX XXX |
+ * |X   X   X   X   |
+ * |                |
+ * |                |
+ * |XXX XXX XXX XXX |
+ * |X   X   X   X   |
+ * |                |
+ * |                |
+ * +----------------+
+ */
+
+MYCONSTRUCTOR_ANIMATION(LED_squares3a)
 {
+    delayms = 20;
+    c.x = 0;
+    c.y = 0;
+    colour = _led->colour_random_notblack();
+    _led->colour_set(colour);
+    steps = 0;
 }
 
 void
-LED_squares3::animation(void)
+LED_squares3a::animation(void)
 {
+    int div = steps / 100;
+
+    if (steps % 100 == 0) {
+	if (steps == 400) {
+	    c.x = 0;
+	    c.y = 0;
+	    steps = 0;
+	    div = 0;
+	}
+
+	max.x = (_VIEW_WIDTH >> div) - 1;
+	max.y = (_VIEW_HEIGHT >> div )- 1;
+	c.x %= _VIEW_WIDTH >> div;
+	c.y %= _VIEW_HEIGHT >> div;
+	delayms = 20 << div;
+    }
+
+    if (c.x == 0 && c.y == 0) {
+	dx = 1;
+	dy = 0;
+    } else if (c.x == max.x && c.y == 0) {
+	dx = 0;
+	dy = 1;
+    } else if (c.x == 0 && c.y == max.y) {
+	dx = 0;
+	dy = -1;
+    } else if (c.x == max.x && c.y == max.y) {
+	dx = -1;
+	dy = 0;
+    }
+    c.x += dx;
+    c.y += dy;
+
+    // SERIAL7(steps, " ", div, " x,y: ", c.x, ",", c.y);
+
+    shift_history(c, _led->colour_transform(step));
+
+    div = 1 << div;
+    for (int y = 0; y < div; y++) {
+	for (int x = 0; x < div; x++) {
+	    for (int i = LED_squares3_history - 1; i >= 0; i--) {
+		_led->dot(x * _VIEW_WIDTH / div + cs[i].x,
+			  y * _VIEW_HEIGHT / div + cs[i].y,
+			  colours[i]);
+	    }
+	}
+    }
+    steps++;
 }
 
 void 
-LED_squares3::shift_history(struct coordinates a, LED c)
+LED_squares3a::shift_history(struct coordinates coor, LED col)
 {
+    for (int i = LED_squares3_history - 1; i > 0; i--) {
+	cs[i] = cs[i - 1];
+	colours[i] = colours[i - 1];
+    }
+    cs[0] = coor;
+    colours[0] = col;
 }
 
 // ============================
