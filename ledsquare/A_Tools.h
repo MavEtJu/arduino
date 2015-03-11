@@ -61,6 +61,14 @@ int freeRam(void);
 	Serial.print(__a2__); \
 	Serial.print(__a1__); \
 	Serial.println(__a0__)
+#define SERIAL7(__a6__, __a5__, __a4__, __a3__, __a2__, __a1__, __a0__) \
+	Serial.print(__a6__); \
+	Serial.print(__a5__); \
+	Serial.print(__a4__); \
+	Serial.print(__a3__); \
+	Serial.print(__a2__); \
+	Serial.print(__a1__); \
+	Serial.println(__a0__)
 
 #define        MAX(a,b) (((a)>(b))?(a):(b))
 #define        MIN(a,b) (((a)<(b))?(a):(b))
