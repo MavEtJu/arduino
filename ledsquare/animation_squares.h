@@ -50,6 +50,13 @@ public:
     void draw(int div);
 };
 
+class LED_squares4 : public LED_Animation {
+public:
+    PARENTCONSTRUCTOR(LED_squares4);
+    void animation(void);
+    int16_t y;
+};
+
 #define LED_movingsquares1_squares 4
 class LED_movingsquares1 : public LED_Animation {
 public:
@@ -106,13 +113,6 @@ public:
     struct coordinates history[LED_spinningsquares1_squares][LED_spinningsquares1_history];
     void animation(void);
     void history_shift(int i, struct coordinates c);
-};
-
-class LED_squares4 : public LED_Animation {
-public:
-    PARENTCONSTRUCTOR(LED_squares4);
-    void animation(void);
-    int16_t y;
 };
 
 
