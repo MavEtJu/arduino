@@ -191,10 +191,10 @@ depends:
 	${CC} ${CXXFLAGS} -x c++ -M *.ino *.cpp > .depend
 
 upload: 
-	OPTIONS="${OPTIONS}" TARGET=arduino make all_arduino
+	OPTIONS="${OPTIONS}" TARGET=arduino ${MAKE} all_arduino
 
 test:
-	OPTIONS="${OPTIONS}" TARGET=freebsd make all_freebsd
+	OPTIONS="${OPTIONS}" TARGET=freebsd ${MAKE} all_freebsd
 
 testing:
-	OPTIONS="TESTING ${OPTIONS}" TARGET=freebsd make all_freebsd
+	OPTIONS="TESTING ${OPTIONS}" TARGET=freebsd ${MAKE} all_freebsd
