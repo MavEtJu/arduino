@@ -50,11 +50,18 @@ public:
     void draw(int div);
 };
 
-class LED_squares4 : public LED_Animation {
+class LED_squares4a : public LED_Animation {
 public:
-    PARENTCONSTRUCTOR(LED_squares4);
+    PARENTCONSTRUCTOR(LED_squares4a);
     void animation(void);
     int16_t y;
+};
+
+class LED_squares4b : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_squares4b);
+    void animation(void);
+    int16_t steps;
 };
 
 #define LED_movingsquares1_squares 4

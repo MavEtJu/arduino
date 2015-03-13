@@ -114,7 +114,7 @@ loop(void)
     //TEST(LED_squares2)
     //TEST(LED_squares3a)
     //TEST(LED_squares3b)
-    TEST(LED_squares4)
+    TEST(LED_squares4a)
     //TEST(LED_test)
     //TEST(LED_torch1)
     //TEST(LED_torch2)
@@ -202,7 +202,8 @@ loop(void)
 	NEW_ANIMATION(LED_squares3c)
 	//NEW_SLIDESHOW(LED_minecraft1)
 	NEW_ANIMATION(LED_cross1)
-	NEW_ANIMATION(LED_squares4)
+	NEW_ANIMATION(LED_squares4a)
+	NEW_ANIMATION(LED_squares4b)
 	{ 
 	    LED_led00_blink1 *p = new LED_led00_blink1(&led, VIEW_WIDTH, VIEW_HEIGHT);
 	    animation[0] = p;

@@ -367,29 +367,28 @@ LED_squares3c::draw(int div)
 
 // ========================
 
-/*
- * +----------------+
- * |          XXXX  |
- * |    XXXXXX   X  |
- * |XXXX         X  |
- * |X             X |
- * |X             X |
- * | X            X |
- * | X            X |
- * | X            X |
- * | X            X |
- * |  X            X|
- * |  X            X|
- * |  X            X|
- * |  X           XX|
- * |   X      XXXX  |
- * |   X  XXXX      |
- * |   XXX          |
+/* +----------------+
+ * |      X         |
+ * |     XXXX       |
+ * |     XX  X      |
+ * |    X  X  XX    |
+ * |   X   X    X   |
+ * |   X   X     XX |
+ * |  X    X     XXX|
+ * | X     XXXXXX X |
+ * | X XXXXXX     X |
+ * |XXX     X    X  |
+ * | XX     X   X   |
+ * |   X    X   X   |
+ * |    XX  X  X    |
+ * |      X  XX     |
+ * |       XXXX     |
+ * |         X      |
  * +----------------+
  */
 
 void
-LED_squares4::animation(void)
+LED_squares4a::animation(void)
 {
     y = step % _VIEW_WIDTH;
 
@@ -402,6 +401,53 @@ LED_squares4::animation(void)
     _led->line(y, _VIEW_HEIGHT - 1, _VIEW_WIDTH - 1, _VIEW_HEIGHT - 1 - y);
     _led->line(_VIEW_WIDTH - 1, _VIEW_HEIGHT - 1 - y, _VIEW_WIDTH - 1 - y, 0);
     _led->line(_VIEW_WIDTH - 1 - y, 0, 0, y);
+}
+
+// ======================
+
+/*
+ * +----------------+
+ * |       X        |
+ * |       X        |
+ * |       X        |
+ * |       X       X|
+ * |       X     XX |
+ * |        X  XX   |
+ * |XXXXX   XXX     |
+ * |     XXXX       |
+ * |       X X      |
+ * |       X  X     |
+ * |      X    X    |
+ * |      X     X   |
+ * |     X       X  |
+ * |     X        X |
+ * |    X          X|
+ * |    X           |
+ * +----------------+
+ */
+
+MYCONSTRUCTOR_ANIMATION(LED_squares4b)
+{
+    steps = 0;
+}
+
+void
+LED_squares4b::animation(void)
+{
+    int angle = (10 * steps) % 360;
+    int div = (steps / 100) % 4 + 3;
+
+    SERIAL3(div, " ", angle);
+
+    _led->colour_set(_led->colour_transform(step));
+    for (int a = 0; a < div; a++) {
+	double s = 2 * _VIEW_WIDTH * sin((M_PI * (angle + a * 360 / div)) / 180);
+	double c = 2 * _VIEW_WIDTH * cos((M_PI * (angle + a * 360 / div)) / 180);
+	_led->line(_VIEW_WIDTH / 2, _VIEW_HEIGHT / 2,
+		   _VIEW_WIDTH / 2 + s, _VIEW_HEIGHT / 2 + c);
+    }
+
+    steps++;
 }
 
 // ============================
