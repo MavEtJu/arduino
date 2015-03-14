@@ -943,3 +943,68 @@ LED_spinningsquares1::animation(void)
     }
 }
 
+// ========================
+
+/*
+ * +----------------+
+ * |XXXXX           |
+ * |XxxxX           |
+ * |XxxxX           |
+ * |XxxxX           |
+ * |XXXXXX          |
+ * |      X         |
+ * |       X        |
+ * |        X       |
+ * |         X      |
+ * |          XX    |
+ * |            X   |
+ * |           XXXXX|
+ * |           XxxxX|
+ * |           XxxxX|
+ * |           XxxxX|
+ * |           XXXXX|
+ * +----------------+
+ */
+
+MYCONSTRUCTOR_ANIMATION(LED_spinningsquares2)
+{
+    c0.x = 0;
+    c0.y = 0;
+    delayms = 25;
+    size = 5;
+}
+
+void
+LED_spinningsquares2::animation(void)
+{
+    if (c0.x == 0 && c0.y == 0) {
+	dx = 1;
+	dy = 0;
+    } else if (c0.x == _VIEW_WIDTH - size && c0.y == 0) {
+	dx = 0;
+	dy = 1;
+    } else if (c0.x == _VIEW_WIDTH - size && c0.y == _VIEW_HEIGHT - size) {
+	dx = -1;
+	dy = 0;
+    } else if (c0.x == 0 && c0.y == _VIEW_HEIGHT - size) {
+	dx = 0;
+	dy = -1;
+    }
+
+    c0.x += dx;
+    c0.y += dy;
+
+    _led->line(c0.x + 3 , c0.y + 3,
+	       _VIEW_WIDTH - c0.x - 3, _VIEW_HEIGHT - c0.y - 3,
+	       _led->colour_white);
+
+    _led->square(c0.x    , c0.y    , size    , size    , _led->colour_blue);
+    _led->square(c0.x + 1, c0.y + 1, size - 2, size - 2, _led->colour_white);
+
+    _led->square(_VIEW_WIDTH - c0.x - size,
+		 _VIEW_HEIGHT - c0.y - size,
+		 size, size, _led->colour_blue);
+    _led->square(_VIEW_WIDTH - c0.x + 1 - size,
+		 _VIEW_HEIGHT - c0.y + 1 - size,
+		 size - 2, size - 2, _led->colour_white);
+}

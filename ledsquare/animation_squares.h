@@ -122,5 +122,13 @@ public:
     void history_shift(int i, struct coordinates c);
 };
 
+class LED_spinningsquares2 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_spinningsquares2);
+    void animation(void);
+    struct coordinates c0;
+    int dx, dy;
+    uint8_t size;
+};
 
 #endif
