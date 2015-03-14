@@ -445,7 +445,6 @@ LED_lines3::animation(void)
 	} while (_led->colour_same(c[0], c[1]));
 
 	stripes = 1 << (step / _VIEW_HEIGHT) % 4;
-	SERIAL2("stripes: ", stripes);
     }
 
 
