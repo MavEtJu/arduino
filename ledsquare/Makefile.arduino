@@ -87,7 +87,7 @@ all_arduino: ${BUILDDIR} ${BUILDDIR}/${PROJECT}.hex ${BUILDDIR}/${PROJECT}.eep
 .cpp.o:
 	${CXX} ${CXXFLAGS} -Werror -x c++ -o ${.TARGET} -c ${.ALLSRC}
 .ino.o:
-	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+	${CXX} ${CXXFLAGS} -Werror -x c++ -o ${.TARGET} -c ${.ALLSRC}
 
 .for M in ${AVRLIBC_FILES}
 ${M:S/^/${BUILDDIR}\//:S/.c$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/avr-libc/${M}
@@ -109,12 +109,12 @@ ${M:S/^/${BUILDDIR}\//:S/.cpp$//}.o: ${SKETCHBOOK_DIR}/libraries/${M}/${M}.cpp
 
 .for M in ${SRC_FILES}
 ${M:S/^/${BUILDDIR}\//:S/.cpp$//}.o: ${M}
-	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+	${CXX} ${CXXFLAGS} -Werror -x c++ -o ${.TARGET} -c ${.ALLSRC}
 .endfor
 
 .for M in ${INO_FILES}
 ${M:S/^/${BUILDDIR}\//:S/.ino$//}.o: ${M}
-	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+	${CXX} ${CXXFLAGS} -Werror -x c++ -o ${.TARGET} -c ${.ALLSRC}
 .endfor
 
 core.a: ${O_FILES}
