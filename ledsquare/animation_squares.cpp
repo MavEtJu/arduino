@@ -437,9 +437,7 @@ LED_squares4b::animation(void)
     int angle = (10 * steps) % 360;
     int div = (steps / 100) % 4 + 3;
 
-    SERIAL3(div, " ", angle);
-
-    _led->colour_set(_led->colour_transform(step));
+    _led->colour_set(_led->colour_transform(step / 4));
     for (int a = 0; a < div; a++) {
 	double s = 2 * _VIEW_WIDTH * sin((M_PI * (angle + a * 360 / div)) / 180);
 	double c = 2 * _VIEW_WIDTH * cos((M_PI * (angle + a * 360 / div)) / 180);
