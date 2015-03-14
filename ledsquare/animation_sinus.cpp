@@ -137,7 +137,7 @@ MYCONSTRUCTOR_ANIMATION(LED_sinus3)
 {
     delayms = 15;
     c[0] = _led->colour_green;
-    c[1] = _led->colour_yellow;
+    c[1] = _led->colour_blue;
 }
 
 void
@@ -154,8 +154,6 @@ LED_sinus3::animation(void)
 	    float f = ((o * piece) * M_PI / 180 ) / (3 * i + 2);
 	    float s = sin(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
 
-	    //SERIAL4("x,y: ", m, ",", (int)s);
-
 	    now.x = m;
 	    now.y = (int)s;
 	    if (!first)
@@ -163,5 +161,67 @@ LED_sinus3::animation(void)
 	    prev = now;
 	    first = 0;
 	}
+    }
+}
+
+// ======================================
+
+/* +----------------+
+ * |XXXxxxxxXXXXXXXX|
+ * |xxxXXXxxxxXXXXXX|
+ * |xxxxxxXXxxxxXXXX|
+ * |XXXxxxxxXXxxxxXX|
+ * |XXXXXXxxxxXXxxxX|
+ * |XXXXXXXXxxxxXXxx|
+ * |XXXXXXXXXXxxxxXx|
+ * |XXXXXXXXXXXXxxxX|
+ * |XXXXXXXXXXXXXXxx|
+ * |XXXXXXXXXXXXXXXx|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * |XXXXXXXXXXXXXXXX|
+ * +----------------+
+ */
+
+MYCONSTRUCTOR_ANIMATION(LED_sinus4)
+{
+    delayms = 15;
+    c_background = _led->colour_random_notblack();
+    do {
+	c_sinus = _led->colour_random_notblack();
+    } while (_led->colour_same(c_sinus, c_background));
+}
+
+void
+LED_sinus4::animation(void)
+{
+    uint32_t piece = 360 / _VIEW_WIDTH;
+
+    struct coordinates now;
+
+    _led->square(0, 0, _VIEW_WIDTH, _VIEW_HEIGHT, c_background);
+
+    for (int16_t m = 0; m < _sVIEW_WIDTH; m++) {
+	int16_t o = (m + step) % 7200;
+	float f = ((o * piece) * M_PI / 180 ) / 5;
+	float s = sin(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
+
+	//SERIAL4("x,y: ", m, ",", (int)s);
+
+	now.x = m;
+	now.y = (int)s;
+	_led->dot(now, c_sinus);
+
+	_led->dot(now.x, now.y - 4, _led->colour_fade(c_background, 1));
+	_led->dot(now.x, now.y - 3, _led->colour_fade(c_background, 1));
+	_led->dot(now.x, now.y - 2, _led->colour_fade(c_background, 2));
+	_led->dot(now.x, now.y - 1, _led->colour_fade(c_background, 2));
+	_led->dot(now.x, now.y + 1, _led->colour_fade(c_background, 2));
+	_led->dot(now.x, now.y + 2, _led->colour_fade(c_background, 2));
+	_led->dot(now.x, now.y + 3, _led->colour_fade(c_background, 1));
+	_led->dot(now.x, now.y + 4, _led->colour_fade(c_background, 1));
     }
 }

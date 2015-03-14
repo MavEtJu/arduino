@@ -26,4 +26,12 @@ public:
     LED c[2];
 };
 
+class LED_sinus4 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_sinus4);
+    void animation(void);
+    LED c_sinus;
+    LED c_background;
+};
+
 #endif
