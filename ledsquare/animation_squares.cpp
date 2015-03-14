@@ -980,13 +980,13 @@ LED_spinningsquares2::animation(void)
     if (c0.x == 0 && c0.y == 0) {
 	dx = 1;
 	dy = 0;
-    } else if (c0.x == _VIEW_WIDTH - size && c0.y == 0) {
+    } else if (c0.x == _sVIEW_WIDTH - size && c0.y == 0) {
 	dx = 0;
 	dy = 1;
-    } else if (c0.x == _VIEW_WIDTH - size && c0.y == _VIEW_HEIGHT - size) {
+    } else if (c0.x == _sVIEW_WIDTH - size && c0.y == _sVIEW_HEIGHT - size) {
 	dx = -1;
 	dy = 0;
-    } else if (c0.x == 0 && c0.y == _VIEW_HEIGHT - size) {
+    } else if (c0.x == 0 && c0.y == _sVIEW_HEIGHT - size) {
 	dx = 0;
 	dy = -1;
     }
