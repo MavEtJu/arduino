@@ -54,4 +54,12 @@ public:
     int16_t angle, length;
 };
 
+class LED_lines3 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_lines3);
+    void animation(void);
+    LED c[2];
+    int8_t stripes;
+};
+
 #endif

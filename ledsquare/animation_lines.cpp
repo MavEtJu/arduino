@@ -405,3 +405,54 @@ LED_lines2::animation(void)
 	angle = c[coor].a0;
     }
 }
+
+// =============================
+
+/*
+ * +----------------+
+ * |       XXXXXXXXX|
+ * |       XXXXXXXXX|
+ * |XXXXXXXXX       |
+ * |XXXXXXXXX       |
+ * |       XXXXXXXXX|
+ * |       XXXXXXXXX|
+ * |XXXXXXXXX       |
+ * |XXXXXXXXX       |
+ * |       XXXXXXXXX|
+ * |       XXXXXXXXX|
+ * |XXXXXXXXX       |
+ * |XXXXXXXXX       |
+ * |       XXXXXXXXX|
+ * |       XXXXXXXXX|
+ * |XXXXXXXXX       |
+ * |XXXXXXXXX       |
+ * +----------------+
+ */
+
+MYCONSTRUCTOR_ANIMATION(LED_lines3)
+{
+    delayms = 35;
+}
+
+void
+LED_lines3::animation(void)
+{
+    int x = 1 + step % _VIEW_WIDTH;
+    if (x == 1) {
+	c[0] = _led->colour_random_notblack();
+	do {
+	    c[1] = _led->colour_random_notblack();
+	} while (_led->colour_same(c[0], c[1]));
+
+	stripes = 1 << (step / _VIEW_HEIGHT) % 4;
+	SERIAL2("stripes: ", stripes);
+    }
+
+
+    for (int i = 0; i < stripes; i++) {
+	_led->square(0, i * (_VIEW_HEIGHT / stripes),
+		     x, (_VIEW_HEIGHT / stripes) / 2, c[0]);
+	_led->square(_VIEW_WIDTH - x, i * (_VIEW_HEIGHT / stripes) + (_VIEW_HEIGHT / stripes / 2),
+		     x, (_VIEW_HEIGHT / stripes) / 2, c[1]);
+    }
+}
