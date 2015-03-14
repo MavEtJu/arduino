@@ -225,3 +225,62 @@ LED_sinus4::animation(void)
 	_led->dot(now.x, now.y + 4, _led->colour_fade(c_background, 1));
     }
 }
+
+// ======================================
+
+/*
+ * +----------------+
+ * |xxxxxxxxxxxxxxxx|
+ * |xxxxxxxxxxxxxxxx|
+ * |xxxxxxxxxxxxxxxx|
+ * |xxxxxxxxxxxxxxxx|
+ * |xxxxxxxxxxxxxxxx|
+ * |.xxxxxxxxxxxxxxx|
+ * |X..xxxxxxxxxxxxx|
+ * |XXX.xxxxxxxxxxxx|
+ * |XXXX..xxxxxxxxxx|
+ * |XXXXXX..xxxxxxxx|
+ * |XXXXXXXX.xxxxxxx|
+ * |XXXXXXXXX..xxxxx|
+ * |XXXXXXXXXXX..xxx|
+ * |XXXXXXXXXXXXX..x|
+ * |XXXXXXXXXXXXXXX.|
+ * |XXXXXXXXXXXXXXXX|
+ * +----------------+
+ */
+
+
+MYCONSTRUCTOR_ANIMATION(LED_sinus5)
+{
+    delayms = 15;
+    c_sinus = _led->colour_random_notblack();
+    do {
+	c_background1 = _led->colour_random_notblack();
+    } while (_led->colour_same(c_sinus, c_background1));
+    do {
+	c_background2 = _led->colour_random_notblack();
+    } while (_led->colour_same(c_background2, c_background1) &&
+	     _led->colour_same(c_sinus, c_background1));
+}
+
+void
+LED_sinus5::animation(void)
+{
+    uint32_t piece = 360 / _VIEW_WIDTH;
+
+    struct coordinates now;
+
+
+    for (int16_t m = 0; m < _sVIEW_WIDTH; m++) {
+	int16_t o = (m + step) % 7200;
+	float f = ((o * piece) * M_PI / 180 ) / 5;
+	float s = sin(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
+
+	now.x = m;
+	now.y = (int)s;
+
+	_led->verline(now.x, 0, now.y, c_background1);
+	_led->verline(now.x, now.y, _VIEW_HEIGHT, c_background2);
+	_led->dot(now, c_sinus);
+    }
+}
