@@ -683,6 +683,66 @@ LED_movingsquares2::animation(void)
     steps++;
 }
 
+// =============================
+
+/*
+ * +----------------+
+ * |     XXXX       |
+ * |     XXXX   XXXX|
+ * |     XXXX   XXXX|
+ * |XXXX XXXX   XXXX|
+ * |XXXX        XXXX|
+ * |XXXX            |
+ * |XXXX            |
+ * |                |
+ * |                |
+ * |            XXXX|
+ * |            XXXX|
+ * |XXXX        XXXX|
+ * |XXXX   XXXX XXXX|
+ * |XXXX   XXXX     |
+ * |XXXX   XXXX     |
+ * |       XXXX     |
+ * +----------------+
+ */
+
+void
+LED_movingsquares3::animation(void)
+{
+    if (step % 100 == 0) {
+	colour = _led->colour_random_notblack();
+	size = 2 << random() % 3;
+	step = 0;
+    }
+
+    int offset = step % (2 * size);
+    _led->colour_set(colour);
+    for (uint16_t i = 0; i < 2 * _VIEW_WIDTH + 2 * _VIEW_HEIGHT - 4 * size; i += 2 * size) {
+	struct coordinates c;
+	offset2xy(i + offset, &c);
+	_led->square(c.x, c.y, size, size);
+    }
+}
+
+void
+LED_movingsquares3::offset2xy(int i, struct coordinates *c)
+{
+    if (i < _sVIEW_WIDTH - size) {
+	c->x = i;
+	c->y = 0;
+    } else if (i < _sVIEW_WIDTH + _sVIEW_HEIGHT - 2 * size) {
+	c->x = _VIEW_WIDTH - size;
+	c->y = i - _VIEW_WIDTH + size;
+    } else if (i < 2 * _sVIEW_WIDTH + _sVIEW_HEIGHT - 3 * size) {
+	c->x = 2 * _VIEW_WIDTH + _VIEW_HEIGHT - 3 * size - i;
+	c->y = _VIEW_HEIGHT - size;
+    } else if (i < 2 * 2 * _sVIEW_WIDTH + 2 * _sVIEW_HEIGHT - 4 * size) {
+	c->x = 0;
+	c->y = 2 * _VIEW_WIDTH + 2 * _VIEW_HEIGHT - 4 * size - i;
+    }
+}
+
+
 // ==============================
 
 /*

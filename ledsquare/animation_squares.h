@@ -83,13 +83,23 @@ class LED_movingsquares2 : public LED_Animation {
 public:
     MYOWNCONSTRUCTOR(LED_movingsquares2);
     void animation(void);
-    void init (int num);
+    void init(int num);
 
     int numsquares;
     uint16_t steps;
     LED c[2];
     int16_t x0[2], y0[2], x1[2], y1[2], dx[2], dy[2], x[2], y[2];
     int16_t size;
+};
+
+class LED_movingsquares3 : public LED_Animation {
+public:
+    PARENTCONSTRUCTOR(LED_movingsquares3);
+    void animation(void);
+    void offset2xy(int i, struct coordinates *c);
+
+    LED colour;
+    uint8_t size;
 };
 
 #define LED_square_splitting_horver	0
