@@ -143,8 +143,8 @@ LED_torch2::animation(void)
     // Change in intensity of the lowest level
     uint32_t piece = 360 / (4 * _VIEW_WIDTH);
     uint16_t o = step;
-    float f = piece * M_PI / 180 * o;
-    float s = sin(f) * _VIEW_HEIGHT;
+    float f = o * piece;
+    float s = SIN(f) * _VIEW_HEIGHT;
     uint8_t floor_intensity = (_VIEW_HEIGHT << 1) + (int)s;
     LED colour_floor = _led->Color(floor_intensity, floor_intensity, 0);
        

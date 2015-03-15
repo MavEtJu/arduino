@@ -79,7 +79,9 @@ int freeRam(void);
 #define SERIAL7(__a6__, __a5__, __a4__, __a3__, __a2__, __a1__, __a0__)
 #endif
 
-#define        MAX(a,b) (((a)>(b))?(a):(b))
-#define        MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define SIN(a) sin((a) * M_PI / 180.0)
+#define COS(a) cos((a) * M_PI / 180.0)
 
 #endif

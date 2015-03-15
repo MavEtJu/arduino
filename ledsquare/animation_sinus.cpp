@@ -46,8 +46,8 @@ LED_sinus1::animation(void)
 	int first = 1;
 	for (int16_t m = -1; m < _sVIEW_WIDTH; m++) {
 	    int16_t o = m + step;
-	    float f = (i * 120 + o * piece) * M_PI / 180;
-	    float s = sin(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
+	    float f = i * 120 + o * piece;
+	    float s = SIN(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
 
 	    //SERIAL4("x,y: ", m, ",", (int)s);
 
@@ -103,8 +103,8 @@ LED_sinus2::animation(void)
 
     for (uint16_t m = 0; m < _VIEW_WIDTH; m++) {
         uint16_t o = (m + step) % 7200;
-        float f = piece * M_PI / 180 * o;
-        float s = sin(f) * height;
+        float f = piece * o;
+        float s = SIN(f) * height;
 
         _led->dot(m, (int)s + _VIEW_HEIGHT / 2, _led->colour_yellow);
     }
@@ -151,8 +151,8 @@ LED_sinus3::animation(void)
 	int first = 1;
 	for (int16_t m = -1; m < _sVIEW_WIDTH; m++) {
 	    int16_t o = (m + step) % 7200;
-	    float f = ((o * piece) * M_PI / 180 ) / (3 * i + 2);
-	    float s = sin(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
+	    float f = o * piece / (3.0 * i + 2.0);
+	    float s = SIN(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
 
 	    now.x = m;
 	    now.y = (int)s;
@@ -206,8 +206,8 @@ LED_sinus4::animation(void)
 
     for (int16_t m = 0; m < _sVIEW_WIDTH; m++) {
 	int16_t o = (m + step) % 7200;
-	float f = ((o * piece) * M_PI / 180 ) / 5;
-	float s = sin(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
+	float f = o * piece / 5.0;
+	float s = SIN(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
 
 	//SERIAL4("x,y: ", m, ",", (int)s);
 
@@ -271,8 +271,8 @@ LED_sinus5::animation(void)
 
     for (int16_t m = 0; m < _sVIEW_WIDTH; m++) {
 	int16_t o = (m + step) % 7200;
-	float f = ((o * piece) * M_PI / 180 ) / 5;
-	float s = sin(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
+	float f = o * piece / 5.0;
+	float s = SIN(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
 
 	now.x = m;
 	now.y = (int)s;
@@ -323,8 +323,8 @@ LED_lissajou1::animation(void)
 
     struct coordinates c;
 
-    c.x = _VIEW_WIDTH / 2 + _VIEW_WIDTH * sin(a * step * M_PI / 180) / 2;
-    c.y = _VIEW_HEIGHT / 2 + _VIEW_HEIGHT * sin(b * step * M_PI / 180) / 2;
+    c.x = _VIEW_WIDTH / 2 + _VIEW_WIDTH * SIN(a * step) / 2;
+    c.y = _VIEW_HEIGHT / 2 + _VIEW_HEIGHT * SIN(b * step) / 2;
     shift_history(c);
 
     for (int i = 0; i < LED_lissajou1_history; i++) {
@@ -380,8 +380,8 @@ LED_rose1::animation(void)
 
     struct coordinates c;
 
-    c.x = _VIEW_WIDTH / 2  + _VIEW_WIDTH  * cos(a * step * M_PI / 180)  * cos(step * M_PI / 180)/ 2;
-    c.y = _VIEW_HEIGHT / 2 + _VIEW_HEIGHT * cos(a * step * M_PI / 180) * sin(step * M_PI / 180)/ 2;
+    c.x = _VIEW_WIDTH / 2  + _VIEW_WIDTH  * COS(a * step) * COS(step) / 2;
+    c.y = _VIEW_HEIGHT / 2 + _VIEW_HEIGHT * COS(a * step) * SIN(step) / 2;
     shift_history(c);
  
     for (int i = 0; i < LED_rose1_history; i++) {
