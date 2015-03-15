@@ -43,4 +43,16 @@ public:
     LED c_background2;
 };
 
+#define LED_lissajou1_history	40
+class LED_lissajou1 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_lissajou1);
+    void animation(void);
+    void shift_history(struct coordinates c);
+    LED colour;
+    int numpoints;
+    int a, b;
+    struct coordinates history[LED_lissajou1_history];
+};
+
 #endif

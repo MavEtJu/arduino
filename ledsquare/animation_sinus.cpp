@@ -267,9 +267,7 @@ void
 LED_sinus5::animation(void)
 {
     uint32_t piece = 360 / _VIEW_WIDTH;
-
     struct coordinates now;
-
 
     for (int16_t m = 0; m < _sVIEW_WIDTH; m++) {
 	int16_t o = (m + step) % 7200;
@@ -283,4 +281,62 @@ LED_sinus5::animation(void)
 	_led->verline(now.x, now.y, _VIEW_HEIGHT, c_background2);
 	_led->dot(now, c_sinus);
     }
+}
+
+// =====================================
+
+/*
+ * +----------------+
+ * |                |
+ * |                |
+ * |XX              |
+ * | X              |
+ * | X              |
+ * |  X             |
+ * |  X             |
+ * |  XX            |
+ * |   X            |
+ * |   X            |
+ * |    X           |
+ * |     X          |
+ * |     X        X |
+ * |      X      X  |
+ * |       X    XX  |
+ * |        XXXXX   |
+ * +----------------+
+ */
+
+MYCONSTRUCTOR_ANIMATION(LED_lissajou1)
+{
+    delayms = 1;
+}
+
+void
+LED_lissajou1::animation(void)
+{
+    if (step % 1000 == 0) {
+	numpoints = 1 + random() % 5;
+	a = 1 + random() % 5;
+	b = 1 + random() % 5;
+	colour = _led->colour_random_notblack();
+    }
+
+    struct coordinates c;
+
+    c.x = _VIEW_WIDTH / 2 + _VIEW_WIDTH * sin(a * step * M_PI / 180) / 2;
+    c.y = _VIEW_HEIGHT / 2 + _VIEW_HEIGHT * sin(b * step * M_PI / 180) / 2;
+    shift_history(c);
+
+    for (int i = 0; i < LED_lissajou1_history; i++) {
+	_led->dot(history[i], colour);
+    }
+}
+
+void
+LED_lissajou1::shift_history(struct coordinates c)
+{
+    for (int i = LED_lissajou1_history - 1; i > 0; i--) {
+	history[i] = history [i - 1];
+    }
+    history[0] = c;
 }
