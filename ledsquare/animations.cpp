@@ -382,11 +382,9 @@ LED_spaceinvaders1::animation(void)
 
 	x = -width[imgnr];
 
-#ifdef SERIAL
 	SERIAL6(F("imgnr:"), imgnr, \
 		F(" - width:"), width[imgnr], \
 		F(" - imglen:"), imglen);
-#endif
     }
 
     height = imglen / width[imgnr];

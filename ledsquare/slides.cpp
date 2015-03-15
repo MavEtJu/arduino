@@ -1,6 +1,3 @@
-//#define MEMORY
-//#define SERIAL
-
 #include <Arduino.h>
 #include "LED_Strip.h"
 #include "A_Tools.h"

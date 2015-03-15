@@ -33,7 +33,6 @@ loop_blink(void)
     digitalWrite(PIN_BLINK, (++onoff % 8) == 0 ? HIGH : LOW);
 }
 
-
 void
 setup(void)
 {
@@ -42,13 +41,12 @@ setup(void)
 #else
     randomSeed(analogRead(0));
 #endif
-#ifdef SERIAL
+#ifdef SERIAL_ENABLE
     Serial.begin(9600);
-    Serial.println(F("Hello, world!"));
+    SERIAL1(F("Hello, world!"));
 # ifdef DEBUG_MEMORY
 #  ifndef SIMULATOR
-    Serial.print(F("free1: "));
-    Serial.println(freeMemory());
+    MEMORYFREE("free1: ", freeMemory());
 #  endif
 # endif
 #endif
@@ -59,12 +57,9 @@ setup(void)
     led.view(VIEW_WIDTH, VIEW_HEIGHT, VIEW_SQUARE);
 #endif
     led.start();
-#ifdef SERIAL
-# ifdef DEBUG_MEMORY
-#  ifndef SIMULATOR
-    Serial.print(F("free2: "));
-    Serial.println(freeMemory());
-#  endif
+#ifdef DEBUG_MEMORY
+# ifndef SIMULATOR
+    MEMORYFREE("free2: ");
 # endif
 #endif
 }
@@ -82,11 +77,9 @@ loop(void)
     static unsigned long started = 0;
 
     /* testing */
-#ifdef SERIAL
-# ifdef DEBUG_MEMORY
-#  ifndef SIMULATOR
-    //FREEMEMORY(F("loop"));
-#  endif
+#ifdef DEBUG_MEMORY
+# ifndef SIMULATOR
+    FREEMEMORY("loop");
 # endif
 #endif
 
@@ -124,19 +117,13 @@ loop(void)
     p->loop();
     led.display();
     started++;
-# ifdef SERIAL
-//    Serial.println(started);
-# endif
     return;
 #endif
 
     if ((animation[0] == NULL && slideshow[0] == NULL) || (started == 0) || (started + DELAY * 1000l < millis())) {
-#ifdef SERIAL
-# ifdef DEBUG_MEMORY
-#  ifndef SIMULATOR
-        Serial.print(F("Free Memory before free: "));
-        Serial.println(freeMemory());
-#  endif
+#ifdef DEBUG_MEMORY
+# ifndef SIMULATOR
+        MEMORYFREE("Free Memory before free: ");
 # endif
 #endif
         if (animation[0] != NULL) {
@@ -150,12 +137,9 @@ loop(void)
             slideshow[0] = NULL;
         }
 
-#ifdef SERIAL
-# ifdef DEBUG_MEMORY
-#  ifndef SIMULATOR
-        Serial.print(F("Free Memory after free: "));
-        Serial.println(freeMemory());
-#  endif
+#ifdef DEBUG_MEMORY
+# ifndef SIMULATOR
+        MEMORYFREE("Free Memory after free: ");
 # endif
 #endif
 
@@ -173,10 +157,8 @@ loop(void)
 		    slideshow[0] = p; \
 		} else
 
-#ifdef SERIAL
-	Serial.print(F("phasenr: "));
-	Serial.println(phasenr);
-#endif
+	SERIAL2(F("phasenr: "), phasenr);
+
    	// NEW_ANIMATION(LED_led00_blink1)
 	NEW_ANIMATION(LED_test)
 	// NEW_ANIMATION(LED_quickbrowfox1)
@@ -217,30 +199,25 @@ loop(void)
 	    animation[0] = p;
 	    phasenr = -1;
 	    started = 0;
-#ifdef SERIAL
-	    Serial.println(F("Reset"));
-#endif
+	    SERIAL1("Reset");
 	}
 	phasenr++;
 
 	if (animation[0] != NULL && animation[0]->broken) {
-	    Serial.println(F("Animation broken before loop()"));
+	    SERIAL1(F("Animation broken before loop()"));
 	    delete(animation[0]);
 	    animation[0] = NULL;
 	}
 	if (slideshow[0] != NULL && slideshow[0]->broken) {
-	    Serial.println(F("Slideshow broken before loop()"));
+	    SERIAL1(F("Slideshow broken before loop()"));
 	    delete(slideshow[0]);
 	    slideshow[0] = NULL;
 	}
 
 
-#ifdef SERIAL
-# ifdef DEBUG_MEMORY
-#  ifndef SIMULATOR
-        Serial.print(F("Free Memory after new: "));
-        Serial.println(freeMemory());
-#  endif
+#ifdef DEBUG_MEMORY
+# ifndef SIMULATOR
+        SERIAL2("Free Memory after new: "), freeMemory());
 # endif
 #endif
         started = millis();
@@ -248,7 +225,7 @@ loop(void)
     if (animation[0] != NULL) {
         animation[0]->loop();
 	if (animation[0]->broken) {
-	    Serial.println(F("Animation broken after loop()"));
+	    SERIAL1(F("Animation broken after loop()"));
 	    delete(animation[0]);
 	    animation[0] = NULL;
 	}
@@ -256,7 +233,7 @@ loop(void)
     if (slideshow[0] != NULL) {
         slideshow[0]->loop();
 	if (slideshow[0]->broken) {
-	    Serial.println(F("Slideshow broken after loop()"));
+	    SERIAL1(F("Slideshow broken after loop()"));
 	    delete(slideshow[0]);
 	    slideshow[0] = NULL;
 	}

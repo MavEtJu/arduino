@@ -13,14 +13,10 @@
 int freeRam(void);
 
 #define FREERAM(f) \
-    Serial.print(F(f)); \
-    Serial.print(F(": FreeRam(): ")); \
-    Serial.println(freeRam()); 
+    SERIAL3(F(f), F(": FreeRam(): "), freeRam());
 
 #define FREEMEMORY(T) \
-    Serial.print(F(T)); \
-    Serial.print(F(": freeMemory(): ")); \
-    Serial.println(freeMemory());
+    SERIAL3(F(T), F(": freeMemory(): "), freeMemory());
 
 #define PARENTCONSTRUCTOR(__t__) \
 	__t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : \
@@ -37,6 +33,7 @@ int freeRam(void);
 	__t__::__t__(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT) : LED_Slideshow(led, VIEW_WIDTH, VIEW_HEIGHT)
 
 
+#ifdef SERIAL_ENABLE
 #define SERIAL1(__a0__) \
 	Serial.println(__a0__)
 #define SERIAL2(__a1__, __a0__) \
@@ -72,6 +69,15 @@ int freeRam(void);
 	Serial.print(__a2__); \
 	Serial.print(__a1__); \
 	Serial.println(__a0__)
+#else
+#define SERIAL1(__a0__)
+#define SERIAL2(__a1__, __a0__)
+#define SERIAL3(__a2__, __a1__, __a0__)
+#define SERIAL4(__a3__, __a2__, __a1__, __a0__)
+#define SERIAL5(__a4__, __a3__, __a2__, __a1__, __a0__)
+#define SERIAL6(__a5__, __a4__, __a3__, __a2__, __a1__, __a0__)
+#define SERIAL7(__a6__, __a5__, __a4__, __a3__, __a2__, __a1__, __a0__)
+#endif
 
 #define        MAX(a,b) (((a)>(b))?(a):(b))
 #define        MIN(a,b) (((a)<(b))?(a):(b))
