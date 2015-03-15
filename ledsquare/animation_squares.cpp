@@ -453,7 +453,8 @@ LED_squares4b::animation(void)
 	double s = 2 * _VIEW_WIDTH * SIN(angle + a * 360 / div);
 	double c = 2 * _VIEW_WIDTH * COS(angle + a * 360 / div);
 	_led->line(_VIEW_WIDTH / 2, _VIEW_HEIGHT / 2,
-		   _VIEW_WIDTH / 2 + s, _VIEW_HEIGHT / 2 + c);
+		   (int16_t)(_VIEW_WIDTH / 2 + s),
+		   (int16_t)(_VIEW_HEIGHT / 2 + c));
     }
 
     steps++;

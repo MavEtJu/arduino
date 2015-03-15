@@ -323,8 +323,8 @@ LED_lissajou1::animation(void)
 
     struct coordinates c;
 
-    c.x = _VIEW_WIDTH / 2 + _VIEW_WIDTH * SIN(a * step) / 2;
-    c.y = _VIEW_HEIGHT / 2 + _VIEW_HEIGHT * SIN(b * step) / 2;
+    c.x = (int16_t)(_VIEW_WIDTH / 2 + _VIEW_WIDTH * SIN(a * step) / 2);
+    c.y = (int16_t)(_VIEW_HEIGHT / 2 + _VIEW_HEIGHT * SIN(b * step) / 2);
     shift_history(c);
 
     for (int i = 0; i < LED_lissajou1_history; i++) {
@@ -380,8 +380,8 @@ LED_rose1::animation(void)
 
     struct coordinates c;
 
-    c.x = _VIEW_WIDTH / 2  + _VIEW_WIDTH  * COS(a * step) * COS(step) / 2;
-    c.y = _VIEW_HEIGHT / 2 + _VIEW_HEIGHT * COS(a * step) * SIN(step) / 2;
+    c.x = (int16_t)(_VIEW_WIDTH / 2  + _VIEW_WIDTH  * COS(a * step) * COS(step) / 2);
+    c.y = (int16_t)(_VIEW_HEIGHT / 2 + _VIEW_HEIGHT * COS(a * step) * SIN(step) / 2);
     shift_history(c);
  
     for (int i = 0; i < LED_rose1_history; i++) {

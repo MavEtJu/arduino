@@ -73,7 +73,7 @@ LED_cross1::animation(void)
         _led->line(c1[i], c2[i], _led->colour_fade(_led->colour_transform(step), i / 2));
     }
     
-    delayms = 50 + 45 * SIN(step);
+    delayms = 50 + (int16_t)(45 * SIN(step));
 }
 
 // ==============================
@@ -371,7 +371,8 @@ LED_lines2::animation(void)
     double co = COS(angle);
 
     shift_history(c[coor].c.x, c[coor].c.y,
-	c[coor].c.x + co * length, c[coor].c.y + si * length);
+	(int16_t)(c[coor].c.x + co * length),
+	(int16_t)(c[coor].c.y + si * length));
 
     for (int i = LED_lines2_history - 1; i >= 0; i--) {
 	_led->line(
