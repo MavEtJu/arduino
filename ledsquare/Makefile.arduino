@@ -78,9 +78,12 @@ all_arduino: ${BUILDDIR} ${BUILDDIR}/${PROJECT}.hex ${BUILDDIR}/${PROJECT}.eep
 	avrdude \
 	    -D -F -V -v -p atmega328p -c arduino \
 	    -P ${COMPORT} -b ${COMSPEED} -Uflash:w:${BUILDDIR}/${PROJECT}.hex:i
-	avr-size ${BUILDDIR}/${PROJECT}.elf
+	${MAKE} size_arduino
 	sleep 2
 	cu -l ${COMPORT} -s 9600
+
+size_arduino: ${BUILDDIR} ${BUILDDIR}/${PROJECT}.elf
+	avr-size ${BUILDDIR}/${PROJECT}.elf
 
 .c.o:
 	${CC} ${CFLAGS} -Werror -o ${.TARGET} -c ${.ALLSRC}
@@ -189,6 +192,9 @@ clean:
 
 depends:
 	${CC} ${CXXFLAGS} -x c++ -M *.ino *.cpp > .depend
+
+size: 
+	OPTIONS="${OPTIONS}" TARGET=arduino ${MAKE} size_arduino
 
 upload: 
 	OPTIONS="${OPTIONS}" TARGET=arduino ${MAKE} all_arduino
