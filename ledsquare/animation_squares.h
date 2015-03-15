@@ -8,7 +8,8 @@ class LED_squares1 : public LED_Animation {
 public:
     MYOWNCONSTRUCTOR(LED_squares1);
     void animation(void);
-    LED c;
+    LED colour;
+    struct coordinates c0;
 };
 
 #define LED_squares2_history 20
