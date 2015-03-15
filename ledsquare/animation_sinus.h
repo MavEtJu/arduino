@@ -55,4 +55,16 @@ public:
     struct coordinates history[LED_lissajou1_history];
 };
 
+#define LED_rose1_history	40
+class LED_rose1 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_rose1);
+    void animation(void);
+    void shift_history(struct coordinates c);
+    LED colour;
+    int numpoints;
+    int a;
+    struct coordinates history[LED_lissajou1_history];
+};
+
 #endif

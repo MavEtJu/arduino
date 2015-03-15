@@ -340,3 +340,60 @@ LED_lissajou1::shift_history(struct coordinates c)
     }
     history[0] = c;
 }
+
+// =====================================
+
+/*
+ * +----------------+
+ * |         XX     |
+ * |         XX     |
+ * |        X X     |
+ * |        X       |
+ * |        X       |
+ * |        X       |
+ * |        X       |
+ * |        X       |
+ * |        X       |
+ * |        X       |
+ * |        X       |
+ * |        X       |
+ * |        X       |
+ * |        X       |
+ * |         X      |
+ * |         X      |
+ * +----------------+
+ */
+
+MYCONSTRUCTOR_ANIMATION(LED_rose1)
+{
+    delayms = 1;
+}
+
+void
+LED_rose1::animation(void)
+{
+    if (step % 1000 == 0) {
+	numpoints = 1 + random() % 5;
+	a = 1 + random() % 5;
+	colour = _led->colour_random_notblack();
+    }
+
+    struct coordinates c;
+
+    c.x = _VIEW_WIDTH / 2  + _VIEW_WIDTH  * cos(a * step * M_PI / 180)  * cos(step * M_PI / 180)/ 2;
+    c.y = _VIEW_HEIGHT / 2 + _VIEW_HEIGHT * cos(a * step * M_PI / 180) * sin(step * M_PI / 180)/ 2;
+    shift_history(c);
+ 
+    for (int i = 0; i < LED_rose1_history; i++) {
+	_led->dot(history[i], colour);
+    }
+}
+
+void
+LED_rose1::shift_history(struct coordinates c)
+{
+    for (int i = LED_rose1_history - 1; i > 0; i--) {
+	history[i] = history [i - 1];
+    }
+    history[0] = c;
+}
