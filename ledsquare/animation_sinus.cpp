@@ -207,7 +207,7 @@ LED_sinus4::animation(void)
     for (int16_t m = 0; m < _sVIEW_WIDTH; m++) {
 	int16_t o = (m + step) % 7200;
 	float f = o * piece / 5.0;
-	float s = SIN(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
+	float s = SIN(f) * (_VIEW_HEIGHT / 2 - 2) + _VIEW_HEIGHT / 2;
 
 	//SERIAL4("x,y: ", m, ",", (int)s);
 
@@ -272,7 +272,7 @@ LED_sinus5::animation(void)
     for (int16_t m = 0; m < _sVIEW_WIDTH; m++) {
 	int16_t o = (m + step) % 7200;
 	float f = o * piece / 5.0;
-	float s = SIN(f) * _VIEW_HEIGHT / 2 + _VIEW_HEIGHT / 2;
+	float s = SIN(f) * (_VIEW_HEIGHT / 2 - 1) + _VIEW_HEIGHT / 2;
 
 	now.x = m;
 	now.y = (int)s;
