@@ -97,6 +97,7 @@ public:
     LED **_matrix;
     LED *_strip;
     LED _colourlast;
+    LED *_colourtransform;
     int16_t _xmax, _ymax;
     uint8_t _options;
 };
