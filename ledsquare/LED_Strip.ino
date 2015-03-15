@@ -12,19 +12,20 @@
 LED_Strip::LED_Strip(uint16_t amount, uint8_t pin) : Adafruit_NeoPixel(amount, pin, NEO_GRB + NEO_KHZ800)
 {
     _colourlast = Color(0, 0, 0);
-    colour_red = Color(8, 0, 0);
-    colour_green = Color(0, 8, 0);
-    colour_blue = Color(0, 0, 8);
+    colour_red = Color(7, 0, 0);
+    colour_green = Color(0, 7, 0);
+    colour_blue = Color(0, 0, 7);
     colour_black = Color(0, 0, 0);
-    colour_white = Color(8, 8, 8);
-    colour_magenta = Color(8, 0, 8);
-    colour_cyan = Color(0, 8, 8);
-    colour_yellow = Color(8, 8, 0);
+    colour_white = Color(7, 7, 7);
+    colour_magenta = Color(7, 0, 7);
+    colour_cyan = Color(0, 7, 7);
+    colour_yellow = Color(7, 7, 0);
     _strip = (LED *)pixels;
     _matrix = NULL;
     _ymax = 0;
     _xmax = 0;
     _options = 0;
+    _colourtransform = (LED *)malloc(sizeof(LED));
  //   letters_init();
 #ifdef SIMULATOR
     srandom(time(NULL));
@@ -172,11 +173,11 @@ LED_Strip::colour_random_notblack(void)
 LED
 LED_Strip::colour_transform(LED c1, LED c2, int steps, int step)
 {
-    LED c;
-    c.red = c1.red + step * (c2.red - c1.red) / steps;
-    c.green = c1.green + step * (c2.green - c1.green) / steps;
-    c.blue = c1.blue + step * (c2.blue - c1.blue) / steps;
-    return c;
+    LED *c = _colourtransform;
+    c->red   = c1.red   + step * (c2.red   - c1.red)   / steps;
+    c->green = c1.green + step * (c2.green - c1.green) / steps;
+    c->blue  = c1.blue  + step * (c2.blue  - c1.blue)  / steps;
+    return *_colourtransform;
 }
 
 LED
@@ -188,9 +189,9 @@ LED_Strip::colour_transform(int step)
             colour_blue,
         };
 
-    LED c1 = ls[(step / 8) % 3];
-    LED c2 = ls[(1 + step / 8 ) % 3];
-    return colour_transform(c1, c2, 24, step % 24);
+    LED c1 = ls[(    step / 8) % 3];
+    LED c2 = ls[(1 + step / 8) % 3];
+    return colour_transform(c1, c2, 8, step % 8);
 }
 
 
