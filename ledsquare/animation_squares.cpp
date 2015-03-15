@@ -31,9 +31,7 @@
 
 MYCONSTRUCTOR_ANIMATION(LED_squares1)
 {
-    colour = _led->colour_random_notblack();
-    c0.x = 0;
-    c0.y = 0;
+    c = _led->colour_random();
 }
 
 void
@@ -41,31 +39,22 @@ LED_squares1::animation(void)
 {
     uint16_t m = step % (2 * _VIEW_HEIGHT);
 
-    if (m % (2 * _VIEW_WIDTH) == 0)
-	colour = _led->colour_random_notblack();
-    if (m == _VIEW_WIDTH) {
-	int i = random() % 4;
-	c0.x = (i < 2) ? 0 : _VIEW_WIDTH - 1;
-	c0.y = (i % 2 == 0) ? 0 : _VIEW_HEIGHT - 1;
-    }
+    if (m == 0)
+	c = _led->colour_random_notblack();
+    _led->colour_set(c);
 
-    _led->colour_set(colour);
-    struct area r;
     if (m < _VIEW_HEIGHT) {
-	r.c2 = c0;
-	r.c1.x = (c0.x == 0) ? m : _VIEW_WIDTH - m - 1;
-	r.c1.y = (c0.y == 0) ? m : _VIEW_HEIGHT - m - 1;
+        _led->line(0, 0, 0, m);
+        _led->line(0, m, m, m);
+        _led->line(m, m, m, 0);
+        _led->line(m, 0, 0, 0);
     } else {
-	m -= _VIEW_HEIGHT;
-	r.c2.x = (c0.x == 0) ? _VIEW_WIDTH - 1 : 0;
-	r.c2.y = (c0.y == 0) ? _VIEW_HEIGHT - 1 : 0;
-	r.c1.x = (c0.x == 0) ? m : _VIEW_WIDTH - m - 1;
-	r.c1.y = (c0.y == 0) ? m : _VIEW_HEIGHT - m - 1;
+        m %= _VIEW_HEIGHT;
+        _led->line(_VIEW_HEIGHT - 1, _VIEW_HEIGHT - 1, _VIEW_HEIGHT - 1, m);
+        _led->line(_VIEW_HEIGHT - 1, m, m, m);
+        _led->line(m, m, m, _VIEW_HEIGHT - 1);
+        _led->line(m, _VIEW_HEIGHT - 1, _VIEW_HEIGHT - 1, _VIEW_HEIGHT - 1);
     }
-    _led->verline(r.c1.x, r.c1.y, r.c2.y);
-    _led->verline(r.c2.x, r.c1.y, r.c2.y);
-    _led->horline(r.c1.y, r.c1.x, r.c2.x);
-    _led->horline(r.c2.y, r.c1.x, r.c2.x);
 }
 
 // ============================
