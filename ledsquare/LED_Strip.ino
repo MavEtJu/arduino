@@ -375,7 +375,8 @@ LED_Strip::line(struct coordinates c1, struct coordinates c2, LED colour)
 void
 LED_Strip::horline(int16_t y, int16_t x1, int16_t x2)
 {
-    for (int16_t x = x1; x <= x2; x++) {
+    int xx2 = MAX(x1, x2);
+    for (int16_t x = MIN(x1, x2); x <= xx2; x++) {
 	dot(x, y);
     }
 }
@@ -390,7 +391,8 @@ LED_Strip::horline(int16_t y, int16_t x1, int16_t x2, LED colour)
 void
 LED_Strip::verline(int16_t x, int16_t y1, int16_t y2)
 {
-    for (int16_t y = y1; y <= y2; y++) {
+    int yy2 = MAX(y1, y2);
+    for (int16_t y = MIN(y1, y2); y <= yy2; y++) {
 	dot(x, y);
     }
 }
