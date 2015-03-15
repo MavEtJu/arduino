@@ -148,6 +148,7 @@ LED_torch2::animation(void)
     uint8_t floor_intensity = (_VIEW_HEIGHT << 1) + (int)s;
     LED colour_floor = _led->Color(floor_intensity, floor_intensity, 0);
        
+    // Do the dark ones around the bright ones first.
     for (int c = 0; c < numcoals; c++) {
         coals[c].y++;
         coals[c].intensity -= coals[c].decay;
@@ -172,6 +173,7 @@ LED_torch2::animation(void)
         }
     }
 
+    // Do the bright ones now.
     for (int c = 0; c < numcoals; c++) {
         _led->dot(coals[c].x % _VIEW_WIDTH, coals[c].y,
             _led->Color(coals[c].intensity, coals[c].intensity, 0));
