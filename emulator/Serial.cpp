@@ -142,6 +142,18 @@ Serial::print(unsigned long ul)
 }
 
 void
+Serial::println(double ud)
+{
+	plog += sprintf(plog, "%f", ud);
+	lognr_increase_written();
+}
+void
+Serial::print(double ud)
+{
+	plog += sprintf(plog, "%f", ud);
+}
+
+void
 Serial::clear(void)
 {
 	lognr_read = lognr_written;

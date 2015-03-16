@@ -24,6 +24,8 @@ public:
     void print(unsigned int ui);
     void println(signed int si);
     void print(signed int si);
+    void println(double ud);
+    void print(double ud);
 
     int lines(void);
     char *get(void);
