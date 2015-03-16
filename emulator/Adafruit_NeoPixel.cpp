@@ -6,6 +6,7 @@
 Adafruit_NeoPixel::Adafruit_NeoPixel(uint16_t n, uint8_t p=6, uint8_t t=NEO_GRB + NEO_KHZ800)
 {
 	pixels = (char *)malloc(sizeof(char) * n * 3);
+	type = t;
 }
 
 void
@@ -29,14 +30,14 @@ Adafruit_NeoPixel::initcurses(void)
 	nodelay(mainwindow, TRUE);
 	start_color();
 	use_default_colors();
-	init_pair(0, COLOR_BLACK, -1);  colour[COLOR_BLACK  ] = COLOR_PAIR(0);
-	init_pair(1, COLOR_RED, -1);    colour[COLOR_RED    ] = COLOR_PAIR(1);
-	init_pair(2, COLOR_GREEN, -1);  colour[COLOR_GREEN  ] = COLOR_PAIR(2);
-	init_pair(3, COLOR_YELLOW, -1); colour[COLOR_YELLOW ] = COLOR_PAIR(3);
-	init_pair(4, COLOR_BLUE, -1);   colour[COLOR_BLUE   ] = COLOR_PAIR(4);
-	init_pair(5, COLOR_MAGENTA, -1);colour[COLOR_MAGENTA] = COLOR_PAIR(5);
-	init_pair(6, COLOR_CYAN, -1);   colour[COLOR_CYAN   ] = COLOR_PAIR(6);
-	init_pair(7, COLOR_WHITE, -1);  colour[COLOR_WHITE  ] = COLOR_PAIR(7);
+	init_pair(0, COLOR_BLACK, -1);
+	init_pair(1, COLOR_RED, -1);
+	init_pair(2, COLOR_GREEN, -1);
+	init_pair(3, COLOR_YELLOW, -1);
+	init_pair(4, COLOR_BLUE, -1);
+	init_pair(5, COLOR_MAGENTA, -1);
+	init_pair(6, COLOR_CYAN, -1);
+	init_pair(7, COLOR_WHITE, -1);
 
 	wattrset(mainwindow, COLOR_PAIR(COLOR_WHITE));
 	refresh();
@@ -72,7 +73,7 @@ Adafruit_NeoPixel::show2(void)
 	}
 
 
-	wattrset(screenLED, colour[COLOR_WHITE]);
+	wattrset(screenLED, COLOR_PAIR(COLOR_WHITE));
 	werase(screenLED);
 	curs_set(0);
 	mvwprintw(screenLED, 0, 0, "+");
@@ -92,9 +93,16 @@ Adafruit_NeoPixel::show2(void)
 	for (y = VIEW_HEIGHT - 1; y >= 0; y--) {
 		for (x = 0; x < VIEW_WIDTH; x++) {
 
-			uint8_t r = pixels[3 * (y * VIEW_WIDTH + x)];
-			uint8_t g = pixels[3 * (y * VIEW_WIDTH + x) + 1];
-			uint8_t b = pixels[3 * (y * VIEW_WIDTH + x) + 2];
+			uint8_t r, g, b;
+			if ((type & NEO_GRB) == 0) {
+				g = pixels[3 * (y * VIEW_WIDTH + x)];
+				r = pixels[3 * (y * VIEW_WIDTH + x) + 1];
+				b = pixels[3 * (y * VIEW_WIDTH + x) + 2];
+			} else {
+				r = pixels[3 * (y * VIEW_WIDTH + x)];
+				g = pixels[3 * (y * VIEW_WIDTH + x) + 1];
+				b = pixels[3 * (y * VIEW_WIDTH + x) + 2];
+			}
 
 			if (r == 0) {
 				if (g == 0) {
@@ -127,7 +135,7 @@ Adafruit_NeoPixel::show2(void)
 			}
 			intensity = r + g + b;
 
-			wattrset(screenLED, colour[c]);
+			wattrset(screenLED, COLOR_PAIR(c));
 			ch = ' ';
 
 			if (c == COLOR_BLACK)
@@ -139,14 +147,13 @@ Adafruit_NeoPixel::show2(void)
 			else 
 				ch = 'X';
 
-
 			mvwprintw(screenLED, VIEW_HEIGHT - y, 1 + x, "%c", ch);
 		}
 	}
 	wrefresh(screenLED);
 
 	// Serial logging
-	wattrset(screenSerial, colour[COLOR_WHITE]);
+	wattrset(screenSerial, COLOR_PAIR(COLOR_WHITE));
 	werase(screenSerial);
 	curs_set(0);
 	int linenr = Serial.lines();

@@ -22,8 +22,8 @@ class Adafruit_NeoPixel {
 	WINDOW *mainwindow;
 	WINDOW *screenLED;
 	WINDOW *screenSerial;
-	int colour[8];
 	uint16_t VIEW_HEIGHT, VIEW_WIDTH;
+	uint8_t type;
 
 	void show1(void);
 	void show2(void);
