@@ -19,6 +19,7 @@ SRC_FILES= \
 	animation_lines.cpp	\
 	animation_sinus.cpp	\
 	animation_torches.cpp	\
+	animation_fractals.cpp	\
 	slides.cpp
 
 .include "Makefile.arduino"

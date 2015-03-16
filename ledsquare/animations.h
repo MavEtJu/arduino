@@ -5,6 +5,7 @@
 #include "animation_lines.h"
 #include "animation_torches.h"
 #include "animation_sinus.h"
+#include "animation_fractals.h"
 
 class LED_test : public LED_Animation {
 public:
@@ -51,15 +52,6 @@ public:
     void animation(void);
     int numcolours;
     LED *colourmap;
-};
-
-class LED_hilbert1 : public LED_Animation {
-public:
-    MYOWNCONSTRUCTOR(LED_hilbert1);
-    void animation(void);
-    int xy2d(int n, int x, int y);
-    void d2xy(int n, int d, int *x, int *y);
-    void rot(int n, int *x, int *y, int rx, int ry);
 };
 
 class LED_pascal1 : public LED_Animation {
