@@ -94,7 +94,7 @@ Adafruit_NeoPixel::show2(void)
 		for (x = 0; x < VIEW_WIDTH; x++) {
 
 			uint8_t r, g, b;
-			if ((type & NEO_GRB) == 0) {
+			if ((type & NEO_GRB) == 1) {
 				g = pixels[3 * (y * VIEW_WIDTH + x)];
 				r = pixels[3 * (y * VIEW_WIDTH + x) + 1];
 				b = pixels[3 * (y * VIEW_WIDTH + x) + 2];
