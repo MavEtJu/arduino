@@ -62,4 +62,15 @@ public:
     void rot(int n, int *x, int *y, int rx, int ry);
 };
 
+class LED_pascal1 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_pascal1);
+    void animation(void);
+    void drawboard(void);
+    void drawstone(void);
+    void drawbottom(void);
+    uint8_t bottom[8];
+    struct coordinates stone;
+};
+
 #endif

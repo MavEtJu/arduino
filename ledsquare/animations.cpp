@@ -463,6 +463,9 @@ LED_plasma1::animation(void)
 
 /*
  * From http://en.wikipedia.org/wiki/Hilbert_curve
+ *
+ * A -> - B F + A F A + F B -
+ * B -> + A F - B F B - F A + 
  */
 
 MYCONSTRUCTOR_ANIMATION(LED_hilbert1)
@@ -526,5 +529,60 @@ LED_hilbert1::rot(int n, int *x, int *y, int rx, int ry)
         int t  = *x;
         *x = *y;
         *y = t;
+    }
+}
+
+// ===========================
+
+MYCONSTRUCTOR_ANIMATION(LED_pascal1)
+{
+    delayms = 150;
+    stone.y = 0;
+    stone.x = _VIEW_WIDTH / 2 - 1;
+    memset(bottom, '\0', sizeof(bottom));
+}
+
+void
+LED_pascal1::animation(void)
+{
+    drawboard();
+
+    stone.y++;
+    if (stone.y >= _sVIEW_HEIGHT / 2 + 1) {
+    } else if (stone.y > 1) {
+	stone.x += random() %2 == 0 ? -1 : 1;
+    }
+    if (stone.y == _sVIEW_HEIGHT / 2 + 3) {
+
+	bottom[stone.x / 2]++;
+	stone.y = 0;
+	stone.x = _VIEW_WIDTH / 2 - 1;
+    }
+    drawstone();
+    drawbottom();
+}
+
+void
+LED_pascal1::drawboard(void)
+{
+    _led->colour_set(_led->colour_white);
+    for (int y = 0; y < _sVIEW_HEIGHT / 2; y++) {
+	for (int x = 0; x < y; x++) {
+	    _led->dot(_VIEW_WIDTH / 2 - y + 2 * x, _VIEW_HEIGHT - 2 - y);
+	}
+    }
+}
+
+void
+LED_pascal1::drawstone(void)
+{
+    _led->dot(stone.x, _VIEW_HEIGHT - 1- stone.y, _led->colour_red);
+}
+
+void
+LED_pascal1::drawbottom(void)
+{
+    for (int x = 0; x < 8; x++) {
+	_led->dot(2 *x, 4, _led->Color(bottom[x], 0, 0));
     }
 }
