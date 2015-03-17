@@ -13,4 +13,21 @@ public:
     void rot(int n, int *x, int *y, int rx, int ry);
 };
 
+class LED_tree1 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_tree1);
+    void next(struct coordinates in, struct coordinates *out1, struct coordinates *out2, int angle, int angleturn, int len);
+    void rotate(struct coordinates *c, int angle);
+    void animation(void);
+
+    struct coordinates c_center;
+    int16_t angle;		// Current orientiation
+    int16_t angleturn;		// Turn factor at the end of the line
+    int16_t nextangle_current;	// Next current orientation
+    int16_t nextangle_target;	// Next current orientation
+    int16_t nextangle_turn;	// Increase in current orientation when != nextagnle
+    int8_t pathlength;
+    int8_t pathmax;
+};
+
 #endif
