@@ -79,7 +79,7 @@ LED_hilbert1::rot(int n, int *x, int *y, int rx, int ry)
 MYCONSTRUCTOR_ANIMATION(LED_tree1)
 {
     delayms = 200;
-    angleturn = angle = nextangle_current = nextangle_target = angleturn = 90;
+    currentangle_turn = currentangle = nextangle_current = nextangle_target = 90;
     nextangle_turn = 30;
     pathmax = _VIEW_WIDTH / 2;
     pathlength = pathmax;
@@ -122,41 +122,41 @@ LED_tree1::animation(void)
     struct coordinates c_T111, c_T112, c_T121, c_T122;
     struct coordinates c_T211, c_T212, c_T221, c_T222;
 
-    next(c_center, &c_target, NULL , angle, 0  , 2 * pathlength              );
-    next(c_center, &c_start , NULL , angle, 180, 2 * pathmax - 2 * pathlength);
-    next(c_target, &c_T1    , &c_T2, angle, angleturn, pathmax / 2);
+    next(c_center, &c_target, NULL , currentangle, 0  , 2 * pathlength              );
+    next(c_center, &c_start , NULL , currentangle, 180, 2 * pathmax - 2 * pathlength);
+    next(c_target, &c_T1    , &c_T2, currentangle, currentangle_turn, pathmax / 2);
 
-    next(c_T1 , &c_T11 , &c_T12 , angle +     angleturn, angleturn, pathmax / 4);
-    next(c_T2 , &c_T21 , &c_T22 , angle +     angleturn, angleturn, pathmax / 4);
-    next(c_T11, &c_T111, &c_T112, angle + 2 * angleturn, angleturn, pathmax / 8);
-    next(c_T12, &c_T121, &c_T122, angle + 2 * angleturn, angleturn, pathmax / 8);
-    next(c_T21, &c_T211, &c_T212, angle + 2 * angleturn, angleturn, pathmax / 8);
-    next(c_T22, &c_T221, &c_T222, angle + 2 * angleturn, angleturn, pathmax / 8);
+    next(c_T1 , &c_T11 , &c_T12 , currentangle +     currentangle_turn, currentangle_turn, pathmax / 4);
+    next(c_T2 , &c_T21 , &c_T22 , currentangle +     currentangle_turn, currentangle_turn, pathmax / 4);
+    next(c_T11, &c_T111, &c_T112, currentangle + 2 * currentangle_turn, currentangle_turn, pathmax / 8);
+    next(c_T12, &c_T121, &c_T122, currentangle + 2 * currentangle_turn, currentangle_turn, pathmax / 8);
+    next(c_T21, &c_T211, &c_T212, currentangle + 2 * currentangle_turn, currentangle_turn, pathmax / 8);
+    next(c_T22, &c_T221, &c_T222, currentangle + 2 * currentangle_turn, currentangle_turn, pathmax / 8);
 
     if (nextangle_target != nextangle_current) {
 	nextangle_current += (nextangle_target > nextangle_current ? 1 : -1) * nextangle_turn;
-	SERIAL2("Angle: ", angle);
+	SERIAL2("Angle: ", currentangle);
 	SERIAL4("nextangle_current:", nextangle_current, " nextangle_target:", nextangle_target);
-	rotate(&c_start, nextangle_current - angle);
-	rotate(&c_target, nextangle_current - angle);
-	rotate(&c_T1, nextangle_current - angle);
-	rotate(&c_T2, nextangle_current - angle);
-	rotate(&c_T11, nextangle_current - angle);
-	rotate(&c_T12, nextangle_current - angle);
-	rotate(&c_T21, nextangle_current - angle);
-	rotate(&c_T22, nextangle_current - angle);
-	rotate(&c_T111, nextangle_current - angle);
-	rotate(&c_T112, nextangle_current - angle);
-	rotate(&c_T121, nextangle_current - angle);
-	rotate(&c_T122, nextangle_current - angle);
-	rotate(&c_T211, nextangle_current - angle);
-	rotate(&c_T212, nextangle_current - angle);
-	rotate(&c_T221, nextangle_current - angle);
-	rotate(&c_T222, nextangle_current - angle);
+	rotate(&c_start, nextangle_current - currentangle);
+	rotate(&c_target, nextangle_current - currentangle);
+	rotate(&c_T1, nextangle_current - currentangle);
+	rotate(&c_T2, nextangle_current - currentangle);
+	rotate(&c_T11, nextangle_current - currentangle);
+	rotate(&c_T12, nextangle_current - currentangle);
+	rotate(&c_T21, nextangle_current - currentangle);
+	rotate(&c_T22, nextangle_current - currentangle);
+	rotate(&c_T111, nextangle_current - currentangle);
+	rotate(&c_T112, nextangle_current - currentangle);
+	rotate(&c_T121, nextangle_current - currentangle);
+	rotate(&c_T122, nextangle_current - currentangle);
+	rotate(&c_T211, nextangle_current - currentangle);
+	rotate(&c_T212, nextangle_current - currentangle);
+	rotate(&c_T221, nextangle_current - currentangle);
+	rotate(&c_T222, nextangle_current - currentangle);
 
 	if (nextangle_target == nextangle_current) {
 	    pathlength = pathmax;
-	    angle = nextangle_target;
+	    currentangle = nextangle_target;
 	}
     }
 
@@ -193,8 +193,8 @@ LED_tree1::animation(void)
     if (nextangle_target == nextangle_current) {
 	pathlength--;
 	if (pathlength == 0) {
-	    nextangle_current = angle;
-	    nextangle_target = angle + angleturn * (random() % 2 == 0 ? -1 : 1);
+	    nextangle_current = currentangle;
+	    nextangle_target = currentangle + currentangle_turn * (random() % 2 == 0 ? -1 : 1);
 	}
     }
 

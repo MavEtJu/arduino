@@ -21,11 +21,13 @@ public:
     void animation(void);
 
     struct coordinates c_center;
-    int16_t angle;		// Current orientiation
-    int16_t angleturn;		// Turn factor at the end of the line
+
+    int16_t currentangle;	// Current orientiation
+    int16_t currentangle_turn;	// Turn factor at the end of the line
     int16_t nextangle_current;	// Next current orientation
     int16_t nextangle_target;	// Next current orientation
     int16_t nextangle_turn;	// Increase in current orientation when != nextagnle
+
     int8_t pathlength;
     int8_t pathmax;
 };
