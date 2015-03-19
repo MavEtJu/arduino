@@ -1,15 +1,52 @@
 .SUFFIXES:	.ino .hex .eep .elf .a
 
-ARDUINO_DIR=/usr/local/arduino
+# Defined in the Makefile:
+#
+# ARDUINO_VER=	1.0.6
+# ARDUINO_VER=	1.6.1
+#
+# ARDUINO_MODEL= Uno
+# ARDUINO_MODEL= Mega2560
+#
+
+ARDUINO_DIR=/usr/local/arduino-${ARDUINO_VER}
+.if ${ARDUINO_VER} == "1.0.6"
+ARDUINO_DEF=106
+ARDUINO_HARDWARE_DIR=${ARDUINO_DIR}/hardware/arduino/
+.elif ${ARDUINO_VER} == "1.6.1"
+ARDUINO_DEF=10600
+ARDUINO_HARDWARE_DIR=${ARDUINO_DIR}/hardware/arduino/avr/
+.else
+. error ARDUINO_VER should be 1.0.6 or 1.6.1
+.endif
 BUILDDIR=./build/${TARGET}
 EMULATORDIR=../emulator
+
+# Arduino Mega256
+.if ${ARDUINO_MODEL} == "Mega2560"
+PARTNO=		atmega2560
+PROTO=		wiring
+MCU=		atmega2560
+CFLAGS_ARDUINO=	-DARDUINO_AVR_MEGA2560 -DARDUINO_ARCH_AVR -DARDUINO=${ARDUINO_DEF}
+.elif ${ARDUINO_MODEL} == "Uno"
+# Arduino UNO
+PARTNO=		atmega328p
+PROTO=		arduino
+MCU=		atmega328p
+CFLAGS_ARDUINO=	-DARDUINO=${ARDUINO_DEF} 
+.else
+. error ARDUINO_MODEL should be Mega2560 or Uni
+.endif
 
 COMPORT=	/dev/cuaU0
 COMSPEED=	115200
 
-AVRLIBC_FILES=			\
-	malloc.c		\
-	realloc.c
+AVRLIBC_FILES=
+.if ${ARDUINO_VER} == "1.0.6"
+AVRLIBC_FILES+=			\
+	realloc.c		\
+	malloc.c
+.endif
 
 BASE_C_FILES=			\
 	WInterrupts.c		\
@@ -18,6 +55,10 @@ BASE_C_FILES=			\
 	wiring_digital.c	\
 	wiring_pulse.c		\
 	wiring_shift.c
+.if ${ARDUINO_VER} == "1.6.1"
+BASE_C_FILES+=			\
+	hooks.c
+.endif
 
 BASE_CXX_FILES=			\
 	CDC.cpp			\
@@ -33,6 +74,15 @@ BASE_CXX_FILES=			\
 	WString.cpp		\
 	main.cpp
 
+.if ${ARDUINO_VER} == "1.6.1"
+BASE_CXX_FILES+=		\
+	abi.cpp			\
+	HardwareSerial3.cpp	\
+	HardwareSerial2.cpp	\
+	HardwareSerial1.cpp	\
+	HardwareSerial0.cpp
+.endif
+
 EMULATOR_FILES=			\
 	Adafruit_NeoPixel.cpp	\
 	Arduino.cpp		\
@@ -41,12 +91,21 @@ EMULATOR_FILES=			\
 	Serial.cpp
 
 O_FILES=				\
-	${SRC_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/}	\
-	${INO_FILES:S/^/${BUILDDIR}\//:S/.ino/.o/}	\
-	${MODULES:S/^/${BUILDDIR}\//:S/$/.o/}		\
 	${AVRLIBC_FILES:S/^/${BUILDDIR}\//:S/.c$/.o/}	\
 	${BASE_C_FILES:S/^/${BUILDDIR}\//:S/.c$/.o/}	\
 	${BASE_CXX_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/}
+.for f in ${INO_FILES}
+O_FILES+= \
+	${f:S/^/${BUILDDIR}\//:S/.ino/.o/}
+.endfor
+.for f in ${SRC_FILES}
+O_FILES+= \
+	${SRC_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/}
+.endfor
+.for f in ${SRC_FILES}
+O_FILES+= \
+	${MODULES:S/^/${BUILDDIR}\//:S/$/.o/}
+.endfor
 
 .if defined(TARGET)
 . if ${TARGET} == "arduino"
@@ -64,10 +123,23 @@ AR=avr-gcc-ar
 CFLAGS= \
 	-c -Os -Wall -Wno-char-subscripts \
 	-fno-exceptions -ffunction-sections -fdata-sections \
-	-mmcu=atmega328p -DF_CPU=16000000L -MMD \
-	-DUSB_VID=null -DUSB_PID=null -DARDUINO=106 \
-	-I${ARDUINO_DIR}/hardware/arduino/cores/arduino \
-	-I${ARDUINO_DIR}/hardware/arduino/variants/standard
+	-fno-threadsafe-statics \
+	-mmcu=${MCU} -DF_CPU=16000000L -MMD \
+	${CFLAGS_ARDUINO}
+.if ${ARDUINO_MODEL} == "Uno"
+CFLAGS+= \
+	-I${ARDUINO_HARDWARE_DIR}/variants/standard \
+	-I${ARDUINO_HARDWARE_DIR}/cores/arduino
+.endif
+.if ${ARDUINO_MODEL} == "Mega2560"
+CFLAGS+= \
+	-I${ARDUINO_HARDWARE_DIR}/cores/arduino \
+	-I${ARDUINO_HARDWARE_DIR}/variants/mega
+.endif
+.if ${ARDUINO_VER} == "1.0.6"
+CFLAGS+= \
+	-DUSB_VID=null -DUSB_PID=null
+.endif
 .for M in ${MODULES}
 CFLAGS+= -I${SKETCHBOOK_DIR}/libraries/${M}
 .endfor
@@ -76,7 +148,7 @@ CXXFLAGS=	${CFLAGS}
 
 all_arduino: ${BUILDDIR} ${BUILDDIR}/${PROJECT}.hex ${BUILDDIR}/${PROJECT}.eep 
 	avrdude \
-	    -D -F -V -v -p atmega328p -c arduino \
+	    -D -F -V -v -p ${PARTNO} -c ${PROTO} \
 	    -P ${COMPORT} -b ${COMSPEED} -Uflash:w:${BUILDDIR}/${PROJECT}.hex:i
 	${MAKE} size_arduino
 	sleep 2
@@ -93,15 +165,15 @@ size_arduino: ${BUILDDIR} ${BUILDDIR}/${PROJECT}.elf
 	${CXX} ${CXXFLAGS} -Werror -x c++ -o ${.TARGET} -c ${.ALLSRC}
 
 .for M in ${AVRLIBC_FILES}
-${M:S/^/${BUILDDIR}\//:S/.c$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/avr-libc/${M}
+${M:S/^/${BUILDDIR}\//:S/.c$/.o/}: ${ARDUINO_HARDWARE_DIR}/cores/arduino/avr-libc/${M}
 	${CC} ${CFLAGS} -o ${.TARGET} -c ${.ALLSRC}
 .endfor
 .for M in ${BASE_C_FILES}
-${M:S/^/${BUILDDIR}\//:S/.c$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/${M}
+${M:S/^/${BUILDDIR}\//:S/.c$/.o/}: ${ARDUINO_HARDWARE_DIR}/cores/arduino/${M}
 	${CC} ${CFLAGS} -o ${.TARGET} -c ${.ALLSRC}
 .endfor
 .for M in ${BASE_CXX_FILES}
-${M:S/^/${BUILDDIR}\//:S/.cpp$/.o/}: ${ARDUINO_DIR}/hardware/arduino/cores/arduino/${M}
+${M:S/^/${BUILDDIR}\//:S/.cpp$/.o/}: ${ARDUINO_HARDWARE_DIR}/cores/arduino/${M}
 	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
 .endfor
 
@@ -124,7 +196,7 @@ core.a: ${O_FILES}
 	${AR} rcs ${.TARGET} ${.ALLSRC} ${O_FILES}
 
 ${BUILDDIR}/${PROJECT}.elf: core.a
-	${CC} -Os -Wl,--gc-sections -mmcu=atmega328p -o ${.TARGET} ${.ALLSRC} -lm
+	${CC} -Os -Wl,--gc-sections,--relax -mmcu=${MCU} -o ${.TARGET} ${.ALLSRC} -lm
 
 ${BUILDDIR}/${PROJECT}.eep: ${BUILDDIR}/${PROJECT}.elf
 	${ARDUINO_DIR}/hardware/tools/avr/bin/avr-objcopy \
@@ -188,7 +260,7 @@ ${BUILDDIR}:
 	mkdir -p ${BUILDDIR}
 
 clean:
-	rm -rf build
+	rm -rf build core.a
 
 depends:
 	${CC} ${CXXFLAGS} -x c++ -M *.ino *.cpp > .depend
