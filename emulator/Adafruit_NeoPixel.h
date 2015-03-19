@@ -4,6 +4,7 @@
 #define Adafruit_NeoPixel__h
 
 #include <curses.h>
+#include <Arduino.h>
 
 #define NEO_GRB		(1 << 0)
 #define	NEO_KHZ800	(1 << 1)
