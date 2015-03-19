@@ -24,16 +24,6 @@ setup(void)
 }
 
 
-void
-loop(void)
-{
-    loop_blink();
-    loop_redgreenchasing();
-    loop_tower();
-    strip.show();
-    delay(DELAY);
-}
-
 
 void
 loop_blink(void)
@@ -43,6 +33,16 @@ loop_blink(void)
     digitalWrite(PIN_BLINK, (++onoff % 8) == 0 ? HIGH : LOW);
 }
 
+
+void
+line(byte l, uint32_t colour)
+{
+    byte offset = l * LEDSPERLAYER;
+    
+    for (byte i = offset; i < offset + LEDSPERLAYER; i++) {
+        strip.setPixelColor(i, colour);
+    }
+}
 
 #define TOWER_DELAY    3
 void
@@ -65,16 +65,6 @@ loop_tower()
         h_delay = TOWER_DELAY;
     }
     line(h, purple);
-}
-
-void
-line(byte l, uint32_t colour)
-{
-    byte offset = l * LEDSPERLAYER;
-    
-    for (byte i = offset; i < offset + LEDSPERLAYER; i++) {
-        strip.setPixelColor(i, colour);
-    }
 }
 
 
@@ -114,4 +104,15 @@ loop_redgreenchasing(void)
     for (i = 0; i < LAYERS; i++) {
         strip.setPixelColor(i * LEDSPERLAYER + x_green, green);
     }
+}
+
+
+void
+loop(void)
+{
+    loop_blink();
+//    loop_redgreenchasing();
+//    loop_tower();
+//    strip.show();
+    delay(DELAY);
 }
