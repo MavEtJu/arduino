@@ -78,14 +78,24 @@ LED_hilbert1::rot(int n, int *x, int *y, int rx, int ry)
 
 MYCONSTRUCTOR_ANIMATION(LED_tree1)
 {
-    delayms = 200;
-    currentangle_turn = currentangle = nextangle_current = nextangle_target = 90;
-    nextangle_turn = 30;
-    pathmax = _VIEW_WIDTH / 2;
+    delayms = 100;
+    currangle_turn = 90;
+    prevangle = 0;
+    currangle = prevangle + currangle_turn;
+    pathmax = _VIEW_WIDTH / 3;
     pathlength = pathmax;
 
     c_center.x = _VIEW_WIDTH / 2;
     c_center.y = _VIEW_HEIGHT / 2;
+}
+
+void
+LED_tree1::prev(struct coordinates out,
+		struct coordinates *in,
+		int prevangle, int len)
+{
+    in->x = out.x - round(COS(prevangle) * len);
+    in->y = out.y - round(SIN(prevangle) * len);
 }
 
 void
@@ -117,67 +127,50 @@ LED_tree1::rotate(struct coordinates *c, int angle)
 void
 LED_tree1::animation(void)
 {
-    struct coordinates c_start, c_target;
+    struct coordinates c_start, c_target, c_end;
+    struct coordinates c_P1;
     struct coordinates c_T1, c_T2, c_T11, c_T12, c_T21, c_T22;
     struct coordinates c_T111, c_T112, c_T121, c_T122;
     struct coordinates c_T211, c_T212, c_T221, c_T222;
+    double m;
 
-    next(c_center, &c_target, NULL , currentangle, 0  , 2 * pathlength              );
-    next(c_center, &c_start , NULL , currentangle, 180, 2 * pathmax - 2 * pathlength);
-    next(c_target, &c_T1    , &c_T2, currentangle, currentangle_turn, pathmax / 2);
+    m = 1 + 1.0 * (pathmax - pathlength) / pathmax;
 
-    next(c_T1 , &c_T11 , &c_T12 , currentangle +     currentangle_turn, currentangle_turn, pathmax / 4);
-    next(c_T2 , &c_T21 , &c_T22 , currentangle +     currentangle_turn, currentangle_turn, pathmax / 4);
-    next(c_T11, &c_T111, &c_T112, currentangle + 2 * currentangle_turn, currentangle_turn, pathmax / 8);
-    next(c_T12, &c_T121, &c_T122, currentangle + 2 * currentangle_turn, currentangle_turn, pathmax / 8);
-    next(c_T21, &c_T211, &c_T212, currentangle + 2 * currentangle_turn, currentangle_turn, pathmax / 8);
-    next(c_T22, &c_T221, &c_T222, currentangle + 2 * currentangle_turn, currentangle_turn, pathmax / 8);
+    next(c_center, &c_target, NULL , currangle,   0, m * pathlength              );
+    next(c_center, &c_start , NULL , currangle, 180, m * pathmax - pathlength    );
+    next(c_center, &c_end   , NULL , currangle, 180, m * 2 * pathmax - pathlength);
+    next(c_target, &c_T1    , &c_T2, currangle, currangle_turn, m * pathmax / 2  );
+    prev(c_start,  &c_P1, prevangle, m * pathmax);
 
-    if (nextangle_target != nextangle_current) {
-	nextangle_current += (nextangle_target > nextangle_current ? 1 : -1) * nextangle_turn;
-	SERIAL2("Angle: ", currentangle);
-	SERIAL4("nextangle_current:", nextangle_current, " nextangle_target:", nextangle_target);
-	rotate(&c_start, nextangle_current - currentangle);
-	rotate(&c_target, nextangle_current - currentangle);
-	rotate(&c_T1, nextangle_current - currentangle);
-	rotate(&c_T2, nextangle_current - currentangle);
-	rotate(&c_T11, nextangle_current - currentangle);
-	rotate(&c_T12, nextangle_current - currentangle);
-	rotate(&c_T21, nextangle_current - currentangle);
-	rotate(&c_T22, nextangle_current - currentangle);
-	rotate(&c_T111, nextangle_current - currentangle);
-	rotate(&c_T112, nextangle_current - currentangle);
-	rotate(&c_T121, nextangle_current - currentangle);
-	rotate(&c_T122, nextangle_current - currentangle);
-	rotate(&c_T211, nextangle_current - currentangle);
-	rotate(&c_T212, nextangle_current - currentangle);
-	rotate(&c_T221, nextangle_current - currentangle);
-	rotate(&c_T222, nextangle_current - currentangle);
+    next(c_T1 , &c_T11 , &c_T12 , currangle +     currangle_turn, currangle_turn, m * pathmax / 4);
+    next(c_T2 , &c_T21 , &c_T22 , currangle +     currangle_turn, currangle_turn, m * pathmax / 4);
+    next(c_T11, &c_T111, &c_T112, currangle + 2 * currangle_turn, currangle_turn, m * pathmax / 8);
+    next(c_T12, &c_T121, &c_T122, currangle + 2 * currangle_turn, currangle_turn, m * pathmax / 8);
+    next(c_T21, &c_T211, &c_T212, currangle + 2 * currangle_turn, currangle_turn, m * pathmax / 8);
+    next(c_T22, &c_T221, &c_T222, currangle + 2 * currangle_turn, currangle_turn, m * pathmax / 8);
 
-	if (nextangle_target == nextangle_current) {
-	    pathlength = pathmax;
-	    currentangle = nextangle_target;
-	}
-    }
+    // Line you came from
+    _led->colour_set(_led->colour_fade(_led->colour_white, 0));
+    _led->line(c_start, c_P1);
 
     // Current line you are on
-    _led->colour_set(_led->colour_green);
-    _led->line(c_start, c_target);
+    _led->colour_set(_led->colour_fade(_led->colour_white, 0));
+    _led->line(c_end, c_target);
 
     // Next turn
-    _led->colour_set(_led->colour_blue);
+    _led->colour_set(_led->colour_fade(_led->colour_white, 1));
     _led->line(c_T1, c_target);
     _led->line(c_T2, c_target);
 
     // Next next turn
-    _led->colour_set(_led->colour_yellow);
+    _led->colour_set(_led->colour_fade(_led->colour_white, 2));
     _led->line(c_T11, c_T1);
     _led->line(c_T12, c_T1);
     _led->line(c_T21, c_T2);
     _led->line(c_T22, c_T2);
 
     // Next next next turn
-    _led->colour_set(_led->colour_magenta);
+    _led->colour_set(_led->colour_fade(_led->colour_white, 3));
     _led->line(c_T111, c_T11);
     _led->line(c_T112, c_T11);
     _led->line(c_T121, c_T12);
@@ -187,16 +180,16 @@ LED_tree1::animation(void)
     _led->line(c_T221, c_T22);
     _led->line(c_T222, c_T22);
 
+    _led->dot(c_start, _led->colour_yellow);
     _led->dot(c_center, _led->colour_red);
     _led->dot(c_target, _led->colour_cyan);
 
-    if (nextangle_target == nextangle_current) {
-	pathlength--;
-	if (pathlength == 0) {
-	    nextangle_current = currentangle;
-	    nextangle_target = currentangle + currentangle_turn * (random() % 2 == 0 ? -1 : 1);
-	}
+    pathlength--;
+    if (pathlength == 0) {
+	pathlength = pathmax;
+	prevangle = currangle;
+	currangle += currangle_turn * (random() % 2 == 0 ? -1 : 1);
+
+	SERIAL4("prevangle:", prevangle, " currangle:", currangle);
     }
-
-
 }

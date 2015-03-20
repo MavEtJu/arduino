@@ -17,16 +17,15 @@ class LED_tree1 : public LED_Animation {
 public:
     MYOWNCONSTRUCTOR(LED_tree1);
     void next(struct coordinates in, struct coordinates *out1, struct coordinates *out2, int angle, int angleturn, int len);
+    void prev(struct coordinates out, struct coordinates *in, int prevangle, int len);
     void rotate(struct coordinates *c, int angle);
     void animation(void);
 
     struct coordinates c_center;
 
-    int16_t currentangle;	// Current orientiation
-    int16_t currentangle_turn;	// Turn factor at the end of the line
-    int16_t nextangle_current;	// Next current orientation
-    int16_t nextangle_target;	// Next current orientation
-    int16_t nextangle_turn;	// Increase in current orientation when != nextagnle
+    int16_t prevangle;		// Previous orientiation
+    int16_t currangle;		// Current orientiation
+    int16_t currangle_turn;	// Turn factor at the end of the line
 
     int8_t pathlength;
     int8_t pathmax;
