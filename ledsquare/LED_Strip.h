@@ -8,22 +8,7 @@
 
 #define VIEW_SQUARE  1
 
-struct LED {
-    uint8_t green;
-    uint8_t red;
-    uint8_t blue;
-};
-typedef struct LED LED;
-
-struct coordinates {
-    int16_t x, y;
-};
-struct distance {
-    int16_t dx, dy;
-};
-struct area {
-    struct coordinates c1, c2;
-};
+#include "LED_Types.h"
 
 class LED_Strip : public Adafruit_NeoPixel {
 public:
