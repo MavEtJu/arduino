@@ -2,9 +2,10 @@
 //
 
 #include <stdio.h>
-#include <Serial.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <Serial.h>
 
 #define LOGNR	10
 Serial::Serial(void)
@@ -145,6 +146,18 @@ void
 Serial::println(double ud)
 {
 	plog += sprintf(plog, "%f", ud);
+	lognr_increase_written();
+}
+void
+Serial::print(struct coordinates c)
+{
+	plog += sprintf(plog, "%d,%d", c.x, c.y);
+}
+
+void
+Serial::println(struct coordinates c)
+{
+	plog += sprintf(plog, "%d,%d", c.x, c.y);
 	lognr_increase_written();
 }
 void

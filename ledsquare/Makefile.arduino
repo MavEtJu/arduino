@@ -219,7 +219,7 @@ ${BUILDDIR}/${PROJECT}.hex: ${BUILDDIR}/${PROJECT}.elf
 LDFLAGS= -lcurses
 CFLAGS= \
 	-c -g -Os -Wall -Werror -Wno-char-subscripts \
-	-I${EMULATORDIR}
+	-I${EMULATORDIR} -I.
 .for M in ${MODULES}
 CFLAGS+= -I${SKETCHBOOK_DIR}/libraries/${M}
 .endfor

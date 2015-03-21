@@ -4,6 +4,9 @@
 #if !defined(Serial__h)
 #define Serial__h
 
+#include "Arduino_types.h"
+#include "LED_Types.h"
+
 class Serial {
 public:
     Serial(void);
@@ -26,6 +29,8 @@ public:
     void print(signed int si);
     void println(double ud);
     void print(double ud);
+    void println(struct coordinates c);
+    void print(struct coordinates c);
 
     int lines(void);
     char *get(void);
