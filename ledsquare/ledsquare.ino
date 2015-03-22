@@ -16,8 +16,8 @@
 #define PIN_BLINK   13
 #define PIN_STRIP    6
 
-#define VIEW_WIDTH  16
-#define VIEW_HEIGHT 16
+#define VIEW_WIDTH  32
+#define VIEW_HEIGHT 32
 
 #ifndef DELAY
 #define DELAY	30l

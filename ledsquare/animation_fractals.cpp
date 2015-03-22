@@ -137,8 +137,8 @@ LED_tree1::animation(void)
     m = 1 + 1.0 * (pathmax - pathlength) / pathmax;
 
     next(c_center, &c_target, NULL , currangle,   0, m * pathlength              );
-    next(c_center, &c_start , NULL , currangle, 180, m * pathmax - pathlength    );
-    next(c_center, &c_end   , NULL , currangle, 180, m * 2 * pathmax - pathlength);
+    next(c_center, &c_start , NULL , currangle, 180, m * (pathmax - pathlength)    );
+    next(c_center, &c_end   , NULL , currangle, 180, m * (2 * pathmax - pathlength));
     next(c_target, &c_T1    , &c_T2, currangle, currangle_turn, m * pathmax / 2  );
     prev(c_start,  &c_P1, prevangle, m * pathmax);
 
@@ -191,5 +191,93 @@ LED_tree1::animation(void)
 	currangle += currangle_turn * (random() % 2 == 0 ? -1 : 1);
 
 	SERIAL4("prevangle:", prevangle, " currangle:", currangle);
+    }
+}
+
+// ===========================
+
+MYCONSTRUCTOR_ANIMATION(LED_tree2)
+{
+    delayms = 200;
+    turnangle = 45;
+    prevturn = turnangle;
+    currangle = 0;
+    pathmax = 2 * _VIEW_WIDTH / 3;
+    pathmax = 10;
+    pathlength = pathmax;
+
+    c_start.x = _VIEW_WIDTH / 2;
+    c_start.y = _VIEW_HEIGHT / 2;
+
+    SERIAL4("Currangle:", currangle, " prevturn:", prevturn);
+}
+
+void
+LED_tree2::next(struct coordinates in,
+		struct coordinates *out1, struct coordinates *out2,
+		int angle, int angleturn, int len)
+{
+    if (out1 != NULL) {
+	out1->x = in.x + round(COS(angle + angleturn) * len);
+	out1->y = in.y + round(SIN(angle + angleturn) * len);
+    }
+    if (out2 != NULL) {
+	out2->x = in.x + round(COS(angle - angleturn) * len);
+	out2->y = in.y + round(SIN(angle - angleturn) * len);
+    }
+}
+
+void
+LED_tree2::drawnext(struct coordinates c_T, int len, int currangle, int turnangle, LED c, double m)
+{
+    struct coordinates c_T1, c_T2;
+    if (len < 2)
+	return;
+
+    next(c_T, &c_T1, &c_T2, currangle, turnangle, m * len);
+    _led->line(c_T, c_T1);
+    _led->line(c_T, c_T2);
+
+    _led->colour_set(c);
+    c = _led->colour_fade(c, 1);
+    drawnext(c_T1, len / 2, currangle + turnangle,  turnangle, c, m);
+    drawnext(c_T2, len / 2, currangle - turnangle,  turnangle, c, m);
+}
+
+void
+LED_tree2::animation(void)
+{
+    double m;
+    LED c = _led->colour_white;
+    struct coordinates c_prev, c_offset1, c_offset, c_origin;
+
+    m = 1 + 1.0 * (pathmax - pathlength) / pathmax;
+
+    next(c_start, &c_offset1, NULL, currangle, turnangle, m * (pathmax - pathlength));
+    SERIAL4("start:", c_start, " O1:", c_offset1);
+//    c_offset.x = c_start.x - (c_offset1.x - c_start.x);
+//    c_offset.y = c_start.y - (c_offset1.y - c_start.y);
+    c_offset = c_start;
+
+    next(c_offset, &c_prev, NULL, currangle - 180, 0, 2 * pathmax);
+    _led->line(c_offset, c_prev, c);
+
+    _led->colour_set(c);
+    drawnext(c_offset, pathmax, currangle, turnangle, c, m);
+
+    // Current line you are on
+    _led->colour_set(c);
+    c = _led->colour_fade(c, 1);
+
+    _led->dot(c_start, _led->colour_yellow);
+    _led->dot(c_offset, _led->colour_cyan);
+
+    pathlength--;
+    if (pathlength == 0) {
+	pathlength = pathmax;
+	prevturn = turnangle * (random() % 2 == 0 ? -1 : 1);
+	currangle += prevturn;
+
+	SERIAL4("Currangle:", currangle, " prevturn:", prevturn);
     }
 }
