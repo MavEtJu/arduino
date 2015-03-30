@@ -12,16 +12,7 @@
 #include "A_Tools.h"
 #include "slides.h"
 #include "animations.h"
-
-#define PIN_BLINK   13
-#define PIN_STRIP    6
-
-#define VIEW_WIDTH  32
-#define VIEW_HEIGHT 32
-
-#ifndef DELAY
-#define DELAY	30l
-#endif
+#include "ledsquare.h"
 
 LED_Strip led = LED_Strip(VIEW_WIDTH * VIEW_HEIGHT, PIN_STRIP);
 
@@ -193,7 +184,7 @@ loop(void)
 	NEW_ANIMATION(LED_squares3a)
 	NEW_ANIMATION(LED_squares3b)
 	NEW_ANIMATION(LED_squares3c)
-	//NEW_SLIDESHOW(LED_minecraft1)
+	NEW_SLIDESHOW(LED_minecraft1)
 	NEW_ANIMATION(LED_cross1)
 	NEW_ANIMATION(LED_squares4a)
 	NEW_ANIMATION(LED_squares4b)
