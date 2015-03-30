@@ -291,31 +291,31 @@ MYCONSTRUCTOR_ANIMATION(LED_lines2)
     c = (struct LED_lines2_coordinates *)malloc(sizeof(struct LED_lines2_coordinates) * 2 * (_VIEW_WIDTH / length + _VIEW_HEIGHT / length));
 
     int ic = 0;
-    for (int y = 0; y < _VIEW_HEIGHT - 1; y += length) {
+    for (int y = 0; y < _sVIEW_HEIGHT - 1; y += length) {
 	c[ic].c.x = 0;
 	c[ic].c.y = y;
 	c[ic].a0 = y == 0 ? 0 : 270;
-	c[ic].a1 = y == _VIEW_HEIGHT - 1 ? 0 : 90;
+	c[ic].a1 = y == _sVIEW_HEIGHT - 1 ? 0 : 90;
 	ic++;
     }
-    for (int x = 0; x < _VIEW_WIDTH - 1; x += length) {
+    for (int x = 0; x < _sVIEW_WIDTH - 1; x += length) {
 	c[ic].c.x = x;
 	c[ic].c.y = _VIEW_HEIGHT - 1;
 	c[ic].a0 = x == 0 ? 270 : 180;
-	c[ic].a1 = x == _VIEW_WIDTH - 1 ? 270 : 0;
+	c[ic].a1 = x == _sVIEW_WIDTH - 1 ? 270 : 0;
 	ic++;
     }
-    for (int y = _VIEW_HEIGHT - 1; y > 0; y -= length) {
+    for (int y = _sVIEW_HEIGHT - 1; y > 0; y -= length) {
 	c[ic].c.x = _VIEW_WIDTH - 1;
 	c[ic].c.y = y;
-	c[ic].a0 = y == _VIEW_HEIGHT - 1 ? 180 : 90;
+	c[ic].a0 = y == _sVIEW_HEIGHT - 1 ? 180 : 90;
 	c[ic].a1 = y == 0 ? 180 : 270;
 	ic++;
     }
-    for (int x = _VIEW_WIDTH - 1; x > 0; x -= length) {
+    for (int x = _sVIEW_WIDTH - 1; x > 0; x -= length) {
 	c[ic].c.x = x;
 	c[ic].c.y = 0;
-	c[ic].a0 = x == _VIEW_WIDTH - 1 ? 90 : 0;
+	c[ic].a0 = x == _sVIEW_WIDTH - 1 ? 90 : 0;
 	c[ic].a1 = x == 0 ? 90 : 180;
 	ic++;
     }
@@ -352,7 +352,6 @@ LED_lines2::animation(void)
 	    history[i].c2.x, history[i].c2.y,
 	    _led->colour_fade(_led->colour_transform(step), i));
 
-	continue;
 	_led->line(
 	    _VIEW_WIDTH - 1 - history[i].c1.x, _VIEW_HEIGHT - 1 - history[i].c1.y,
 	    _VIEW_WIDTH - 1 - history[i].c2.x, _VIEW_HEIGHT - 1 - history[i].c2.y,
