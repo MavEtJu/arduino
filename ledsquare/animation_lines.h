@@ -45,13 +45,14 @@ public:
     void animation(void);
     void shift_history(int16_t c1x, int16_t c1y, int16_t c2x, int16_t c2y);
 
-    struct LED_lines2_coordinates c[12];
+    struct LED_lines2_coordinates *c;
 
     struct area history[LED_lines2_history];
     struct LED colour;
 
     int16_t x0, y0, coor;
     int16_t angle, length;
+    int8_t ics;
 };
 
 class LED_lines3 : public LED_Animation {

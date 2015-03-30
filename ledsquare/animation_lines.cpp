@@ -284,71 +284,43 @@ MYCONSTRUCTOR_ANIMATION(LED_lines2)
     angle = 0;
     delayms = 25;
     colour = _led->colour_random_notblack();
+    memset(history, '\0', sizeof(history[0]) * LED_lines2_history);
 
     coor = 0;
 
-    // Bottom left
-    c[0].c.x = 0;
-    c[0].c.y = 0;
-    c[0].a0 = 0;
-    c[0].a1 = 90;
+    c = (struct LED_lines2_coordinates *)malloc(sizeof(struct LED_lines2_coordinates) * 2 * (_VIEW_WIDTH / length + _VIEW_HEIGHT / length));
 
-    c[1].c.x = 0;
-    c[1].c.y = 5;
-    c[1].a0 = 270;
-    c[1].a1 = 90;
+    int ic = 0;
+    for (int y = 0; y < _VIEW_HEIGHT - 1; y += length) {
+	c[ic].c.x = 0;
+	c[ic].c.y = y;
+	c[ic].a0 = y == 0 ? 0 : 270;
+	c[ic].a1 = y == _VIEW_HEIGHT - 1 ? 0 : 90;
+	ic++;
+    }
+    for (int x = 0; x < _VIEW_WIDTH - 1; x += length) {
+	c[ic].c.x = x;
+	c[ic].c.y = _VIEW_HEIGHT - 1;
+	c[ic].a0 = x == 0 ? 270 : 180;
+	c[ic].a1 = x == _VIEW_WIDTH - 1 ? 270 : 0;
+	ic++;
+    }
+    for (int y = _VIEW_HEIGHT - 1; y > 0; y -= length) {
+	c[ic].c.x = _VIEW_WIDTH - 1;
+	c[ic].c.y = y;
+	c[ic].a0 = y == _VIEW_HEIGHT - 1 ? 180 : 90;
+	c[ic].a1 = y == 0 ? 180 : 270;
+	ic++;
+    }
+    for (int x = _VIEW_WIDTH - 1; x > 0; x -= length) {
+	c[ic].c.x = x;
+	c[ic].c.y = 0;
+	c[ic].a0 = x == _VIEW_WIDTH - 1 ? 90 : 0;
+	c[ic].a1 = x == 0 ? 90 : 180;
+	ic++;
+    }
 
-    c[2].c.x = 0;
-    c[2].c.y = 10;
-    c[2].a0 = 270;
-    c[2].a1 = 90;
-
-    c[3].c.x = 0;
-    c[3].c.y = 15;
-    c[3].a0 = 270;
-    c[3].a1 = 0;
-
-    c[4].c.x = 5;
-    c[4].c.y = 15;
-    c[4].a0 = 180;
-    c[4].a1 = 0;
-
-    c[5].c.x = 10;
-    c[5].c.y = 15;
-    c[5].a0 = 180;
-    c[5].a1 = 0;
-
-    c[6].c.x = 15;
-    c[6].c.y = 15;
-    c[6].a0 = 180;
-    c[6].a1 = 270;
-
-    c[7].c.x = 15;
-    c[7].c.y = 10;
-    c[7].a0 = 90;
-    c[7].a1 = 270;
-
-    c[8].c.x = 15;
-    c[8].c.y = 5;
-    c[8].a0 = 90;
-    c[8].a1 = 270;
-
-    c[9].c.x = 15;
-    c[9].c.y = 0;
-    c[9].a0 = 90;
-    c[9].a1 = 180;
-
-    c[10].c.x = 10;
-    c[10].c.y = 0;
-    c[10].a0 = 0;
-    c[10].a1 = 180;
-
-    c[11].c.x = 5;
-    c[11].c.y = 0;
-    c[11].a0 = 0;
-    c[11].a1 = 180;
-
-    memset(history, '\0', sizeof(history[0]) * LED_lines2_history);
+    ics = ic;
 }
 
 void
@@ -380,6 +352,7 @@ LED_lines2::animation(void)
 	    history[i].c2.x, history[i].c2.y,
 	    _led->colour_fade(_led->colour_transform(step), i));
 
+	continue;
 	_led->line(
 	    _VIEW_WIDTH - 1 - history[i].c1.x, _VIEW_HEIGHT - 1 - history[i].c1.y,
 	    _VIEW_WIDTH - 1 - history[i].c2.x, _VIEW_HEIGHT - 1 - history[i].c2.y,
@@ -388,12 +361,12 @@ LED_lines2::animation(void)
 	_led->line(
 	    _VIEW_WIDTH - history[i].c1.y, history[i].c1.x,
 	    _VIEW_WIDTH - history[i].c2.y, history[i].c2.x,
-	    _led->colour_fade(_led->colour_transform(step + 12), i));
+	    _led->colour_fade(_led->colour_transform(step + ics), i));
 
 	_led->line(
 	    history[i].c1.y, _VIEW_HEIGHT - 1 - history[i].c1.x,
 	    history[i].c2.y, _VIEW_HEIGHT - 1 - history[i].c2.x,
-	    _led->colour_fade(_led->colour_transform(step + 12), i));
+	    _led->colour_fade(_led->colour_transform(step + ics), i));
 
     }
 
@@ -402,9 +375,11 @@ LED_lines2::animation(void)
 
     if (c[coor].a1 == angle) {
 	coor++;
-	coor %= 12;
+	coor %= ics;
 	angle = c[coor].a0;
+	SERIAL9(coor, ": ", c[coor].c.x, ",", c[coor].c.y, " ", c[coor].a0, " ", c[coor].a1);
     }
+    SERIAL2("angle: ", angle);
 }
 
 // =============================
