@@ -31,23 +31,4 @@ public:
     int8_t pathmax;
 };
 
-class LED_tree2 : public LED_Animation {
-public:
-    MYOWNCONSTRUCTOR(LED_tree2);
-    void next(struct coordinates in, struct coordinates *out1, struct coordinates *out2, int angle, int angleturn, int len);
-    void prev(struct coordinates out, struct coordinates *in, int prevangle, int len);
-    void rotate(struct coordinates *c, int angle);
-    void drawnext(struct coordinates c_T1, int pathlength, int currangle, int turnangle, LED c, double m);
-    void animation(void);
-
-    struct coordinates c_offset, c_start;
-
-    int16_t currangle;		// Current orientiation
-    int16_t turnangle;		// Turn factor at the end of the line
-    int16_t prevturn;		// Turn factor at the end of the line
-
-    int8_t pathlength;
-    int8_t pathmax;
-};
-
 #endif
