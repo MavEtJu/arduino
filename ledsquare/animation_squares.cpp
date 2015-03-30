@@ -585,14 +585,14 @@ LED_movingsquares2::init(int num)
     size = _VIEW_WIDTH / numsquares;
     x0[0] = 0;
     y0[0] = 0;
-    x1[0] = size;
-    y1[0] = size;
+    x1[0] = _VIEW_WIDTH / numsquares;
+    y1[0] = _VIEW_HEIGHT / numsquares;
     x[0] = x0[0];
     y[0] = y0[0];
     x0[1] = 0;
     y0[1] = 0;
-    x1[1] = size;
-    y1[1] = size;
+    x1[1] = _VIEW_WIDTH / numsquares;
+    y1[1] = _VIEW_HEIGHT / numsquares;
     x[1] = x1[1];
     y[1] = y1[1];
 }
@@ -856,7 +856,7 @@ LED_square_splitting::animation(void)
 	_led->square(0, 0, _VIEW_WIDTH, _VIEW_HEIGHT, c_previous);
 	_led->line(c0, c, c_now);
 
-	if (steps <  _sVIEW_WIDTH + 1)  {
+	if (steps <  _sVIEW_WIDTH + 1 && steps < _sVIEW_HEIGHT + 1)  {
 	    c0.x += d.dx;
 	    c0.y += d.dy;
 	    steps++;
