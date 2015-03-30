@@ -180,9 +180,9 @@ LED_tree1::animation(void)
     _led->line(c_T221, c_T22);
     _led->line(c_T222, c_T22);
 
-    _led->dot(c_start, _led->colour_yellow);
-    _led->dot(c_center, _led->colour_red);
-    _led->dot(c_target, _led->colour_cyan);
+    //_led->dot(c_start, _led->colour_yellow);
+    //_led->dot(c_center, _led->colour_red);
+    //_led->dot(c_target, _led->colour_cyan);
 
     pathlength--;
     if (pathlength == 0) {
