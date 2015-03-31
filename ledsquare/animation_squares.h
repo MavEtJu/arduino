@@ -102,11 +102,11 @@ public:
     uint8_t size;
 };
 
-#define LED_square_splitting_horver	0
-#define LED_square_splitting_diagonal	1
-class LED_square_splitting : public LED_Animation {
+#define LED_square_splitting1_horver	0
+#define LED_square_splitting1_diagonal	1
+class LED_square_splitting1 : public LED_Animation {
 public:
-    MYOWNCONSTRUCTOR(LED_square_splitting);
+    MYOWNCONSTRUCTOR(LED_square_splitting1);
     void init(void);
     void animation(void);
 
@@ -115,6 +115,14 @@ public:
     LED c_now, c_previous;
     struct coordinates c0, c;
     struct distance d;
+};
+
+class LED_square_splitting2 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_square_splitting2);
+    void animation(void);
+    struct coordinates c;
+    LED colours[4];
 };
 
 #define LED_spinningsquares1_squares	8

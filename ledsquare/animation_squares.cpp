@@ -767,7 +767,7 @@ LED_movingsquares3::offset2xy(int i, struct coordinates *c)
  * +----------------+
  */
 
-MYCONSTRUCTOR_ANIMATION(LED_square_splitting)
+MYCONSTRUCTOR_ANIMATION(LED_square_splitting1)
 {
     c_previous = _led->colour_black;
     c_now = _led->colour_black;
@@ -775,7 +775,7 @@ MYCONSTRUCTOR_ANIMATION(LED_square_splitting)
 }
 
 void
-LED_square_splitting::init(void)
+LED_square_splitting1::init(void)
 {
     c_previous = c_now;
     c_now = _led->colour_random_notblack();
@@ -787,56 +787,56 @@ LED_square_splitting::init(void)
     case 0: // bottom left
 	c0.x = c0.y = -1;
 	d.dx = d.dy = 1;
-	type = LED_square_splitting_diagonal;
+	type = LED_square_splitting1_diagonal;
 	break;
     case 1: // bottom right
 	c0.x = _VIEW_WIDTH;
 	c0.y = -1;
 	d.dx = -1;
 	d.dy = 1;
-	type = LED_square_splitting_diagonal;
+	type = LED_square_splitting1_diagonal;
 	break;
     case 2: // top left
 	c0.x = -1;
 	c0.y = _VIEW_HEIGHT;
 	d.dx = 1;
 	d.dy = -1;
-	type = LED_square_splitting_diagonal;
+	type = LED_square_splitting1_diagonal;
 	break;
     case 3: // top right
 	c0.x = _VIEW_WIDTH;
 	c0.y = _VIEW_HEIGHT;
 	d.dx = -1;
 	d.dy = -1;
-	type = LED_square_splitting_diagonal;
+	type = LED_square_splitting1_diagonal;
 	break;
     case 4: // bottom middle
 	c0.x = _VIEW_WIDTH / 2;
 	c0.y = -1;
 	d.dx = 0;
 	d.dy = 1;
-	type = LED_square_splitting_horver;
+	type = LED_square_splitting1_horver;
 	break;
     case 5: // left middle
 	c0.x = -1;
 	c0.y = _VIEW_HEIGHT / 2;
 	d.dx = 1;
 	d.dy = 0;
-	type = LED_square_splitting_horver;
+	type = LED_square_splitting1_horver;
 	break;
     case 6: // right middle
 	c0.x = _VIEW_WIDTH;
 	c0.y = _VIEW_HEIGHT / 2;
 	d.dx = -1;
 	d.dy = 0;
-	type = LED_square_splitting_horver;
+	type = LED_square_splitting1_horver;
 	break;
     case 7: // top middle
 	c0.x = _VIEW_WIDTH / 2;
 	c0.y = _VIEW_HEIGHT;
 	d.dx = 0;
 	d.dy = -1;
-	type = LED_square_splitting_horver;
+	type = LED_square_splitting1_horver;
 	break;
     }
 
@@ -845,9 +845,9 @@ LED_square_splitting::init(void)
 }
 
 void
-LED_square_splitting::animation(void)
+LED_square_splitting1::animation(void)
 {
-    if (type == LED_square_splitting_diagonal) {
+    if (type == LED_square_splitting1_diagonal) {
 
 	if (steps == 2 * _sVIEW_WIDTH + 2)
 	    init();
@@ -880,7 +880,7 @@ LED_square_splitting::animation(void)
 
     }
 
-    if (type  == LED_square_splitting_horver) {
+    if (type  == LED_square_splitting1_horver) {
 
 	if (steps == _sVIEW_WIDTH + 1 + _sVIEW_WIDTH / 2)
 	    init();
@@ -1080,3 +1080,46 @@ LED_spinningsquares2::animation(void)
 		 _VIEW_HEIGHT - c0.y + 1 - size,
 		 size - 2, size - 2, _led->colour_white);
 }
+
+// ========================================
+
+MYCONSTRUCTOR_ANIMATION(LED_square_splitting2)
+{
+    c.x = 0;
+    c.y = 1;
+    delayms = 100;
+}
+
+void
+LED_square_splitting2::animation(void)
+{
+    int m = step % (_VIEW_WIDTH + 1 );
+    if (m == 0) {
+	colours[0] = _led->colour_random_notblack();
+	colours[1] = _led->colour_random_notblack();
+	colours[2] = _led->colour_random_notblack();
+	colours[3] = _led->colour_random_notblack();
+    }
+    for (int x = 0; x < m; x++) {
+	// Bottom left
+	_led->line(x, x + 1,
+		   x - _VIEW_WIDTH, x + 1 + _VIEW_HEIGHT,
+		   colours[0]);
+
+	// Top right
+	_led->line(_VIEW_WIDTH - 1 - x, _VIEW_WIDTH - 2 - x,
+		   2 * _VIEW_WIDTH - 1 - x, - 2 - x,
+		   colours[1]);
+
+	// Bottom left
+	_led->line(_VIEW_WIDTH - 1 - x, x + 1,
+		   2 * _VIEW_WIDTH - 1 - x, _VIEW_HEIGHT + x + 1,
+		   colours[2]);
+
+	// Top left
+	_led->line(x, _VIEW_HEIGHT - 2 - x,
+		   x - _VIEW_WIDTH, - 2 - x,
+		   colours[3]);
+    }
+}
+
