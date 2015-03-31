@@ -254,8 +254,11 @@ ${BUILDDIR}/${PROJECT}: ${EMULATOR_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/} ${SRC_F
 	${CXX} ${LDFLAGS} -o ${.TARGET} ${.ALLSRC}
 
 
-all_freebsd: ${BUILDDIR} ${BUILDDIR}/${PROJECT}
+freebsd_all: ${BUILDDIR} ${BUILDDIR}/${PROJECT}
 	${BUILDDIR}/ledsquare
+
+freebsd_depends:
+	${CC} ${CXXFLAGS} -x c++ -M *.ino *.cpp > .depend
 .endif
 
 #
@@ -271,9 +274,6 @@ ${BUILDDIR}:
 clean:
 	rm -rf build core.a
 
-depends:
-	${CC} ${CXXFLAGS} -x c++ -M *.ino *.cpp > .depend
-
 size: 
 	OPTIONS="${OPTIONS}" TARGET=arduino ${MAKE} size_arduino
 
@@ -284,7 +284,10 @@ uno:
 	OPTIONS="${OPTIONS}" TARGET=arduino ARDUINO_MODEL=Uno ${MAKE} arduino
 
 test:
-	OPTIONS="${OPTIONS}" TARGET=freebsd ${MAKE} all_freebsd
+	OPTIONS="${OPTIONS}" TARGET=freebsd ${MAKE} freebsd_all
+
+depends:
+	OPTIONS="${OPTIONS}" TARGET=freebsd ${MAKE} freebsd_depends
 
 testing:
 	OPTIONS="TESTING ${OPTIONS}" TARGET=freebsd ${MAKE} all_freebsd
