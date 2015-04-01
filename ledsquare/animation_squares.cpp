@@ -1083,6 +1083,27 @@ LED_spinningsquares2::animation(void)
 
 // ========================================
 
+/*
+ * +----------------+
+ * |                |
+ * |X              X|
+ * | X            X |
+ * |X X          X X|
+ * | X X        X X |
+ * |X X X      X X X|
+ * |XX X        X XX|
+ * |XXX          XXX|
+ * |XXX          XXX|
+ * |XX X        X XX|
+ * |X X X      X X X|
+ * | X X        X X |
+ * |X X          X X|
+ * | X            X |
+ * |X              X|
+ * |                |
+ * +----------------+
+ */
+
 MYCONSTRUCTOR_ANIMATION(LED_square_splitting2)
 {
     c.x = 0;
