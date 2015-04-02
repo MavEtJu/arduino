@@ -1117,9 +1117,15 @@ LED_square_splitting2::animation(void)
     int m = step % (_VIEW_WIDTH + 1 );
     if (m == 0) {
 	colours[0] = _led->colour_random_notblack();
-	colours[1] = _led->colour_random_notblack();
-	colours[2] = _led->colour_random_notblack();
-	colours[3] = _led->colour_random_notblack();
+	do {
+	    colours[1] = _led->colour_random_notblack();
+	} while (_led->colour_same(colours[1], colours[0]));
+	do {
+	    colours[2] = _led->colour_random_notblack();
+	} while (_led->colour_same3(colours[2], colours[1], colours[0]));
+	do {
+	    colours[3] = _led->colour_random_notblack();
+	} while (_led->colour_same4(colours[3], colours[2], colours[1], colours[0]));
     }
     for (int x = 0; x < m; x++) {
 	// Bottom left
