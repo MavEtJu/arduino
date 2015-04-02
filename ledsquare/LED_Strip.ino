@@ -390,6 +390,18 @@ LED_Strip::line(struct coordinates c1, struct coordinates c2, LED colour)
 }
 
 void
+LED_Strip::line(struct coordinates c1, int16_t x2, int16_t y2)
+{
+    line(c1.x, c1.y, x2, y2);
+}
+
+void
+LED_Strip::line(struct coordinates c1, int16_t x2, int16_t y2, LED colour)
+{
+    line(c1.x, c1.y, x2, y2, colour);
+}
+
+void
 LED_Strip::horline(int16_t y, int16_t x1, int16_t x2)
 {
     int xx2 = MAX(x1, x2);

@@ -64,6 +64,8 @@ public:
     void line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, LED colour);
     void line(struct coordinates c1, struct coordinates c2);
     void line(struct coordinates c1, struct coordinates c2, LED colour);
+    void line(struct coordinates c1, int16_t x2, int16_t y2);
+    void line(struct coordinates c1, int16_t x2, int16_t y2, LED colour);
     void horline(int16_t y, int16_t x1, int16_t x2);
     void horline(int16_t y, int16_t x1, int16_t x2, LED colour);
     void verline(int16_t x, int16_t y1, int16_t y2);
