@@ -30,8 +30,14 @@ extern Serial Serial;
 
 
 // Default options used for simulator
-#define SERIAL_ENABLE
-#define MEMORY
-#define SIMULATOR
+#if !defined SERIAL_ENABLE
+# define SERIAL_ENABLE
+#endif
+#if !defined MEMORY
+# define MEMORY
+#endif
+#if !defined SIMULATOR
+# define SIMULATOR
+#endif
 
 #endif
