@@ -32,6 +32,8 @@ public:
     LED colour_fade(LED colour, int fade);
     LED colour_fade_seq(LED colour, int fade);
     int colour_same(LED c1, LED c2);
+    int colour_same3(LED c1, LED c2, LED c3);
+    int colour_same4(LED c1, LED c2, LED c3, LED c4);
     LED colour_transform(LED c1, LED c2, int steps, int step);
     LED colour_transform(int step);
     

@@ -139,6 +139,23 @@ LED_Strip::colour_same(LED c1, LED c2)
     return (c1.red == c2.red && c1.green == c2.green && c1.blue == c2.blue);
 }
 
+int
+LED_Strip::colour_same3(LED c1, LED c2, LED c3)
+{
+    return
+	colour_same(c1, c2) || colour_same(c2, c3) ||
+	colour_same(c1, c3);
+}
+
+int
+LED_Strip::colour_same4(LED c1, LED c2, LED c3, LED c4)
+{
+    return
+	colour_same(c1, c2) || colour_same(c1, c3) || colour_same(c1, c4) ||
+	colour_same(c2, c3) || colour_same(c2, c4) ||
+	colour_same(c3, c4);
+}
+
 LED
 LED_Strip::colour_random(void)
 {
