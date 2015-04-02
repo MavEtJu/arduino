@@ -63,4 +63,12 @@ public:
     int8_t stripes;
 };
 
+class LED_lines_waver1 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_lines_waver1);
+    void animation(void);
+    #define LED_lines_waver1_origins	5
+    struct coordinates origins[LED_lines_waver1_origins];
+};
+
 #endif

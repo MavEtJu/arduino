@@ -430,3 +430,39 @@ LED_lines3::animation(void)
 		     x, (_VIEW_HEIGHT / stripes) / 2, c[1]);
     }
 }
+
+// =========================
+
+MYCONSTRUCTOR_ANIMATION(LED_lines_waver1)
+{
+    delayms = 1;
+
+    origins[0].x = 1 * _VIEW_WIDTH / 4;
+    origins[0].y = 1 * _VIEW_HEIGHT / 4;
+    origins[1].x = 2 * _VIEW_WIDTH / 4;
+    origins[1].y = 2 * _VIEW_HEIGHT / 4;
+    origins[2].x = 3 * _VIEW_WIDTH / 4;
+    origins[2].y = 3 * _VIEW_HEIGHT / 4;
+    origins[3].x = 3 * _VIEW_WIDTH / 4;
+    origins[3].y = 1 * _VIEW_HEIGHT / 4;
+    origins[4].x = 1 * _VIEW_WIDTH / 4;
+    origins[4].y = 3 * _VIEW_HEIGHT / 4;
+}
+
+void
+LED_lines_waver1::animation(void)
+{
+    int angle = step / 12;
+    int vw4 = _VIEW_WIDTH / 4;
+    int vh4 = _VIEW_HEIGHT / 4;
+
+    _led->colour_set(_led->colour_red);
+    for (int i = 0; i < LED_lines_waver1_origins; i++) {
+	_led->line(origins[i],
+	    origins[i].x + vw4 * COS(angle),
+	    origins[i].y + vh4 * SIN(angle),
+	    _led->colour_transform(step)
+	);
+    }
+}
+
