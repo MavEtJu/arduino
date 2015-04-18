@@ -278,19 +278,19 @@ size:
 	OPTIONS="${OPTIONS}" TARGET=arduino ${MAKE} size_arduino
 
 mega2560:
-.if ${OPTIONS:MTESTING}
+.if OPTIONS && ${OPTIONS:MTESTING}
 	touch ledsquare.ino
 .endif
 	OPTIONS="${OPTIONS}" TARGET=arduino ARDUINO_MODEL=Mega2560 ${MAKE} arduino
 
 uno:
-.if ${OPTIONS:MTESTING}
+.if OPTIONS && ${OPTIONS:MTESTING}
 	touch ledsquare.ino
 .endif
 	OPTIONS="${OPTIONS}" TARGET=arduino ARDUINO_MODEL=Uno ${MAKE} arduino
 
 test:
-.if ${OPTIONS:MTESTING}
+.if OPTIONS && ${OPTIONS:MTESTING}
 	touch ledsquare.ino
 .endif
 	OPTIONS="${OPTIONS}" TARGET=freebsd ${MAKE} freebsd_all
