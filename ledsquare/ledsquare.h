@@ -5,7 +5,7 @@
 #define ledsquare__h
 
 #define PIN_BLINK   13
-#define PIN_STRIP    6
+#define PIN_STRIP    5
 
 #define VIEW_WIDTH  16
 #define VIEW_HEIGHT 16
