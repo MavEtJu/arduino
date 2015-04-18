@@ -6,6 +6,7 @@
 #include "animation_torches.h"
 #include "animation_sinus.h"
 #include "animation_fractals.h"
+#include "animation_vortex.h"
 
 class LED_test : public LED_Animation {
 public:

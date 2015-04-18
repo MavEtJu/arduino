@@ -25,6 +25,7 @@ SRC_FILES= \
 	animation_sinus.cpp	\
 	animation_torches.cpp	\
 	animation_fractals.cpp	\
+	animation_vortex.cpp	\
 	slides.cpp
 
 .include "Makefile.arduino"
