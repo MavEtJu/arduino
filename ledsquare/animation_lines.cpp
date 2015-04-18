@@ -378,7 +378,7 @@ LED_lines2::animation(void)
 	angle = c[coor].a0;
 	SERIAL9(coor, ": ", c[coor].c.x, ",", c[coor].c.y, " ", c[coor].a0, " ", c[coor].a1);
     }
-    SERIAL2("angle: ", angle);
+    //SERIAL2("angle: ", angle);
 }
 
 // =============================

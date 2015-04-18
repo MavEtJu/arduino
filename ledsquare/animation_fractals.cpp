@@ -190,7 +190,7 @@ LED_tree1::animation(void)
 	prevangle = currangle;
 	currangle += currangle_turn * (random() % 2 == 0 ? -1 : 1);
 
-	SERIAL4("prevangle:", prevangle, " currangle:", currangle);
+	//SERIAL4("prevangle:", prevangle, " currangle:", currangle);
     }
 }
 
