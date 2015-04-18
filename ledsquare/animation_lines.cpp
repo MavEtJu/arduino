@@ -433,36 +433,49 @@ LED_lines3::animation(void)
 
 // =========================
 
+/*
+ * +----------------+
+ * |x    x    xx   x|
+ * |x     x         |
+ * |x      xx       |
+ * | x       x      |
+ * | x          xxx |
+ * |xx   x    xx   x|
+ * |x     x         |
+ * |x      xx       |
+ * | x       x      |
+ * | x          xxx |
+ * |xx   x    xx   x|
+ * |x     x         |
+ * |x      xx       |
+ * | x       x      |
+ * | x          xxx |
+ * |xx   x    xx   x|
+ * +----------------+
+ */
+
 MYCONSTRUCTOR_ANIMATION(LED_lines_waver1)
 {
-    delayms = 1;
-
-    origins[0].x = 1 * _VIEW_WIDTH / 4;
-    origins[0].y = 1 * _VIEW_HEIGHT / 4;
-    origins[1].x = 2 * _VIEW_WIDTH / 4;
-    origins[1].y = 2 * _VIEW_HEIGHT / 4;
-    origins[2].x = 3 * _VIEW_WIDTH / 4;
-    origins[2].y = 3 * _VIEW_HEIGHT / 4;
-    origins[3].x = 3 * _VIEW_WIDTH / 4;
-    origins[3].y = 1 * _VIEW_HEIGHT / 4;
-    origins[4].x = 1 * _VIEW_WIDTH / 4;
-    origins[4].y = 3 * _VIEW_HEIGHT / 4;
+    delayms = 25l;
+    number = 4;
+    len = _VIEW_WIDTH / (number - 1);
+    angle = 0;
 }
 
 void
 LED_lines_waver1::animation(void)
 {
-    int angle = step / 12;
-    int vw4 = _VIEW_WIDTH / 4;
-    int vh4 = _VIEW_HEIGHT / 4;
-
-    _led->colour_set(_led->colour_red);
-    for (int i = 0; i < LED_lines_waver1_origins; i++) {
-	_led->line(origins[i],
-	    origins[i].x + vw4 * COS(angle),
-	    origins[i].y + vh4 * SIN(angle),
-	    _led->colour_transform(step)
+    for (int16_t i = 0; i < number * number; i++) {
+	int x = i % number;
+	int y = i / number;
+	_led->line(x * len, y * len, 
+	    x * len + len * COS(x * 45 + angle),
+	    y * len + len * SIN(x * 45 + angle),
+	    _led->colour_transform(step + i)
 	);
     }
+
+    angle += 10;
+    angle %= 360;
 }
 

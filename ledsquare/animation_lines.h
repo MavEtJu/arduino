@@ -69,6 +69,9 @@ public:
     void animation(void);
     #define LED_lines_waver1_origins	5
     struct coordinates origins[LED_lines_waver1_origins];
+    int angle;
+    int len;
+    int number;
 };
 
 #endif
