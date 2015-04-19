@@ -7,6 +7,7 @@
 #include "animation_sinus.h"
 #include "animation_fractals.h"
 #include "animation_vortex.h"
+#include "animation_text.h"
 
 class LED_test : public LED_Animation {
 public:
@@ -18,14 +19,6 @@ class LED_led00_blink1 : public LED_Animation {
 public:
     PARENTCONSTRUCTOR(LED_led00_blink1);
     void animation(void);
-};
-
-class LED_quickbrowfox1 : public LED_Animation {
-public:
-    MYOWNCONSTRUCTOR(LED_quickbrowfox1);
-    ~LED_quickbrowfox1(void);
-    void animation(void);
-    LED_Text *text;
 };
 
 #define LED_spaceinvaders_IMGS 11

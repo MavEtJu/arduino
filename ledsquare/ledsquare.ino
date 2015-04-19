@@ -152,7 +152,7 @@ loop(void)
 
    	// NEW_ANIMATION(LED_led00_blink1)
 	NEW_ANIMATION(LED_test)
-	NEW_ANIMATION(LED_quickbrowfox1)
+	NEW_ANIMATION(LED_quickbrownfox1)
 	NEW_ANIMATION(LED_torch2)
 	NEW_ANIMATION(LED_torch1)
 	NEW_ANIMATION(LED_spinningsquares1)
