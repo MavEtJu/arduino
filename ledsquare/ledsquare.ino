@@ -192,6 +192,9 @@ loop(void)
 	NEW_ANIMATION(LED_squares4b)
 	NEW_ANIMATION(LED_vortex1)
 	NEW_ANIMATION(LED_vortex2)
+	NEW_ANIMATION(LED_vortex3)
+	NEW_ANIMATION(LED_vortex4)
+	NEW_ANIMATION(LED_vortex5)
 	{ 
 	    LED_led00_blink1 *p = new LED_led00_blink1(&led, VIEW_WIDTH, VIEW_HEIGHT);
 	    animation[0] = p;
