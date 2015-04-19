@@ -13,4 +13,12 @@ public:
     LED_Text *text;
 };
 
+class LED_textline1 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_textline1);
+    ~LED_textline1(void);
+    void animation(void);
+    LED_Text *text;
+};
+
 #endif
