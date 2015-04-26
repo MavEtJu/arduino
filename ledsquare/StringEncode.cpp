@@ -169,7 +169,7 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
 #ifdef DEBUG_MEMORY
     FREERAM("StringEncodeMulti::decode");
 #endif
-    
+
     *bytes_out = 0;
     
     letters = in[0];
@@ -198,12 +198,12 @@ StringEncodeMulti::decode(const char *in, char *out, uint16_t bits_in,
 	FREEMEMORY("alphabet==NULL");
 	FREERAM("alphabet==NULL");
 #endif
+	delay(100);
 	return;
     }
     memset(alphabet, '\0', letters * sizeof(uint8_t));
     for (uint8_t c = 0; c < letters; c++) {
 	alphabet[c] = in[1 + c];
-	printf("%c", in[1 + c]);
 	pin++;
     }
 
