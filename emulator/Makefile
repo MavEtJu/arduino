@@ -3,13 +3,13 @@
 .SUFFIXES: .ino
 
 # Remove the -O2 since it broke wrefresh(screen) from libcurses for some reason.
-CFLAGS	= -Wall -Werror -I. -Wno-char-subscripts -g
+CFLAGS	= -Wall -Werror -I. -Wno-char-subscripts -g -I../ledsquare
 CXXFLAGS	= ${CFLAGS}
 .for o in ${OPTIONS}
 CFLAGS+= -D${o}
 .endfor
 
-all:	.depend test StringEncodeMain
+all:	StringEncodeMain
 
 upload: all
 	./test
