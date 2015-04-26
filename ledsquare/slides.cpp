@@ -69,7 +69,7 @@ MYCONSTRUCTOR_SLIDESHOW(LED_mario1)
 	"\x04\x20\x2e\x52\x57\x00\x54\x15\x00\x40\xa9\x7e\x01\xd0\xab\xfe\x07\xf4\xaa\xfa\x1f\xf4\xfe\xeb\x1f\xa9\xff\xaf\x6a\xa9\xff\xaf\x6f\xad\xff\xef\x7f\xbd\xfe\xeb\x7f\xbd\xaa\xaa\x6f\xad\x55\x55\x6a\x54\xdf\xf7\x15\xd0\xdf\xf7\x07\xd0\xff\xff\x07\x40\xfd\x7f\x01\x00\x54\x15\x00"
 	));
 
-    add_colourmap('S', COLOUR_MAX + 1, 208 >> 4, 189 >> 4, 156 >> 4);
+    add_colourmap('S', 208 >> 4, 189 >> 4, 156 >> 4);
 }
 
 // =======================
@@ -162,40 +162,41 @@ LED_minecraft1::create_colourmap(void)
 {
     memset(&colourmap, 0, sizeof(colourmap));
 
-    add_colourmap(' ',  0,   0 >> 3,   0 >> 3,   0 >> 3);
+    clear_colourmap();
+    add_colourmap(' ',   0 >> 3,   0 >> 3,   0 >> 3);
 
     // Tools (sword, pickaxe, shovel, axe)
-    add_colourmap('0', 10, 137 >> 3, 103 >> 3,  39 >> 3);
-    add_colourmap('1',  1, 104 >> 3,  78 >> 3,  30 >> 3);
-    add_colourmap('2',  2,  73 >> 3,  54 >> 3,  21 >> 3);
-    add_colourmap('3',  3,  40 >> 3,  30 >> 3,  11 >> 3);
-    add_colourmap('4',  4, 255 >> 3, 255 >> 3, 255 >> 3);
-    add_colourmap('5',  5, 216 >> 3, 216 >> 3, 216 >> 3);
-    add_colourmap('6',  6, 150 >> 3, 150 >> 3, 150 >> 3);
-    add_colourmap('7',  7, 107 >> 3, 107 >> 3, 107 >> 3);
-    add_colourmap('8',  8,  68 >> 3,  68 >> 3,  68 >> 3);
-    add_colourmap('9',  9,  40 >> 3,  40 >> 3,  40 >> 3);
+    add_colourmap('0', 137 >> 3, 103 >> 3,  39 >> 3);
+    add_colourmap('1', 104 >> 3,  78 >> 3,  30 >> 3);
+    add_colourmap('2',  73 >> 3,  54 >> 3,  21 >> 3);
+    add_colourmap('3',  40 >> 3,  30 >> 3,  11 >> 3);
+    add_colourmap('4', 255 >> 3, 255 >> 3, 255 >> 3);
+    add_colourmap('5', 216 >> 3, 216 >> 3, 216 >> 3);
+    add_colourmap('6', 150 >> 3, 150 >> 3, 150 >> 3);
+    add_colourmap('7', 107 >> 3, 107 >> 3, 107 >> 3);
+    add_colourmap('8',  68 >> 3,  68 >> 3,  68 >> 3);
+    add_colourmap('9',  40 >> 3,  40 >> 3,  40 >> 3);
     
     // Buckets
-    add_colourmap('a', 26,  53 >> 4,  53 >> 4,  53 >> 4);
-    add_colourmap('b', 11,  81 >> 4,  81 >> 4,  81 >> 4);
-    add_colourmap('c', 12, 114 >> 4, 114 >> 4, 114 >> 4);
-    add_colourmap('d', 13, 150 >> 4, 150 >> 4, 150 >> 4);
-    add_colourmap('e', 14, 168 >> 4, 168 >> 4, 168 >> 4);
-    add_colourmap('f', 15, 216 >> 4, 216 >> 4, 216 >> 4);
-    add_colourmap('g', 16, 255 >> 4, 255 >> 4, 255 >> 4);
-    add_colourmap('h', 17,  71 >> 4, 114 >> 4, 236 >> 4);
-    add_colourmap('i', 18,  58 >> 4, 101 >> 4, 223 >> 4);
-    add_colourmap('j', 19,  52 >> 4,  95 >> 4, 218 >> 4);
-    add_colourmap('k', 20,  50 >> 4,  93 >> 4, 215 >> 4);
-    add_colourmap('l', 21,  45 >> 4,  89 >> 4, 211 >> 4);
-    add_colourmap('m', 22,  63 >> 4,  87 >> 4, 154 >> 4);
-    add_colourmap('n', 23,  75 >> 4, 100 >> 4, 167 >> 4);
-    add_colourmap('o', 24,  82 >> 4, 105 >> 4, 174 >> 4);
-    add_colourmap('p', 25, 100 >> 4, 124 >> 4, 191 >> 4);
-    add_colourmap('q', 27, 255 >> 4,   2 >> 4,   0 >> 4);
-    add_colourmap('r', 28, 247 >> 4, 150 >> 4,  37 >> 4);
-    add_colourmap('s', 29, 255 >> 4, 210 >> 4,   4 >> 4);
+    add_colourmap('a',  53 >> 4,  53 >> 4,  53 >> 4);
+    add_colourmap('b',  81 >> 4,  81 >> 4,  81 >> 4);
+    add_colourmap('c', 114 >> 4, 114 >> 4, 114 >> 4);
+    add_colourmap('d', 150 >> 4, 150 >> 4, 150 >> 4);
+    add_colourmap('e', 168 >> 4, 168 >> 4, 168 >> 4);
+    add_colourmap('f', 216 >> 4, 216 >> 4, 216 >> 4);
+    add_colourmap('g', 255 >> 4, 255 >> 4, 255 >> 4);
+    add_colourmap('h',  71 >> 4, 114 >> 4, 236 >> 4);
+    add_colourmap('i',  58 >> 4, 101 >> 4, 223 >> 4);
+    add_colourmap('j',  52 >> 4,  95 >> 4, 218 >> 4);
+    add_colourmap('k',  50 >> 4,  93 >> 4, 215 >> 4);
+    add_colourmap('l',  45 >> 4,  89 >> 4, 211 >> 4);
+    add_colourmap('m',  63 >> 4,  87 >> 4, 154 >> 4);
+    add_colourmap('n',  75 >> 4, 100 >> 4, 167 >> 4);
+    add_colourmap('o',  82 >> 4, 105 >> 4, 174 >> 4);
+    add_colourmap('p', 100 >> 4, 124 >> 4, 191 >> 4);
+    add_colourmap('q', 255 >> 4,   2 >> 4,   0 >> 4);
+    add_colourmap('r', 247 >> 4, 150 >> 4,  37 >> 4);
+    add_colourmap('s', 255 >> 4, 210 >> 4,   4 >> 4);
 }
 
 MYCONSTRUCTOR_SLIDESHOW(LED_minecraft1)
