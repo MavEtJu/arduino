@@ -10,11 +10,6 @@ struct SlideshowImage {
 };
 
 #define LED_Slideshow_MAX    30
-enum {
-    COLOUR_RED, COLOUR_WHITE,COLOUR_BLUE, COLOUR_YELLOW, COLOUR_GREEN, COLOUR_BROWN, COLOUR_BLACK,
-    COLOUR_MAGENTA, COLOUR_CYAN, COLOUR_REALBLACK,
-    COLOUR_MAX
-};
 class LED_Slideshow {
 public:
     LED_Slideshow(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
@@ -22,8 +17,9 @@ public:
     virtual void display(struct SlideshowImage *img);
     virtual void destroy(void);
     virtual void create_colourmap(void);
-    void add_colourmap(char c, uint8_t value, uint8_t r, uint8_t g, uint8_t b);
-    LED find_colourmap(char c);
+    void clear_colourmap(void);
+    void add_colourmap(unsigned char c, uint8_t r, uint8_t g, uint8_t b);
+    LED find_colourmap(unsigned char c);
     void loop(void);
 
     struct SlideshowImage *images;
@@ -39,6 +35,7 @@ public:
     uint16_t _VIEW_HEIGHT;
     uint16_t _VIEW_WIDTH;
     uint8_t broken;
+    uint8_t colourmax;
 };
 
 #endif

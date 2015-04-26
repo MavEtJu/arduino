@@ -33,16 +33,17 @@ LED_Slideshow::create_colourmap(void)
      * r brown
      * m magenta
      */
-    add_colourmap(' ' , COLOUR_REALBLACK,     0,   0,   0);
-    add_colourmap('.' , COLOUR_BLACK,         1,   1,   1);
-    add_colourmap('W' , COLOUR_WHITE,         8,   8,   8);
-    add_colourmap('y' , COLOUR_YELLOW,        8,   8,   0);
-    add_colourmap('G' , COLOUR_GREEN,         0,   8,   0);
-    add_colourmap('R' , COLOUR_RED,           8,   0,   0);
-    add_colourmap('B' , COLOUR_BLUE,          0,   0,   8);
-    add_colourmap('r' , COLOUR_BROWN,         6,   2,   2);
-    add_colourmap('m' , COLOUR_MAGENTA,       8,   0,   8);
-    add_colourmap('c' , COLOUR_CYAN,          0,   8,   8);
+    clear_colourmap();
+    add_colourmap(' ' , 0,   0,   0); // real black
+    add_colourmap('.' , 1,   1,   1); // black
+    add_colourmap('W' , 8,   8,   8); // white
+    add_colourmap('y' , 8,   8,   0); // yellow
+    add_colourmap('G' , 0,   8,   0); // green
+    add_colourmap('R' , 8,   0,   0); // red
+    add_colourmap('B' , 0,   0,   8); // blue
+    add_colourmap('r' , 6,   2,   2); // brown
+    add_colourmap('m' , 8,   0,   8); // magenta
+    add_colourmap('c' , 0,   8,   8); // cyan
 }
 
 LED_Slideshow::~LED_Slideshow(void)
@@ -53,19 +54,29 @@ LED_Slideshow::~LED_Slideshow(void)
 }
 
 void
-LED_Slideshow::add_colourmap(char c, uint8_t v, uint8_t r, uint8_t g, uint8_t b)
+LED_Slideshow::clear_colourmap(void)
 {
-    colourmap[v] = c;
-    colours[v] = _led->Color(r, g, b);
+    colourmax = 0;
+}
+
+void
+LED_Slideshow::add_colourmap(unsigned char c, uint8_t r, uint8_t g, uint8_t b)
+{
+    colourmap[colourmax] = c;
+    colours[colourmax] = _led->Color(r, g, b);
+    colourmax++;
 }
 
 LED
-LED_Slideshow::find_colourmap(char c)
+LED_Slideshow::find_colourmap(unsigned char c)
 {
-    for (uint8_t i = 0; i < LED_Slideshow_MAX; i++) {
+    for (uint8_t i = 0; i < colourmax; i++) {
         if (colourmap[i] == c)
             return colours[i];
     }
+    SERIAL4(F("Colour not found: ."), (int)c,
+	    F(". - colourmax:"), colourmax
+    );
     return _led->Color(255, 255, 255);
 }
 
