@@ -31,6 +31,8 @@ public:
     void print(double ud);
     void println(struct coordinates c);
     void print(struct coordinates c);
+    void println(LED c);
+    void print(LED c);
 
     int lines(void);
     char *get(void);

@@ -149,9 +149,9 @@ Serial::println(double ud)
 	lognr_increase_written();
 }
 void
-Serial::print(struct coordinates c)
+Serial::print(double ud)
 {
-	plog += sprintf(plog, "%d,%d", c.x, c.y);
+	plog += sprintf(plog, "%f", ud);
 }
 
 void
@@ -161,9 +161,22 @@ Serial::println(struct coordinates c)
 	lognr_increase_written();
 }
 void
-Serial::print(double ud)
+Serial::print(struct coordinates c)
 {
-	plog += sprintf(plog, "%f", ud);
+	plog += sprintf(plog, "%d,%d", c.x, c.y);
+}
+
+
+void
+Serial::println(LED c)
+{
+	plog += sprintf(plog, "(%d,%d,%d)", c.red, c.green, c.blue);
+	lognr_increase_written();
+}
+void
+Serial::print(LED c)
+{
+	plog += sprintf(plog, "(%d,%d,%d)", c.red, c.green, c.blue);
 }
 
 void
