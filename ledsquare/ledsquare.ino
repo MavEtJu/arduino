@@ -37,7 +37,7 @@ setup(void)
     SERIAL1(F("Hello, world!"));
 # ifdef DEBUG_MEMORY
 #  ifndef SIMULATOR
-    MEMORYFREE("free1: ", freeMemory());
+    FREEMEMORY("free1: ");
 #  endif
 # endif
 #endif
@@ -50,7 +50,7 @@ setup(void)
     led.start();
 #ifdef DEBUG_MEMORY
 # ifndef SIMULATOR
-    MEMORYFREE("free2: ");
+    FREEMEMORY("free2: ");
 # endif
 #endif
 }
@@ -114,7 +114,7 @@ loop(void)
     if ((animation[0] == NULL && slideshow[0] == NULL) || (started == 0) || (started + DELAY * 1000l < millis())) {
 #ifdef DEBUG_MEMORY
 # ifndef SIMULATOR
-        MEMORYFREE("Free Memory before free: ");
+        FREEMEMORY("Free Memory before free: ");
 # endif
 #endif
         if (animation[0] != NULL) {
@@ -130,7 +130,7 @@ loop(void)
 
 #ifdef DEBUG_MEMORY
 # ifndef SIMULATOR
-        MEMORYFREE("Free Memory after free: ");
+        FREEMEMORY("Free Memory after free: ");
 # endif
 #endif
 
@@ -220,7 +220,7 @@ loop(void)
 
 #ifdef DEBUG_MEMORY
 # ifndef SIMULATOR
-        SERIAL2("Free Memory after new: "), freeMemory());
+        SERIAL2(F("Free Memory after new: "), freeMemory());
 # endif
 #endif
         started = millis();
