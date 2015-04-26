@@ -19,14 +19,15 @@ SRC_FILES= \
 	LED_Slideshow.cpp	\
 	LED_Text.cpp		\
 	StringEncode.cpp	\
-	animations.cpp		\
-	animation_squares.cpp	\
+	animation_fractals.cpp	\
 	animation_lines.cpp	\
 	animation_sinus.cpp	\
-	animation_torches.cpp	\
-	animation_fractals.cpp	\
-	animation_vortex.cpp	\
+	animation_spaceinvaders.cpp	\
+	animation_squares.cpp	\
 	animation_text.cpp	\
+	animation_torches.cpp	\
+	animation_vortex.cpp	\
+	animations.cpp		\
 	slides.cpp
 
 .include "Makefile.arduino"
