@@ -74,4 +74,15 @@ public:
     int number;
 };
 
+class LED_lines_worm1 : public LED_Animation {
+public:
+    MYOWNCONSTRUCTOR(LED_lines_worm1);
+    void animation(void);
+    #define LED_lines_worm1s		10
+    #define LED_lines_worm1_history	6
+    struct coordinates history[LED_lines_worm1s][LED_lines_worm1_history];
+    int dx[LED_lines_worm1s], dy[LED_lines_worm1s];
+    LED c[LED_lines_worm1s];
+};
+
 #endif

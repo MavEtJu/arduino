@@ -479,3 +479,77 @@ LED_lines_waver1::animation(void)
     angle %= 360;
 }
 
+// =================================
+
+/*
+ * +----------------+
+ * |     .          |
+ * |     X    .     |
+ * |     X    X     |
+ * |          X     |
+ * |                |
+ * |                |
+ * |                |
+ * |      .         |
+ * |      x      .x |
+ * |      x         |
+ * |             . .|
+ * |             x X|
+ * |             x X|
+ * |    X          X|
+ * |    X      .   X|
+ * |    .     XX    |
+ * +----------------+
+ */
+
+MYCONSTRUCTOR_ANIMATION(LED_lines_worm1)
+{
+    for (int w = 0; w < LED_lines_worm1s; w++) {
+	for (int i = 0; i < LED_lines_worm1_history; i++) {
+	    history[w][i].x = _VIEW_WIDTH / 2;
+	    history[w][i].y = _VIEW_HEIGHT / 2;
+	}
+	dx[w] = 1;
+	dy[w] = 0;
+	c[w] = _led->colour_random_notblack();
+    }
+}
+
+void
+LED_lines_worm1::animation(void)
+{
+    for (int w = 0; w < LED_lines_worm1s; w++) {
+	for (int i = LED_lines_worm1_history - 1; i > 0; i--) {
+	    history[w][i] = history[w][i - 1];
+	    _led->dot(history[w][i],
+	    _led->colour_fade(c[w], i));
+	}
+	int x = history[w][0].x;
+	int y = history[w][0].y;
+	_led->dot(history[w][0], c[w]);
+
+	if ((dx[w] == 1  && x == _sVIEW_WIDTH - 1)
+	 || (dx[w] == -1 && x == 0)
+	 || (dy[w] == 1  && y == _sVIEW_HEIGHT - 1)
+	 || (dy[w] == -1 && y == 0)
+	 || (random() % (_VIEW_WIDTH / 2) == 0)) {
+	    int _dx = dx[w];
+	    int _dy = dy[w];
+	    do {
+		dy[w] = _dx * (random() % 2 == 0 ? -1 : 1);
+		dx[w] = _dy * (random() % 2 == 0 ? -1 : 1);
+	    } while ((dx[w] == 1  && x == _sVIEW_WIDTH - 1)
+		  || (dx[w] == -1 && x == 0)
+		  || (dy[w] == 1  && y == _sVIEW_HEIGHT - 1)
+		  || (dy[w] == -1 && y == 0));
+	}
+
+	x += dx[w];
+	y += dy[w];
+
+	history[w][0].x = x;
+	history[w][0].y = y;
+	_led->dot(history[w][0], c[w]);
+    }
+}
+
