@@ -93,17 +93,26 @@ BASE_CXX_FILES+=		\
 	HardwareSerial0.cpp
 . endif
 
-O_FILES=				\
-	${AVRLIBC_FILES:S/^/${BUILDDIR}\//:S/.c$/.o/}	\
-	${BASE_C_FILES:S/^/${BUILDDIR}\//:S/.c$/.o/}	\
-	${BASE_CXX_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/}
+. if "${SYSMODULESEXTRA}" != ""
+O_FILES+=${SYSMODULESEXTRA:C/^.*\///:S/^/${BUILDDIR}\//:S/$/.o/}
+. endif
+. if "${SYSMODULES}" != ""
+O_FILES+=${SYSMODULES:S/^/${BUILDDIR}\//:S/$/.o/}
+. endif
+. if "${AVRLIBC_FILES}" != ""
+O_FILES+=${AVRLIBC_FILES:S/^/${BUILDDIR}\//:S/.c$/.o/}
+. endif
+. if "${BASE_C_FILES}" != ""
+O_FILES+=${BASE_C_FILES:S/^/${BUILDDIR}\//:S/.c$/.o/}
+. endif
+. if "${BASE_CXX_FILES}" != ""
+O_FILES+=${BASE_CXX_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/}
+. endif
 . for f in ${INO_FILES}
-O_FILES+= \
-	${f:S/^/${BUILDDIR}\//:S/.ino/.o/}
+O_FILES+=${f:S/^/${BUILDDIR}\//:S/.ino/.o/}
 . endfor
 . for f in ${SRC_FILES}
-O_FILES+= \
-	${SRC_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/}
+O_FILES+=${SRC_FILES:S/^/${BUILDDIR}\//:S/.cpp$/.o/}
 . endfor
 . for f in ${SRC_FILES}
 O_FILES+= \
@@ -117,7 +126,7 @@ O_FILES+= \
 CC=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-gcc
 CXX=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-g++
 AR=${ARDUINO_DIR}/hardware/tools/avr/bin/avr-ar
-CC=avr-gcc-4.8.3
+CC=avr-gcc-4.9.3
 CXX=avr-g++
 AR=avr-gcc-ar
 
@@ -143,6 +152,12 @@ CFLAGS+= \
 . endif
 . for M in ${MODULES}
 CFLAGS+= -I${SKETCHBOOK_DIR}/libraries/${M}
+. endfor
+. for M in ${SYSMODULES}
+CFLAGS+= -I${ARDUINO_HARDWARE_DIR}/libraries/${M}
+. endfor
+. for M in ${SYSMODULESEXTRA}
+CFLAGS+= -I${ARDUINO_HARDWARE_DIR}/libraries/${M:C/\/[^\/]*$//}
 . endfor
 
 CXXFLAGS=	${CFLAGS}
@@ -176,6 +191,17 @@ ${M:S/^/${BUILDDIR}\//:S/.c$/.o/}: ${ARDUINO_HARDWARE_DIR}/cores/arduino/${M}
 . for M in ${BASE_CXX_FILES}
 ${M:S/^/${BUILDDIR}\//:S/.cpp$/.o/}: ${ARDUINO_HARDWARE_DIR}/cores/arduino/${M}
 	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+. endfor
+
+. for M in ${SYSMODULES}
+${M:S/^/${BUILDDIR}\//}.o: ${ARDUINO_HARDWARE_DIR}/libraries/${M}/${M}.cpp
+	${CXX} ${CXXFLAGS} -x c++ -o ${.TARGET} -c ${.ALLSRC}
+. endfor
+
+. for M in ${SYSMODULESEXTRA}
+SME= ${M:C/^.*\///:S/^/${BUILDDIR}\//}.o
+${M:C/^.*\///:S/^/${BUILDDIR}\//}.o: ${ARDUINO_HARDWARE_DIR}/libraries/${M}
+	${CC} ${CFLAGS} -o ${.TARGET} -c ${.ALLSRC}
 . endfor
 
 . for M in ${MODULES}
@@ -230,9 +256,13 @@ EMULATOR_FILES=			\
 LDFLAGS= -lcurses
 CFLAGS= \
 	-c -g -Os -Wall -Werror -Wno-char-subscripts \
-	-I${EMULATORDIR} -I.
+	-I${EMULATORDIR} -I. ${ARDUINO_HARDWARE_DIR}/libraries
 . for M in ${MODULES}
 CFLAGS+= -I${SKETCHBOOK_DIR}/libraries/${M}
+. endfor
+. for M in ${SYSMODULES}
+CFLAGS+= -I${ARDUINO_HARDWARE_DIR}/libraries/${M}
+.error fo
 . endfor
 
 . for M in ${EMULATOR_FILES}
