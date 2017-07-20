@@ -399,3 +399,247 @@ MYCONSTRUCTOR_SLIDESHOW(LED_minecraft1)
 
 }
 
+// =================================
+
+void
+LED_minecraft1::walkingman1(void)
+{
+    memset(&colourmap, 0, sizeof(colourmap));
+
+    clear_colourmap();
+    add_colourmap(' ',   0 >> 3,   0 >> 3,   0 >> 3);
+
+    // Tools (sword, pickaxe, shovel, axe)
+    add_colourmap('0', 137 >> 3, 103 >> 3,  39 >> 3);
+    add_colourmap('1', 104 >> 3,  78 >> 3,  30 >> 3);
+    add_colourmap('2',  73 >> 3,  54 >> 3,  21 >> 3);
+    add_colourmap('3',  40 >> 3,  30 >> 3,  11 >> 3);
+    add_colourmap('4', 255 >> 3, 255 >> 3, 255 >> 3);
+    add_colourmap('5', 216 >> 3, 216 >> 3, 216 >> 3);
+    add_colourmap('6', 150 >> 3, 150 >> 3, 150 >> 3);
+    add_colourmap('7', 107 >> 3, 107 >> 3, 107 >> 3);
+    add_colourmap('8',  68 >> 3,  68 >> 3,  68 >> 3);
+    add_colourmap('9',  40 >> 3,  40 >> 3,  40 >> 3);
+    
+    // Buckets
+    add_colourmap('a',  53 >> 4,  53 >> 4,  53 >> 4);
+    add_colourmap('b',  81 >> 4,  81 >> 4,  81 >> 4);
+    add_colourmap('c', 114 >> 4, 114 >> 4, 114 >> 4);
+    add_colourmap('d', 150 >> 4, 150 >> 4, 150 >> 4);
+    add_colourmap('e', 168 >> 4, 168 >> 4, 168 >> 4);
+    add_colourmap('f', 216 >> 4, 216 >> 4, 216 >> 4);
+    add_colourmap('g', 255 >> 4, 255 >> 4, 255 >> 4);
+    add_colourmap('h',  71 >> 4, 114 >> 4, 236 >> 4);
+    add_colourmap('i',  58 >> 4, 101 >> 4, 223 >> 4);
+    add_colourmap('j',  52 >> 4,  95 >> 4, 218 >> 4);
+    add_colourmap('k',  50 >> 4,  93 >> 4, 215 >> 4);
+    add_colourmap('l',  45 >> 4,  89 >> 4, 211 >> 4);
+    add_colourmap('m',  63 >> 4,  87 >> 4, 154 >> 4);
+    add_colourmap('n',  75 >> 4, 100 >> 4, 167 >> 4);
+    add_colourmap('o',  82 >> 4, 105 >> 4, 174 >> 4);
+    add_colourmap('p', 100 >> 4, 124 >> 4, 191 >> 4);
+    add_colourmap('q', 255 >> 4,   2 >> 4,   0 >> 4);
+    add_colourmap('r', 247 >> 4, 150 >> 4,  37 >> 4);
+    add_colourmap('s', 255 >> 4, 210 >> 4,   4 >> 4);
+}
+
+MYCONSTRUCTOR_SLIDESHOW(LED_minecraft1)
+{
+    create_colourmap();
+    set_imgs(6);
+
+    /* From http://fc04.deviantart.net/fs71/f/2013/162/9/5/minecraft_sword_patterns_by_sarrel-d68p8xf.png */
+    add_image(16, 1024, PSTR(
+	/*
+        "             888"
+        "            8458"
+        "           84548"
+        "          84548 "
+        "         84548  "
+        "        84548   "
+        "  100   84548    "
+        "  979 84548     "
+        "   9694548      "
+        "   969548       "
+        "    9699        "
+        "   219669       "
+        "  203 9979      "
+        "9913            "
+        "969             "
+        "999             "
+	*/
+	"\x0b\x20\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x00\x00\x00\x00\x00\x00\x90\x99\x00\x00\x00\x00\x00\x00\x59\x96\x00\x00\x00\x00\x00\x90\x65\x95\x00\x00\x00\x00\x00\x59\x56\x09\x00\x00\x00\x00\x90\x65\x95\x00\x00\x00\x00\x00\x59\x56\x09\x00\x00\xaa\x00\x90\x65\x95\x00\x00\x00\x8a\x0a\x59\x56\x09\x00\x00\x00\xa0\xa7\x65\x95\x00\x00\x00\x00\xa0\xa7\x56\x09\x00\x00\x00\x00\x00\x7a\xaa\x00\x00\x00\x00\x00\x30\xa2\x77\x0a\x00\x00\x00\x00\x13\x04\xaa\xa8\x00\x00\x00\xaa\x42\x00\x00\x00\x00\x00\x00\x7a\x0a\x00\x00\x00\x00\x00\x00\xaa\x0a\x00\x00\x00\x00\x00\x00"
+	));
+
+    /* http://fc04.deviantart.net/fs71/f/2013/162/9/8/minecraft_pickaxe_patterns_by_sarrel-d68p8h7.png */
+    add_image(13, 676, PSTR(
+	/*
+        "                "
+        "                "
+        "     88888      "
+        "    845665821   "
+        "     88886603   "
+        "         2568   "
+        "        213658  "
+        "       203 868  "
+        "      213  868  "
+        "     203   858  "
+        "    213    848  "
+        "   203      8   "
+        "  213           "
+        " 203            "
+        " 13             "
+        "                "
+	*/
+	"\x09\x20\x30\x31\x32\x33\x34\x35\x36\x38\x00\x00\x88\x88\x08\x00\x00\x00\x58\x76\x67\x38\x02\x00\x00\x88\x88\x77\x41\x00\x00\x00\x00\x30\x76\x08\x00\x00\x00\x30\x42\x67\x08\x00\x00\x30\x41\x80\x87\x00\x00\x30\x42\x00\x78\x08\x00\x30\x41\x00\x80\x86\x00\x30\x42\x00\x00\x58\x08\x30\x41\x00\x00\x00\x08\x30\x42\x00\x00\x00\x00\x30\x41\x00\x00\x00\x00\x00\x42\x00\x00\x00\x00\x00\x00"
+	));
+
+    /* http://fc06.deviantart.net/fs70/f/2013/162/8/5/minecraft_axe_patterns_by_sarrel-d68p7v3.png */
+    add_image(12, 672, PSTR(
+	/*
+        "                "
+        "         88     "
+        "        8448    "
+        "       84658    "
+        "      8466621   "
+        "      8456763   "
+        "       8826768  "
+        "        203668  "
+        "       213 88   "
+        "      203       "
+        "     213        "
+        "    203         "
+        "   213          "
+        "  203           "
+        "  13            "
+        "                "
+	*/
+	"\x0a\x20\x30\x31\x32\x33\x34\x35\x36\x37\x38\x00\x00\x00\x90\x09\x00\x00\x00\x00\x59\x95\x00\x00\x00\x90\x75\x96\x00\x00\x00\x59\x77\x37\x02\x00\x00\x59\x76\x78\x04\x00\x00\x90\x39\x87\x97\x00\x00\x00\x13\x74\x97\x00\x00\x30\x42\x90\x09\x00\x00\x13\x04\x00\x00\x00\x30\x42\x00\x00\x00\x00\x13\x04\x00\x00\x00\x30\x42\x00\x00\x00\x00\x13\x04\x00\x00\x00\x00\x42\x00\x00\x00\x00\x00"
+	));
+
+    /* http://fc07.deviantart.net/fs70/f/2013/162/e/1/minecraft_shovel_patterns_by_sarrel-d68p8pl.png */
+    add_image(13, 676, PSTR(
+	/*
+        "                "
+        "                "
+        "          888   "
+        "         84468  "
+        "        845648  "
+        "       8456548  "
+        "        26548   "
+        "       20348    "
+        "      203 8     "
+        "     213        "
+        "    203         "
+        "   213          "
+        " 3203           "
+        " 213            "
+        "  23            "
+        "                "
+	*/
+	"\x09\x20\x30\x31\x32\x33\x34\x35\x36\x38\x00\x00\x00\x00\x80\x88\x00\x00\x00\x00\x80\x55\x87\x00\x00\x00\x80\x65\x57\x08\x00\x00\x80\x65\x67\x85\x00\x00\x00\x30\x67\x85\x00\x00\x00\x30\x41\x85\x00\x00\x00\x30\x41\x80\x00\x00\x00\x30\x42\x00\x00\x00\x00\x30\x41\x00\x00\x00\x00\x30\x42\x00\x00\x00\x00\x34\x41\x00\x00\x00\x00\x30\x42\x00\x00\x00\x00\x00\x30\x04\x00\x00\x00\x00\x00"
+	));
+
+    /* Water and lava bucket */
+
+    add_image(12, 780, PSTR(
+	/*
+        "                "
+        "                "
+        "     aaabbb     "
+        "   aanoooopbb   "
+        "  ammkjjjjippa  "
+        "  balkkjjjiiaa  "
+        "  bfaakjjjaaca  "
+        "  bfffaaaaiica  "
+        "  bffgheeeidca  "
+        "   bfgfeeeica   "
+        "   bffgfeddca   "
+        "   bffgfedica   "
+        "    bfffedda    "
+        "    bdffddda    "
+        "     aaaaaa     "
+        "                "
+	*/
+	"\x11\x20\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x00\x80\x10\x82\x10\x02\x00\x00\x42\x70\xef\xbd\x07\x84\x00\xa1\xb5\xa5\x94\x52\x09\xc2\x20\x02\x5b\x4b\x29\x95\x52\x08\xc2\x84\xb0\x94\x52\x21\x8c\x20\x8c\x31\x21\x84\x90\xd2\x08\xc2\x98\x83\x4a\x29\x89\x8c\x00\x84\x39\xa6\x94\x92\x46\x00\x40\x18\x73\x4c\x21\x64\x04\x00\x84\x31\xc7\x14\x92\x46\x00\x00\x08\x63\x4c\x21\x24\x00\x00\x80\x20\xc6\x10\x42\x02\x00\x00\x80\x10\x42\x08\x01\x00\x00"
+        ));
+
+    add_image(12, 624, PSTR(
+	/*
+        "                "
+        "                "
+        "     aaabbb     "
+        "   aarrssrqbb   "
+        "  asrqrssrqqsa  "
+        "  barssrssrqaa  "
+        "  bfaasqrraaca  "
+        "  bfffaaaassca  "
+        "  bffgqeeerdca  "
+        "   bfgfeeeqca   "
+        "   bffgfeddca   "
+        "   bffgfedqca   "
+        "    bfffedda    "
+        "    bdffddda    "
+        "     aaaaaa     "
+        "                "
+	*/
+	"\x0b\x20\x61\x62\x63\x64\x65\x66\x67\x71\x72\x73\x00\x10\x11\x22\x02\x00\x10\x91\xa9\x9a\x28\x02\xa1\x89\xa9\x9a\x88\x1a\x12\xa9\x9a\xaa\x89\x11\x62\x11\x8a\x99\x11\x13\x62\x66\x11\x11\xaa\x13\x62\x76\x58\x55\x49\x13\x20\x76\x56\x55\x38\x01\x20\x66\x67\x45\x34\x01\x20\x66\x67\x45\x38\x01\x00\x62\x66\x45\x14\x00\x00\x42\x66\x44\x14\x00\x00\x10\x11\x11\x01\x00"
+	));
+
+   
+//    /* Gold block from http://i.imgur.com/ksa9hqZ.png */
+//    imgs[4] = PSTR(
+//        "abbbbaccdcabbbba"
+//        "aaccccccbcccdaab"
+//        "adbbbbbegbaadbaa"
+//        "acaaddaefhbbbbba"
+//        "accghbbbbbcccccd"
+//        "bbaeeaabaddghbda"
+//        "ccaaabbbaageeccd"
+//        "aaabbbhgbdbbbbaa"
+//        "ahddcefabdcccccc"
+//        "afgbbbbaddbgebca"
+//        "aegbcccbdbhfeaaa"
+//        "deaabaaagcaccccd"
+//        "abbbbbbggaaacbba"
+//        "acbghaaeeabggacc"
+//        "aaagebbbaaceebba"
+//        "bbbbdccaaaabbbaa"
+//        );
+//
+//    add_colourmap('a', 11, 127 >> 4, 127 >> 4, 127 >> 4);
+//    add_colourmap('b', 12, 116 >> 4, 116 >> 4, 116 >> 4);
+//    add_colourmap('c', 13, 143 >> 4, 143 >> 4, 143 >> 4);
+//    add_colourmap('d', 14, 104 >> 4, 104 >> 4, 104 >> 4);
+//    add_colourmap('e', 15, 248 >> 2, 175 >> 2,  42 >> 2);
+//    add_colourmap('f', 16, 255 >> 2, 255 >> 2, 181 >> 2);
+//    add_colourmap('g', 17, 252 >> 2, 238 >> 2,  75 >> 2);
+//    add_colourmap('h', 18, 255 >> 2, 255 >> 2, 255 >> 2);
+//    
+//    /* Diamond block from http://i.imgur.com/ksa9hqZ.png */
+//    imgs[5] = PSTR(
+//        "abbbbaccdcabcbba"
+//        "accccccdbccccbbb"
+//        "aaaabbbikbaaabba"
+//        "acaabbbjjlbbabca"
+//        "acbdijbbbbabbccd"
+//        "bcadkmbaabbimbba"
+//        "caacbbababllmbcd"
+//        "aabcaaijabbbbbaa"
+//        "abkbckmabbcbbccc"
+//        "ablibaabccdimaca"
+//        "abmjbcbccbljmbaa"
+//        "abkbcbbbibbbbccd"
+//        "aabbbbbjicbcbaba"
+//        "acbijbalkcbijbcc"
+//        "aaakmbbdbbbkmbba"
+//        "bbbbbccabbabbbaa"
+//        );
+//    add_colourmap('i', 19, 200 >> 2, 255 >> 2, 255 >> 2);
+//    add_colourmap('j', 20, 141 >> 2, 255 >> 2, 255 >> 2);
+//    add_colourmap('k', 21,   3 >> 2, 255 >> 2, 255 >> 2);
+//    add_colourmap('l', 22,   3 >> 2, 223 >> 2, 228 >> 2);
+//    add_colourmap('m', 23,   3 >> 2, 223 >> 2, 255 >> 2);
+
+}
+

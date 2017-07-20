@@ -151,10 +151,10 @@ loop(void)
 	SERIAL2(F("phasenr: "), phasenr);
 
    	// NEW_ANIMATION(LED_led00_blink1)
-	// NEW_SLIDESHOW(LED_galaga1)
 	// NEW_ANIMATION(LED_lineshorver1)
-	// NEW_SLIDESHOW(LED_mario1)
-	// NEW_SLIDESHOW(LED_minecraft1)
+	NEW_SLIDESHOW(LED_galaga1)
+	NEW_SLIDESHOW(LED_mario1)
+	NEW_SLIDESHOW(LED_minecraft1)
 
 	NEW_ANIMATION(LED_test)
 	NEW_ANIMATION(LED_quickbrownfox1)

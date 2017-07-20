@@ -20,4 +20,9 @@ public:
     void create_colourmap(void);
 };
 
+class LED_walkingman1 : public LED_Slideshow {
+public:
+    LED_walkingman1(LED_Strip *led, uint16_t VIEW_WIDTH, uint16_t VIEW_HEIGHT);
+};
+
 #endif
