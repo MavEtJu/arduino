@@ -13,12 +13,10 @@ double baseline; // baseline pressure
 double baseheight;
 
 double getPressure();
-int timeleft = 5 * 60;	// five minutes
-int found = 0;
+int secondcounter = 0;
 int intro = 10;
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
-
 
 void setup()
 {
@@ -59,16 +57,6 @@ void setup()
 
 void loop()
 {
-  if (timeleft == 0) {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Time is up. Go");
-    lcd.setCursor(0, 1);
-    lcd.print("back and retry.");
-    delay(10000);
-    return;
-  }
-
   double a,P;
   
   // Get a new pressure reading:
@@ -80,44 +68,26 @@ void loop()
 
   a = pressure.altitude(P, baseline);
 
-  if (a > 20) {
-    found = 1;
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Congratulations!");
-    delay(10000);
-  }
-  if (found == 1) {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("S  34  5.292");
-    lcd.setCursor(0, 1);
-    lcd.print("E 150 59.447");
-
-    delay(120000);
-    return;
-  }
-  
   Serial.print("relative altitude: ");
   if (a >= 0.0) Serial.print(" "); // add a space for positive numbers
-  Serial.print(a,1);
+  Serial.print(a, 1);
   Serial.print(" meters, ");
   if (a >= 0.0) Serial.print(" "); // add a space for positive numbers
-  Serial.print(a*3.28084,0);
+  Serial.print(a * 3.28084,0);
   Serial.println(" feet");
   
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Timer: ");
-  lcd.print(timeleft);
+  lcd.print(secondcounter);
   lcd.print(" secs");
 
   lcd.setCursor(0, 1);
-  lcd.print(20 - (int)a);
-  lcd.print(" meters to go");
+  lcd.print((int)a);
+  lcd.print(" meters");
 
-  timeleft--;
   delay(1000);	// must match the decrement of timeleft which is in seconds
+  secondcounter++;
 }
 
 

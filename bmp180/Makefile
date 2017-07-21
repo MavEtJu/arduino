@@ -11,6 +11,7 @@ ARDUINO_VER=1.0.6
 ARDUINO_VER=1.6.1
 
 INO_FILES=altlcd.ino
+INO_FILES=measure.ino
 
 SRC_FILES=SFE_BMP180.cpp LiquidCrystal.cpp
 
