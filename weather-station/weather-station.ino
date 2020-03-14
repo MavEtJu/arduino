@@ -4,16 +4,10 @@
 #define __STATION_REMOTE__
 #endif
 
-#include <SPI.h>
-#include <nRF24L01.h>
-#include <RF24.h>
-#include <DHT.h>
 #include <ArduinoPrintf.h>
 
 #include "const.h"
 #ifdef __STATION_CENTRAL__
-#include <UTFT.h>
-#include "window.h"
 #include "central.h"
 Central station;
 #endif

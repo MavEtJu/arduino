@@ -1,4 +1,3 @@
-#define __STATION_CENTRAL__
 #include <UTFT.h>
 #include <ArduinoPrintf.h>
 
@@ -11,10 +10,6 @@ struct stationData stationData[STATION_MAX];
 extern uint8_t SmallFont[];
 extern uint8_t BigFont[];
 extern uint8_t SevenSegNumFont[];
-
-Central::Central(void)
-{
-}
 
 void Central::setup(void)
 {
@@ -103,7 +98,6 @@ void Central::redraw(void)
 {
   redraw_1();
 }
-
 
 void Central::redraw_1(void)
 {

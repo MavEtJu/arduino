@@ -1,9 +1,4 @@
-#define __STATION_REMOTE__
 #include "remote.h"
-
-Remote::Remote(void)
-{
-}
 
 void Remote::setup_station(void)
 {

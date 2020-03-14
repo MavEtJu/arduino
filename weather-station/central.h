@@ -1,9 +1,7 @@
 #ifndef __CENTRAL_H__
 #define __CENTRAL_H__
 
-#ifndef __STATION_CENTRAL__
-#error huh
-#endif
+#include <UTFT.h>
 
 #include "Station.h"
 
@@ -19,13 +17,11 @@ struct stationData {
   float humidity[MEASURE_HISTORY];
   float heatIndex[MEASURE_HISTORY];
 };
-extern struct stationData stationData[STATION_MAX];
 
 void setup_lcd(void);
 
 class Central : public Station {
   public:
-  Central(void);
   void setup(void);
   void loop(void);
 
@@ -37,6 +33,8 @@ class Central : public Station {
   void Central::updateHistory(int s, float t, float h, float hi);
   void Central::redraw(void);
   void Central::redraw_1(void);
+
+  struct stationData stationData[STATION_MAX];
 };
 
 #endif
