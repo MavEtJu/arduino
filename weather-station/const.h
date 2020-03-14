@@ -18,4 +18,23 @@ enum {
   STATION_MAX
 } addresses;
 
+#define MEASURE_HISTORY 50
+struct stationData {
+  unsigned long lastPoll;
+
+  float tempCMaxEver, tempCMaxHistory;
+  float humidityMaxEver, humidityMaxHistory;
+  float heatIndexMaxEver, heatIndexMaxHistory;
+  
+  float tempCMinEver, tempCMinHistory;
+  float humidityMinEver, humidityMinHistory;
+  float heatIndexMinEver, heatIndexMinHistory;
+  
+  float tempC[MEASURE_HISTORY];
+  float humidity[MEASURE_HISTORY];
+  float heatIndex[MEASURE_HISTORY];
+};
+
+typedef struct stationData StationData;
+
 #endif

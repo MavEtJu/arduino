@@ -2,21 +2,9 @@
 #define __CENTRAL_H__
 
 #include <UTFT.h>
+#include "Grapher.h"
 
 #include "Station.h"
-
-#define MEASURE_HISTORY 50
-struct stationData {
-  unsigned long lastPoll;
-
-  float tempCMaxEver, tempCMaxHistory;
-  float humidityMaxEver, humidityMaxHistory;
-  float heatIndexMaxEver, heatIndexMaxHistory;
-  
-  float tempC[MEASURE_HISTORY];
-  float humidity[MEASURE_HISTORY];
-  float heatIndex[MEASURE_HISTORY];
-};
 
 class Central : public Station {
   public:
@@ -29,11 +17,12 @@ class Central : public Station {
   void setup_lcd(void);
   void setup_station(void);
   void setup_radio(void);
-  void Central::updateHistory(int s, float t, float h, float hi);
-  void Central::redraw(void);
-  void Central::redraw_1(void);
+  void setup_grapher(void);
+  void updateHistory(int s, float t, float h, float hi);
+  void redraw(void);
 
-  struct stationData stationData[STATION_MAX];
+  Grapher *graph;
+  StationData stationData[STATION_MAX];
 };
 
 #endif
