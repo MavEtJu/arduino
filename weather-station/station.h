@@ -9,8 +9,9 @@
 class Station {
   public:
   Station(void);
-  void setup(void);
   void setup_station(void);
+  void setup_radio(void);
+  void setup_dht22(void);
   void loop(void);
   void loopTempHumidity(void);
 
@@ -24,8 +25,6 @@ class Station {
   private:  
   char _uniqueID[UniqueIDsize + 1];
   void detectSerialNumber(void);
-  void setup_radio(void);
-  void setup_dht22(void);
   static DHT dht;
 };
 

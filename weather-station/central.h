@@ -18,8 +18,6 @@ struct stationData {
   float heatIndex[MEASURE_HISTORY];
 };
 
-void setup_lcd(void);
-
 class Central : public Station {
   public:
   void setup(void);
@@ -30,6 +28,7 @@ class Central : public Station {
   private:
   void setup_lcd(void);
   void setup_station(void);
+  void setup_radio(void);
   void Central::updateHistory(int s, float t, float h, float hi);
   void Central::redraw(void);
   void Central::redraw_1(void);

@@ -6,9 +6,11 @@
 class Remote : public Station {
   public:
   void loop(void);
+  void setup(void);
 
   private:
   void setup_station(void);
+  void setup_radio(void);
   void loopSend(void);
 };
 

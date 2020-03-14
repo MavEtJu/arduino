@@ -41,21 +41,6 @@ Station::Station(void)
   stationIndex = 0;
 }
 
-void Station::setup(void)
-{  
-  setup_dht22();
-
-  setup_station();
-  Serial.print  (F("Station index: "));
-  Serial.println(stationIndex);
-  
-  setup_radio();
-
-#ifdef __STATION_CENTRAL__
-  setup_lcd();
-#endif
-}
-
 void Station::setup_dht22(void)
 {
   Serial.println(F("DHT22 initializing"));
@@ -81,18 +66,6 @@ void Station::setup_radio(void)
   radio.begin();
   radio.setRetries(RADIO_RETRIES, RADIO_TIMEOUT);
   radio.setPayloadSize(RADIO_MTU);
-
-#ifdef __STATION_CENTRAL__
-  radio.openWritingPipe(station.radioChannels[STATION_CENTRAL]);
-  for (int i = 1; i < STATION_MAX; i++)
-    radio.openReadingPipe(i, station.radioChannels[i]);
-#endif
-#ifdef __STATION_REMOTE__
-  radio.openWritingPipe(station.radioChannels[stationIndex]);
-  radio.openReadingPipe(1, station.radioChannels[STATION_CENTRAL]);
-#endif
-  radio.startListening();
-  radio.printDetails();
 }
 
 void Station::loopTempHumidity(void)

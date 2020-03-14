@@ -1,5 +1,16 @@
 #include "remote.h"
 
+void Remote::setup(void)
+{
+  Station::setup_dht22();
+
+  Station::setup_station();
+  Serial.print  (F("Station index: "));
+  Serial.println(stationIndex);
+  
+  setup_radio();
+}
+
 void Remote::setup_station(void)
 {
   Station::setup_station();
@@ -17,6 +28,16 @@ void Remote::setup_station(void)
       break;
     }
   }
+}
+
+void Remote::setup_radio(void)
+{
+  Station::setup_radio();
+  
+  radio.openWritingPipe(radioChannels[stationIndex]);
+  radio.openReadingPipe(1, radioChannels[STATION_CENTRAL]);
+  radio.startListening();
+  radio.printDetails();
 }
 
 void Remote::loop(void)

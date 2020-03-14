@@ -13,16 +13,35 @@ extern uint8_t SevenSegNumFont[];
 
 void Central::setup(void)
 {
-  Station::setup();
+  Station::setup_dht22();
+
+  Station::setup_station();
+  Serial.print  (F("Station index: "));
+  Serial.println(stationIndex);
+  
+  setup_radio();
   setup_lcd();
 }
 
 void Central::setup_lcd(void)
 {
-  _lcd = UTFT(ILI9481,38,39,40,41);
+  _lcd = UTFT(ILI9481, 38, 39, 40, 41);
   _lcd.InitLCD();
   _lcd.setFont(BigFont);
   _lcd.clrScr();
+}
+
+void Central::setup_radio(void)
+{
+  Station::setup_radio();
+
+  Serial.println(F("Radio initializing2"));
+
+  radio.openWritingPipe(radioChannels[STATION_CENTRAL]);
+  for (int i = 1; i < STATION_MAX; i++)
+    radio.openReadingPipe(i, radioChannels[i]);
+  radio.startListening();
+  radio.printDetails();
 }
 
 void Central::setup_station(void)
@@ -42,7 +61,7 @@ void Central::setup_station(void)
       stationData[s].humidity[i] = 0;
       stationData[s].heatIndex[i] = 0;
     }
-  }  
+  }
 }
 
 void Central::loop(void)
@@ -83,7 +102,7 @@ void Central::loop(void)
 void Central::updateHistory(int s, float t, float h, float hi)
 {
   printf("Updating %d\n\r", s),
-  stationData[s].lastPoll = millis();
+         stationData[s].lastPoll = millis();
   memcpy(stationData[s].tempC, stationData[s].tempC + sizeof(float), sizeof(float) * (MEASURE_HISTORY - 1));
   memcpy(stationData[s].humidity,  stationData[s].humidity + sizeof(float), sizeof(float) * (MEASURE_HISTORY - 1));
   memcpy(stationData[s].heatIndex, stationData[s].heatIndex + sizeof(float), sizeof(float) * (MEASURE_HISTORY - 1));
