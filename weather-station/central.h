@@ -8,10 +8,11 @@
 
 class Central : public Station {
   public:
+  Central::Central(void);
   void setup(void);
   void loop(void);
 
-  UTFT _lcd;
+  UTFT *_lcd;
 
   private:
   void setup_lcd(void);
@@ -22,7 +23,7 @@ class Central : public Station {
   void redraw(void);
 
   Grapher *graph;
-  StationData stationData[STATION_MAX];
+  StationData *stationData;
 };
 
 #endif

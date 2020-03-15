@@ -3,8 +3,8 @@
 #define RADIO_PIN1  6
 #define RADIO_PIN2  7
 
-#define DHTPIN 2
-#define DHTTYPE DHT22
+#define DHT_PIN 2
+#define DHT_TYPE DHT22
 
 uint64_t Station::radioChannels[] = {
   0xF123450000LL,   // Central
@@ -33,18 +33,24 @@ char *Station::stationName[] = {
   "Garage",
 };
 
-RF24 Station::radio = RF24(RADIO_PIN1, RADIO_PIN2);
-DHT Station::dht = DHT(DHTPIN, DHTTYPE);
-
 Station::Station(void)
 {
   stationIndex = 0;
+  radio = new RF24(RADIO_PIN1, RADIO_PIN2);
+  dht = new DHT(DHT_PIN, DHT_TYPE);
+}
+
+void Station::setup(void)
+{
+}
+void Station::loop(void)
+{
 }
 
 void Station::setup_dht22(void)
 {
   Serial.println(F("DHT22 initializing"));
-  dht.begin();
+  dht->begin();
 }
 
 void Station::setup_station(void)
@@ -63,15 +69,15 @@ void Station::setup_radio(void)
 {
   Serial.println(F("Radio initializing"));
 
-  radio.begin();
-  radio.setRetries(RADIO_RETRIES, RADIO_TIMEOUT);
-  radio.setPayloadSize(RADIO_MTU);
+  radio->begin();
+  radio->setRetries(RADIO_RETRIES, RADIO_TIMEOUT);
+  radio->setPayloadSize(RADIO_MTU);
 }
 
 void Station::loopTempHumidity(void)
 {
-  thHumidity = dht.readHumidity();
-  thTempC = dht.readTemperature();
+  thHumidity = dht->readHumidity();
+  thTempC = dht->readTemperature();
   
   if (isnan(thHumidity) || isnan(thTempC)) {
     Serial.println(F("Failed to read from DHT sensor!"));
@@ -81,7 +87,7 @@ void Station::loopTempHumidity(void)
     return;
   }
 
-  thHeatIndex = dht.computeHeatIndex(thTempC, thHumidity, false);
+  thHeatIndex = dht->computeHeatIndex(thTempC, thHumidity, false);
 
   Serial.print(F("Humidity: "));
   Serial.print(thHumidity);

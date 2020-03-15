@@ -9,22 +9,29 @@
 #include "const.h"
 #ifdef __STATION_CENTRAL__
 #include "central.h"
-Central station;
 #endif
 #ifdef __STATION_REMOTE__
 #include "remote.h"
-Remote station;
 #endif
+
+Station *station;
 
 void setup(void)
 {
   Serial.begin(9600);
   printf_begin();
 
-  station.setup();
+#ifdef __STATION_CENTRAL__
+  station = new Central;
+#endif
+#ifdef __STATION_REMOTE__
+  station = new Remote;
+#endif
+
+  station->setup();
 }
 
 void loop(void)
 {
-  station.loop();
+  station->loop();
 }

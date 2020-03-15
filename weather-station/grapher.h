@@ -7,10 +7,10 @@
 
 class Grapher {
   public:
-  void setup(UTFT lcd, Station *station, StationData *stationData);
+  void setup(UTFT *lcd, Station *station, StationData *stationData);
   virtual void redraw(void);
 
-  UTFT _lcd;
+  UTFT *_lcd;
   Station *_station;
   StationData *_stationData;
 };

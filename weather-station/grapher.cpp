@@ -1,6 +1,6 @@
 #include "grapher.h"
 
-void Grapher::setup(UTFT lcd, Station *station, StationData *stationData)
+void Grapher::setup(UTFT *lcd, Station *station, StationData *stationData)
 {
   _lcd = lcd;
   _station = station;
@@ -10,4 +10,5 @@ void Grapher::setup(UTFT lcd, Station *station, StationData *stationData)
 void Grapher::redraw(void)
 {
   Serial.println(F("Grapher::redraw should not be called"));
+  exit(0);
 }

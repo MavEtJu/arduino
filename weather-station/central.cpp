@@ -7,6 +7,11 @@
 
 struct stationData stationData[STATION_MAX];
 
+Central::Central(void)
+{
+  stationData = calloc(STATION_MAX, sizeof(StationData));
+}
+
 void Central::setup(void)
 {
   Station::setup_dht22();
@@ -22,22 +27,21 @@ void Central::setup(void)
 
 void Central::setup_lcd(void)
 {
-  _lcd = UTFT(ILI9481, 38, 39, 40, 41);
-  _lcd.InitLCD();
-  _lcd.clrScr();
+  _lcd = new UTFT(ILI9481, 38, 39, 40, 41);
+  _lcd->InitLCD();
+  _lcd->clrScr();
 }
 
 void Central::setup_radio(void)
 {
   Station::setup_radio();
+  Serial.println(F("Radio initializing - Central"));
 
-  Serial.println(F("Radio initializing2"));
-
-  radio.openWritingPipe(radioChannels[STATION_CENTRAL]);
+  radio->openWritingPipe(radioChannels[STATION_CENTRAL]);
   for (int i = 1; i < STATION_MAX; i++)
-    radio.openReadingPipe(i, radioChannels[i]);
-  radio.startListening();
-  radio.printDetails();
+    radio->openReadingPipe(i, radioChannels[i]);
+  radio->startListening();
+  radio->printDetails();
 }
 
 void Central::setup_station(void)
@@ -63,7 +67,7 @@ void Central::setup_station(void)
 void Central::setup_grapher(void)
 {
   graph = new Grapher1();
-  graph->setup(_lcd, this, (StationData *)stationData);
+  graph->setup(_lcd, this, stationData);
 }
 
 void Central::loop(void)
@@ -75,9 +79,9 @@ void Central::loop(void)
     updateHistory(STATION_CENTRAL, thTempC, thHumidity, thHeatIndex);
   }
 
-  while (radio.available()) {
+  while (radio->available()) {
     char f[RADIO_MTU];
-    bool b = radio.read(f, RADIO_MTU);
+    bool b = radio->read(f, RADIO_MTU);
 
     if (b) {
       printf("---%s---\n\r", f);

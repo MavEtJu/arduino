@@ -19,22 +19,26 @@ void window::print(char *s, int x, int y)
 {
   _lcd->print(s, X(x), Y(y) - _lcd->cfont.y_size);
 }
+
 void window::printC(char *s, int y)
 {
   print(s, (_sizex - strlen(s) * _lcd->cfont.x_size) / 2, y);
 }
+
 void window::printF(float f, int x, int y)
 {
   char s[10];
   dtostrf(f, 4, 1, s);
   print(s, x, y);
 }
+
 void window::printFC(float f, int y)
 {
   char s[10];
   dtostrf(f, 4, 1, s);
   printC(s, y);
 }
+
 void window::printFC7(float f, int y)
 {
   char s[10];

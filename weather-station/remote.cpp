@@ -34,10 +34,10 @@ void Remote::setup_radio(void)
 {
   Station::setup_radio();
   
-  radio.openWritingPipe(radioChannels[stationIndex]);
-  radio.openReadingPipe(1, radioChannels[STATION_CENTRAL]);
-  radio.startListening();
-  radio.printDetails();
+  radio->openWritingPipe(radioChannels[stationIndex]);
+  radio->openReadingPipe(1, radioChannels[STATION_CENTRAL]);
+  radio->startListening();
+  radio->printDetails();
 }
 
 void Remote::loop(void)
@@ -63,9 +63,9 @@ void Remote::loopSend(void)
   sprintf(data, "N=%d,T=%s,H=%s,HI=%s|", stationIndex, sTempC, sHumidity, sHeatIndex);
 
   printf("Sending: '%s'\r\n", data);
-  radio.stopListening();
-  ok = radio.write(data, strlen(data) + 1);
-  radio.startListening();
+  radio->stopListening();
+  ok = radio->write(data, strlen(data) + 1);
+  radio->startListening();
     
   if (ok)
     Serial.println(F("ok!"));
