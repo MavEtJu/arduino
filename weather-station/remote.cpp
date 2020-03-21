@@ -1,4 +1,5 @@
 #include "remote.h"
+#include "LowPower.h"
 
 void Remote::setup(void)
 {
@@ -42,9 +43,25 @@ void Remote::setup_radio(void)
 
 void Remote::loop(void)
 {
+  unsigned long timeout = millis() + DELAY_MEASURE;
   loopTempHumidity();
   loopSend();
-  delay(DELAY_MEASURE);
+  loopDelay();
+}
+
+void Remote::loopDelay(void)
+{
+  delay(100);
+  unsigned long d = DELAY_MEASURE / 1000  ;
+  while (d > 8) {
+    LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
+    d -= 8;
+  }
+  while (d > 2) {
+   LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF);
+   d -= 1;
+  }
+//  Serial.begin(9600);
 }
 
 void Remote::loopSend(void)

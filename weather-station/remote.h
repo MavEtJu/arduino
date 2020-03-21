@@ -12,6 +12,7 @@ class Remote : public Station {
   void setup_station(void);
   void setup_radio(void);
   void loopSend(void);
+  void loopDelay(void);
 };
 
 #endif

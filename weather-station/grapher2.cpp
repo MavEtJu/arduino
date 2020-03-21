@@ -75,7 +75,6 @@ void Grapher2::redraw(void)
     if (darkness > 240)
       darkness = 240;
     darkness = 240 - darkness;
-    printf("Station %d - darkness %d\n", s, darkness);
 
     RGB rgb = rgbs[s];
     if (rgb.red != 0) rgb.red -= darkness;
