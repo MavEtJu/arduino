@@ -32,6 +32,7 @@ char *Station::stationName[] = {
   "Dirk",
   "Garage",
 };
+int Station::stationNameLengthMax = 7;
 
 Station::Station(void)
 {
@@ -55,7 +56,7 @@ void Station::setup_dht22(void)
 
 void Station::setup_station(void)
 {
-  Serial.print(F("Serial number:"));
+  Serial.print(F("Serial number: "));
   _uniqueID[0] = 0;
   for (size_t i = 0; i < UniqueIDsize; i++) {
     if (UniqueID[i] < 0x10)

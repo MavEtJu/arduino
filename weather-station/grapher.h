@@ -5,6 +5,8 @@
 #include "const.h"
 #include "Station.h"
 
+int freeMemory();
+
 class Grapher {
   public:
   void setup(UTFT *lcd, Station *station, StationData *stationData);

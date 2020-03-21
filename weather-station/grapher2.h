@@ -6,6 +6,9 @@
 class Grapher2 : public Grapher {
   public:
   void redraw(void);
+
+  private:
+  static RGB rgb[STATION_MAX];
 };
 
 #endif

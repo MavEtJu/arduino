@@ -4,10 +4,10 @@ void Remote::setup(void)
 {
   Station::setup_dht22();
 
-  Station::setup_station();
+  setup_station();
   Serial.print  (F("Station index: "));
   Serial.println(stationIndex);
-  
+
   setup_radio();
 }
 

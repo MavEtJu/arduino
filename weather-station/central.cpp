@@ -4,6 +4,7 @@
 #include "const.h"
 #include "Central.h"
 #include "Grapher1.h"
+#include "Grapher2.h"
 
 struct stationData stationData[STATION_MAX];
 
@@ -16,7 +17,7 @@ void Central::setup(void)
 {
   Station::setup_dht22();
 
-  Station::setup_station();
+  setup_station();
   Serial.print  (F("Station index: "));
   Serial.println(stationIndex);
 
@@ -50,23 +51,23 @@ void Central::setup_station(void)
 
   for (int s = 0; s < STATION_MAX; s++) {
     stationData[s].lastPoll = millis();
-    stationData[s].heatIndexMaxEver = 0;
-    stationData[s].heatIndexMaxHistory = 0;
-    stationData[s].tempCMaxEver = 0;
-    stationData[s].tempCMaxHistory = 0;
-    stationData[s].humidityMaxEver = 0;
-    stationData[s].humidityMaxHistory = 0;
+    stationData[s].heatIndexMaxEver = VALUE_MIN;
+    stationData[s].tempCMaxEver = VALUE_MIN;
+    stationData[s].humidityMaxEver = VALUE_MIN;
+    stationData[s].heatIndexMinEver = VALUE_MAX;
+    stationData[s].tempCMinEver = VALUE_MAX;
+    stationData[s].humidityMinEver = VALUE_MAX;
     for (int i = 0; i < MEASURE_HISTORY; i++) {
-      stationData[s].tempC[i] = 0;
-      stationData[s].humidity[i] = 0;
-      stationData[s].heatIndex[i] = 0;
+      stationData[s].tempC[i] = VALUE_NONE;
+      stationData[s].humidity[i] = VALUE_NONE;
+      stationData[s].heatIndex[i] = VALUE_NONE;
     }
   }
 }
 
 void Central::setup_grapher(void)
 {
-  graph = new Grapher1();
+  graph = new Grapher2();
   graph->setup(_lcd, this, stationData);
 }
 
@@ -77,6 +78,10 @@ void Central::loop(void)
   if (pollnr++ % (DELAY_MEASURE / DELAY_RADIO) == 0) {
     loopTempHumidity();
     updateHistory(STATION_CENTRAL, thTempC, thHumidity, thHeatIndex);
+
+    // Not needed that often
+    Serial.print("Memory: ");
+    Serial.println(freeMemory());
   }
 
   while (radio->available()) {
@@ -109,12 +114,19 @@ void Central::updateHistory(int s, float t, float h, float hi)
 {
   printf("Updating %d\n\r", s),
          stationData[s].lastPoll = millis();
-  memcpy(stationData[s].tempC, stationData[s].tempC + sizeof(float), sizeof(float) * (MEASURE_HISTORY - 1));
-  memcpy(stationData[s].humidity,  stationData[s].humidity + sizeof(float), sizeof(float) * (MEASURE_HISTORY - 1));
-  memcpy(stationData[s].heatIndex, stationData[s].heatIndex + sizeof(float), sizeof(float) * (MEASURE_HISTORY - 1));
+  memcpy(stationData[s].tempC, stationData[s].tempC + 1, sizeof(float) * (MEASURE_HISTORY - 1));
+  memcpy(stationData[s].humidity,  stationData[s].humidity + 1, sizeof(float) * (MEASURE_HISTORY - 1));
+  memcpy(stationData[s].heatIndex, stationData[s].heatIndex + 1, sizeof(float) * (MEASURE_HISTORY - 1));
   stationData[s].tempC[MEASURE_HISTORY - 1] = t;
   stationData[s].humidity[MEASURE_HISTORY - 1] = h;
   stationData[s].heatIndex[MEASURE_HISTORY - 1] = hi;
 
+  MAX(stationData[s].tempCMaxEver, t);
+  MAX(stationData[s].humidityMaxEver, h);
+  MAX(stationData[s].heatIndexMaxEver, hi);
+  MIN(stationData[s].tempCMinEver, t);
+  MIN(stationData[s].humidityMinEver, h);
+  MIN(stationData[s].heatIndexMinEver, hi);
+  
   graph->redraw();
 }

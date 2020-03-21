@@ -20,6 +20,7 @@ class Station {
   static uint64_t radioChannels[STATION_MAX];
   static char *uniqueIDs[STATION_MAX];
   static char *stationName[STATION_MAX];
+  static int stationNameLengthMax;
   int stationIndex;
   RF24 *radio;
   double thHumidity, thTempC, thHeatIndex;
