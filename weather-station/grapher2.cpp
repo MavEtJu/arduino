@@ -8,7 +8,7 @@ extern uint8_t SmallFont[];
 extern uint8_t BigFont[];
 extern uint8_t SevenSegNumFont[];
 
-RGB Grapher2::rgb[] = {
+RGB Grapher2::rgbs[] = {
   { 240,   0,   0},
   { 240, 240,   0},
   { 240,   0, 240},
@@ -19,7 +19,6 @@ RGB Grapher2::rgb[] = {
 
 void Grapher2::redraw(void)
 {
-
   float maxTempHistory[STATION_MAX];
   float minTempHistory[STATION_MAX];
   int validHistory[STATION_MAX];
@@ -56,12 +55,14 @@ void Grapher2::redraw(void)
   }
 
 #define X(x) (MARGIN + (x) * (1.0 * xsize / MEASURE_HISTORY))
-#define Y(y) (ymax - MARGIN - ((y - (mintemp - TEMP_MARGIN)) * (ysize / (maxtemp - mintemp + 2 *TEMP_MARGIN))))
+#define Y(y) (ymax - MARGIN - ((y - (mintemp - TEMP_MARGIN)) * (ysize / (maxtemp - mintemp + 2 * TEMP_MARGIN))))
 
   // minimums / maximums
-  _lcd->setColor(120, 120, 120);
-  _lcd->drawLine(X(0), Y(mintemp), X(MEASURE_HISTORY), Y(mintemp));
-  _lcd->drawLine(X(0), Y(maxtemp), X(MEASURE_HISTORY), Y(maxtemp));
+  _lcd->setColor(192, 192, 192);
+  if (Y(mintemp) < MARGIN + ysize)
+    _lcd->drawLine(X(0), Y(mintemp), X(MEASURE_HISTORY), Y(mintemp));
+  if (Y(maxtemp) > MARGIN)
+    _lcd->drawLine(X(0), Y(maxtemp), X(MEASURE_HISTORY), Y(maxtemp));
 
   for (int s = 0; s < STATION_MAX; s++) {
     if (validHistory[s] == 0)
@@ -74,12 +75,18 @@ void Grapher2::redraw(void)
     if (darkness > 240)
       darkness = 240;
     darkness = 240 - darkness;
+    printf("Station %d - darkness %d\n", s, darkness);
+
+    RGB rgb = rgbs[s];
+    if (rgb.red != 0) rgb.red -= darkness;
+    if (rgb.green != 0) rgb.green -= darkness;
+    if (rgb.blue != 0) rgb.blue -= darkness;
 
     // legend
     int y = MARGIN + s * (_lcd->cfont.y_size + 1);
     int x = MARGIN + 3 * _lcd->cfont.x_size;  // diamond with the colour start here
 
-    _lcd->setColor(rgb[s].red - darkness, rgb[s].green - darkness, rgb[s].blue - darkness);
+    _lcd->setColor(rgb.red, rgb.green, rgb.blue);
     _lcd->fillRoundRect(x, y, x + 5, y + 5);
 
     _lcd->setColor(240 - darkness, 240 - darkness, 240 - darkness);
@@ -95,14 +102,17 @@ void Grapher2::redraw(void)
     _lcd->print("\'C", x, y);
     
     // minimums / maximums
-    _lcd->setColor(rgb[s].red / 2 - darkness / 2, rgb[s].green / 2 - darkness / 2, rgb[s].blue / 2 - darkness / 2);
+    _lcd->setColor(rgb.red / 2, rgb.green / 2, rgb.blue / 2);
     _lcd->drawLine(X(0), Y(minTempHistory[s]), X(MEASURE_HISTORY), Y(minTempHistory[s]));
     _lcd->drawLine(X(0), Y(maxTempHistory[s]), X(MEASURE_HISTORY), Y(maxTempHistory[s]));
-    _lcd->drawLine(X(0), Y((_stationData + s)->tempCMaxEver), X(MEASURE_HISTORY), Y((_stationData + s)->tempCMaxEver));
-    _lcd->drawLine(X(0), Y((_stationData + s)->tempCMinEver), X(MEASURE_HISTORY), Y((_stationData + s)->tempCMinEver));
+
+    if (Y((_stationData + s)->tempCMaxEver) > MARGIN)
+      _lcd->drawLine(X(0), Y((_stationData + s)->tempCMaxEver), X(MEASURE_HISTORY), Y((_stationData + s)->tempCMaxEver));
+    if (Y((_stationData + s)->tempCMinEver) < MARGIN + ysize)
+      _lcd->drawLine(X(0), Y((_stationData + s)->tempCMinEver), X(MEASURE_HISTORY), Y((_stationData + s)->tempCMinEver));
 
     // station data.
-    _lcd->setColor(rgb[s].red - darkness, rgb[s].green - darkness, rgb[s].blue - darkness);
+    _lcd->setColor(rgb.red, rgb.green, rgb.blue);
     for (int h = 1; h < MEASURE_HISTORY; h++) {
       float y1 = (_stationData + s)->tempC[h - 1];
       float y2 = (_stationData + s)->tempC[h];

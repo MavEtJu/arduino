@@ -61,6 +61,9 @@ void Central::setup_station(void)
       stationData[s].tempC[i] = VALUE_NONE;
       stationData[s].humidity[i] = VALUE_NONE;
       stationData[s].heatIndex[i] = VALUE_NONE;
+
+      stationData[s].tempC[i] = VALUE_NONE;
+
     }
   }
 }

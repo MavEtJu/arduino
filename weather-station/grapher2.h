@@ -8,7 +8,7 @@ class Grapher2 : public Grapher {
   void redraw(void);
 
   private:
-  static RGB rgb[STATION_MAX];
+  static RGB rgbs[STATION_MAX];
 };
 
 #endif
