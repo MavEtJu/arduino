@@ -2,7 +2,7 @@
 
 BOARD_TAG    = uno
 AVRDUDE_CONF = /usr/share/arduino/hardware/tools/avrdude.conf
-ARDUINO_LIBS = Adafruit_NeoPixel
+ARDUINO_LIBS = FastLED
 USER_LIB_PATH = ../libraries
 
 include /usr/share/arduino/Arduino.mk
