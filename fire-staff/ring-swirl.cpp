@@ -1,0 +1,42 @@
+
+#include "ring-swirl.h"
+
+void
+ring_swirl::setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring)
+{
+	Serial.println("ring_swirl::setup");
+	led_ring::setup(leds, num_leds, number_of_rings, leds_per_ring);
+}
+
+int
+ring_swirl::delay_value(void)
+{
+	return 100;
+}
+
+void
+ring_swirl::loop(void)
+{
+	Serial.println("ring_swirl::loop");
+	led_ring::loop();
+
+	static int step = 0;
+
+	CRGB c1 = CRGB(8, 0, 0);
+	CRGB c2 = CRGB(0, 8, 0);
+	CRGB c3 = CRGB(0, 0, 8);
+	CRGB c4 = CRGB(8, 0, 8);
+	for (int ring = 0; ring < this->number_of_rings(); ring++) {
+		int lpr = this->leds_per_ring(ring);
+		this->ring_led(ring, (step + 0          ) % lpr, c1);
+		this->ring_led(ring, (step + lpr / 2 + 0) % lpr, c1);
+		this->ring_led(ring, (step + 2          ) % lpr, c2);
+		this->ring_led(ring, (step + 2 + lpr / 2) % lpr, c2);
+		this->ring_led(ring, (step + 4          ) % lpr, c3);
+		this->ring_led(ring, (step + 4 + lpr / 2) % lpr, c3);
+		this->ring_led(ring, (step + 6          ) % lpr, c4);
+		this->ring_led(ring, (step + 6 + lpr / 2) % lpr, c4);
+	}
+
+	step = step + 1;
+}

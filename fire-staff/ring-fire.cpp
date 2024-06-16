@@ -25,10 +25,16 @@ float QuadraticEaseInOut(float p);
 float CubicEaseInOut(float p);
 
 void
-ring_fire::setup(CRGB *leds, int num_leds)
+ring_fire::setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring)
 {
 	Serial.println("ring_fire::setup");
-	led_ring::setup(leds, num_leds);
+	led_ring::setup(leds, num_leds, number_of_rings, leds_per_ring);
+}
+
+int
+ring_fire::delay_value(void)
+{
+	return 100;
 }
 
 void
@@ -38,7 +44,6 @@ ring_fire::loop(void)
 	led_ring::loop();
 
 	static int tick = 100;
-	int wait = 100;
 
 	unsigned int time = millis();
 
@@ -64,7 +69,6 @@ ring_fire::loop(void)
 
 		leds[i] = CRGB(red * rfactor, red * gfactor, red * bfactor);
 	}
-	delay(wait);
 	FastLED.show();
 }
 
@@ -130,7 +134,6 @@ void loop2() {
 		Serial.println(i);
 		strip.setPixelColor(i, c);
 		strip.show();
-		delay(wait);
 		strip.setPixelColor(i, black);
 	}
 }
