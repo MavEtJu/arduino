@@ -21,7 +21,7 @@ rings_loop::delay_value(void)
 void
 rings_loop::loop(void)
 {
-	Serial.println("ring_test::loop5");
+	Serial.println("ring_loop::loop5");
 	led_ring::loop();
 
 	static int led = 1;
@@ -51,6 +51,13 @@ rings_loop::loop(void)
 			s->current_led == led &&
 			s->current_direction == direction) {
 			found = 1;
+
+			// Maybe this one, maybe a next one.
+			if (s->more_choices) {
+				int pick = random(0, s->more_choices);
+				s += pick;
+			}
+
 			direction = s->new_direction;
 			led = s->new_led;
 			ring = s->new_ring;
