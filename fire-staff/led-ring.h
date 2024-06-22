@@ -13,6 +13,11 @@ public:
 	int num_leds;
 	int wait;
 
+	// If the sequence of events for this animation is finished
+	int finished = 0;
+
+	unsigned int loopcounter = 0;
+
 	virtual void setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring);
 	virtual void loop();
 	virtual int delay_value();

@@ -16,6 +16,8 @@ private:
 	void loop2(void);
 	void loop3(void);
 	void loop4(void);
+	void loop5(void);
+	void loop6(void);
 	void ring_led(int ring, int led, CRGB colour);
 	void line_horizontal(int lineno, CRGB colour);
 	void line_vertical(int lineno, CRGB colour);

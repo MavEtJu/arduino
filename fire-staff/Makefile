@@ -5,6 +5,9 @@ AVRDUDE_CONF = /usr/share/arduino/hardware/tools/avrdude.conf
 ARDUINO_LIBS = FastLED
 USER_LIB_PATH = ../libraries
 
+ARDUINO_PORT = /dev/ttyUSB1
+MONITOR_PORT = /dev/ttyUSB1
+
 include /usr/share/arduino/Arduino.mk
 
 

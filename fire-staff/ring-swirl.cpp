@@ -1,4 +1,3 @@
-
 #include "ring-swirl.h"
 
 void
@@ -8,10 +7,18 @@ ring_swirl::setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_r
 	led_ring::setup(leds, num_leds, number_of_rings, leds_per_ring);
 }
 
+
+#define MIN(a, b) ((a) < (b)) ? (a) : (b)
+#define MAX(a, b) ((a) > (b)) ? (a) : (b)
 int
 ring_swirl::delay_value(void)
 {
-	return 100;
+	static int currentdelay = 150;
+	if (this->loopcounter % 24 == 0) {
+		currentdelay += 10 * random(-1, 2);
+		currentdelay = MIN(200, MAX(50, currentdelay));
+	}
+	return currentdelay;
 }
 
 void

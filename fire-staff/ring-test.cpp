@@ -11,13 +11,13 @@ ring_test::setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ri
 void
 ring_test::loop(void)
 {
-	this->loop4();
+	this->loop6();
 }
 
 int
 ring_test::delay_value(void)
 {
-	return 100;
+	return 50;
 }
 
 void
@@ -135,4 +135,30 @@ ring_test::loop1(void)
 	}
 	if (g == 3)
 		g = 0;
+}
+
+void
+ring_test::loop6(void)
+{
+	Serial.println("ring_test::loop6");
+	led_ring::loop();
+	CRGB colour = CRGB(8, 0, 0);
+	this->leds[0] = colour;
+	this->leds[24] = colour;
+	this->leds[40] = colour;
+	this->leds[52] = colour;
+	colour = CRGB(0, 8, 0);
+	this->leds[12] = colour;
+	this->leds[32] = colour;
+	this->leds[46] = colour;
+	this->leds[56] = colour;
+	colour = CRGB(0, 0, 8);
+	this->ring_led(0, 0, colour);
+	this->ring_led(0, 12, colour);
+	this->ring_led(1, 0, colour);
+	this->ring_led(1, 8, colour);
+	this->ring_led(2, 0, colour);
+	this->ring_led(2, 6, colour);
+	this->ring_led(3, 0, colour);
+	this->ring_led(3, 4, colour);
 }

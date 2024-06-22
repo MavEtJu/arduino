@@ -19,6 +19,7 @@ void
 led_ring::loop(void)
 {
 	Serial.println("led_ring::loop");
+	this->loopcounter++;
 }
 
 int
