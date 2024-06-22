@@ -31,7 +31,8 @@ setup(void)
 {
 	Serial.begin(115200);
 	Serial.println("setup");
-	//Serial.end();
+	Serial.end();
+	randomSeed(analogRead(0));
 
 	num_leds_tower = 0;
 	for (int r = 0; r < NUM_RINGS; r++) {
