@@ -1,0 +1,13 @@
+# Arduino Make file. Refer to https://github.com/sudar/Arduino-Makefile
+
+BOARD_TAG    = uno
+AVRDUDE_CONF = /usr/share/arduino/hardware/tools/avrdude.conf
+ARDUINO_LIBS = FastLED
+USER_LIB_PATH = ../libraries
+
+ARDUINO_PORT = /dev/ttyUSB0
+MONITOR_PORT = ${ARDUINO_PORT}
+
+LOCAL_INO_SRCS = tower-of-rings.ino
+
+include /usr/share/arduino/Arduino.mk
