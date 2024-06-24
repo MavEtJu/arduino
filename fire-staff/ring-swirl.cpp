@@ -1,11 +1,8 @@
 #include "ring-swirl.h"
 
-void
-ring_swirl::setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring)
+ring_swirl::ring_swirl(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring) : led_ring(leds, num_leds, number_of_rings, leds_per_ring)
 {
-	Serial.println("ring_swirl::setup");
-	led_ring::setup(leds, num_leds, number_of_rings, leds_per_ring);
-
+	Serial.println("ring_swirl::ring_swirl");
 	this->class_type = LED_RING_SWIRL;
 }
 

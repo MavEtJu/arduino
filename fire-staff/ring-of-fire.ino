@@ -4,11 +4,10 @@
  */
 
 #include <Arduino.h>
-#include "FastLED.h"
 
 #include "ring-fire.h"
 
-#define DATA_PIN	4	// D3
+#define DATA_PIN	3	// D3
 
 #define NUM_RINGS	4
 int leds_per_ring[NUM_RINGS] = {24, 16, 12, 8};
@@ -22,8 +21,8 @@ setup(void)
 {
 	Serial.begin(115200);
 	Serial.println("setup");
-	Serial.end();
 	randomSeed(analogRead(0));
+	Serial.end();
 
 	num_leds = 0;
 	for (int r = 0; r < NUM_RINGS; r++) {
@@ -33,8 +32,7 @@ setup(void)
 
 	FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, num_leds);
 
-	lr = new ring_fire();
-	lr->setup(leds, num_leds, NUM_RINGS, (int *)leds_per_ring);
+	lr = new ring_fire(leds, num_leds, NUM_RINGS, (int *)leds_per_ring);
 }
 
 void
@@ -44,7 +42,7 @@ loop(void)
 	static int loopcounter = 0;
 
 	for (int led = 0; led < num_leds; led++) {
-		leds[led] = CGRB::Black;
+		leds[led] = CRGB::Black;
 	}
 	lr->loop();
 	FastLED.show();

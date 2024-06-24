@@ -24,14 +24,12 @@ float SineEaseOut(float p);
 float QuadraticEaseInOut(float p);
 float CubicEaseInOut(float p);
 
-void
-ring_fire::setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring)
+ring_fire::ring_fire(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring) : led_ring(leds, num_leds, number_of_rings, leds_per_ring)
 {
-	Serial.println("ring_fire::setup");
-	led_ring::setup(leds, num_leds, number_of_rings, leds_per_ring);
-
+	Serial.println("ring_fire::ring_fire");
 	this->class_type = LED_RING_FIRE;
 }
+
 
 int
 ring_fire::delay_value(void)

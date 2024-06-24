@@ -1,11 +1,8 @@
 #include "rings-flash.h"
 
-void
-rings_flash::setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring)
+rings_flash::rings_flash(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring) : led_ring(leds, num_leds, number_of_rings, leds_per_ring)
 {
-	Serial.println("rings_flash::setup");
-	led_ring::setup(leds, num_leds, number_of_rings, leds_per_ring);
-
+	Serial.println("rings_flash::rings_flash");
 	this->class_type = LED_RINGS_FLASH;
 }
 

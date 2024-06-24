@@ -7,7 +7,7 @@
 class ring_fire : public led_ring
 {
 public:
-	void setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring);
+	ring_fire(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring);
 	void loop(void);
 	int delay_value(void);
 };

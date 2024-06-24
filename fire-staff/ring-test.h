@@ -7,7 +7,7 @@
 class ring_test : public led_ring
 {
 public:
-	void setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring);
+	ring_test(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring);
 	void loop(void);
 	int delay_value(void);
 

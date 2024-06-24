@@ -18,6 +18,9 @@ private:
 	int *_leds_per_ring;
 	int _number_of_rings;
 public:
+	led_ring(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring);
+	virtual ~led_ring(void);
+
 	int class_type = LED_RING;
 
 	CRGB *leds;
@@ -29,7 +32,6 @@ public:
 
 	unsigned int loopcounter = 0;
 
-	virtual void setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring);
 	virtual void loop();
 	virtual int delay_value();
 

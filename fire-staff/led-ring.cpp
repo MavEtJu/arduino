@@ -1,9 +1,8 @@
 #include "led-ring.h"
 
-void
-led_ring::setup(CRGB *leds, int num_leds, int rings, int *leds_per_ring)
+led_ring::led_ring(CRGB *leds, int num_leds, int rings, int *leds_per_ring)
 {
-	Serial.println("led_ring::setup");
+	Serial.println("led_ring::led_ring");
 
 	this->num_leds = num_leds;
 	this->leds = leds;
@@ -13,6 +12,11 @@ led_ring::setup(CRGB *leds, int num_leds, int rings, int *leds_per_ring)
 	for (int i = 0; i < rings; i++) {
 		this->_leds_per_ring[i] = leds_per_ring[i];
 	}
+}
+led_ring::~led_ring(void)
+{
+	Serial.println("led_ring::~led_ring");
+	free(this->_leds_per_ring);
 }
 
 void
