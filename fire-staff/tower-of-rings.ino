@@ -52,7 +52,7 @@ loop(void)
 	int current_second = millis() / 1000;
 	int previous_second = 0;
 	if (current_second != previous_second) {
-		if (current_second % 10 == 0 && lr->class_type != LED_RINGS_FLASH) {
+		if (current_second % 300 == 0 && lr->class_type != LED_RINGS_FLASH) {
 			delete lr;
 			lr = new rings_flash(leds, num_leds, NUM_RINGS, (int *)leds_per_ring);
 		}
