@@ -5,8 +5,9 @@ ring_swirl::setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_r
 {
 	Serial.println("ring_swirl::setup");
 	led_ring::setup(leds, num_leds, number_of_rings, leds_per_ring);
-}
 
+	this->class_type = LED_RING_SWIRL;
+}
 
 #define MIN(a, b) ((a) < (b)) ? (a) : (b)
 #define MAX(a, b) ((a) > (b)) ? (a) : (b)

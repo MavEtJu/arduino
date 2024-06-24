@@ -5,8 +5,9 @@ rings_flash::setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_
 {
 	Serial.println("rings_flash::setup");
 	led_ring::setup(leds, num_leds, number_of_rings, leds_per_ring);
-}
 
+	this->class_type = LED_RINGS_FLASH;
+}
 
 int
 rings_flash::delay_value(void)
@@ -34,7 +35,7 @@ rings_flash::loop(void)
 	}
 
 	// Blue markers
-	CRGB c = CRGB(0, 0, 8);
+	static CRGB c = CRGB(0, 8, 8);
 	this->ring_led(0, 0, c);
 	this->ring_led(0, 12, c);
 	this->ring_led(1, 0, c);

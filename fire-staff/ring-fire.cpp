@@ -29,6 +29,8 @@ ring_fire::setup(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ri
 {
 	Serial.println("ring_fire::setup");
 	led_ring::setup(leds, num_leds, number_of_rings, leds_per_ring);
+
+	this->class_type = LED_RING_FIRE;
 }
 
 int
