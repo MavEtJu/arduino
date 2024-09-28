@@ -10,6 +10,8 @@ enum class_type {
 	LED_RINGS_LOOP,
 	LED_RING_FIRE,
 	LED_RING_SWIRL,
+	LED_RING_BLUERED,
+	LED_RING_SPINNER,
 };
 
 class led_ring
@@ -39,6 +41,9 @@ public:
 	int number_of_rings(void);
 
 	void ring_led(int ring, int led, CRGB colour);
+	int ring_led_to_offset(int ring, int led);
+	int offset_to_led(int offset);
+	int offset_to_ring(int offset);
 };
 
 int freeRam(void);

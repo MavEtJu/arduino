@@ -1,5 +1,5 @@
 
-#include "ring-fire.h"
+#include "ring-bluered.h"
 #include "fire-effects.h"
 
 // The variation in yellow color to create the fire effect, define the interval where the color can change.
@@ -17,23 +17,24 @@
 
 const byte RED = 16;
 
-ring_fire::ring_fire(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring) : led_ring(leds, num_leds, number_of_rings, leds_per_ring)
+ring_bluered::ring_bluered(CRGB *leds, int num_leds, int number_of_rings, int *leds_per_ring) : led_ring(leds, num_leds, number_of_rings, leds_per_ring)
 {
-	Serial.println("ring_fire::ring_fire");
-	this->class_type = LED_RING_FIRE;
+	Serial.println("ring_bluered::ring_bluered");
+	this->class_type = LED_RING_BLUERED;
 }
 
-
 int
-ring_fire::delay_value(void)
+ring_bluered::delay_value(void)
 {
 	return 100;
 }
 
+#define MAX(a, b) ((a) > (b)) ? (a) : (b)
+
 void
-ring_fire::loop(void)
+ring_bluered::loop(void)
 {
-	Serial.println("ring_fire::loop");
+	Serial.println("ring_bluered::loop");
 	led_ring::loop();
 
 	static int tick = 100;
@@ -41,7 +42,7 @@ ring_fire::loop(void)
 	unsigned int time = millis();
 
 	float rfactor = 1.0;
-	float gfactor = 0.1;
+	float gfactor = 0.0;
 	float bfactor = 0.0;
 	tick++;
 
@@ -58,9 +59,15 @@ ring_fire::loop(void)
 
 		vi = (MAX_INTENSITY - MIN_INTENSITY) * v + MIN_INTENSITY;
 		float red = vi * (RED * v);
-		float yellow = vi *((MAX_VARIATION - MIN_VARIATION)*v + MIN_VARIATION);
 
 		leds[i] = CRGB(red * rfactor, red * gfactor, red * bfactor);
 	}
+
+	CRGB c;
+	c = leds[ring_led_to_offset(0,  0)]; c.g = MAX(c.r / 10, 1); ring_led(0,  0, c);
+	c = leds[ring_led_to_offset(1,  0)]; c.g = MAX(c.r / 10, 1); ring_led(1,  0, c);
+	c = leds[ring_led_to_offset(2,  0)]; c.g = MAX(c.r / 10, 1); ring_led(2,  0, c);
+	c = leds[ring_led_to_offset(3,  0)]; c.g = MAX(c.r / 10, 1); ring_led(3,  0, c);
+
 	FastLED.show();
 }

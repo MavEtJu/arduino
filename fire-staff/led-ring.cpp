@@ -48,11 +48,44 @@ led_ring::leds_per_ring(int ring)
 void
 led_ring::ring_led(int ring, int led, CRGB colour)
 {
+	int offset = ring_led_to_offset(ring, led);
+	this->leds[offset + led] = colour;
+}
+
+int
+led_ring::ring_led_to_offset(int ring, int led)
+{
 	int offset = 0;
 	for (int r = 0; r < ring; r++) {
 		offset += this->leds_per_ring(r);
 	}
-	this->leds[offset + led] = colour;
+	return offset + led;
+}
+
+int
+led_ring::offset_to_ring(int offset)
+{
+	int nor = number_of_rings();
+	for (int r = 0; r < nor; r++) {
+		int lpr = this->leds_per_ring(r);
+		if (offset < lpr)
+			return r;
+		offset -= this->leds_per_ring(r);
+	}
+	return -1;
+}
+
+int
+led_ring::offset_to_led(int offset)
+{
+	int nor = number_of_rings();
+	for (int r = 0; r < nor; r++) {
+		int lpr = this->leds_per_ring(r);
+		if (offset < lpr)
+			return offset;
+		offset -= this->leds_per_ring(r);
+	}
+	return -1;
 }
 
 /* https://learn.adafruit.com/memories-of-an-arduino/measuring-free-memory */
