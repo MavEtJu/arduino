@@ -6,7 +6,6 @@
 #include <Arduino.h>
 
 #include "ring-bluered.h"
-#include "ring-spinner.h"
 
 #define DATA_PIN	3	// D3
 
@@ -33,7 +32,7 @@ setup(void)
 
 	FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, num_leds);
 
-	lr = new ring_spinner(leds, num_leds, NUM_RINGS, (int *)leds_per_ring);
+	lr = new ring_bluered(leds, num_leds, NUM_RINGS, (int *)leds_per_ring);
 }
 
 void
